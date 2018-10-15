@@ -32,7 +32,14 @@ class CompteController extends Controller {
 
     }
     public function serieAbo(Request $request, string $type){
-       return Serie::where('publication', true)->where('type', $type)->get();
+       $serie = Serie::where('publication', true)->where('type', $type)->get();
+        $tab = [];
+        foreach ($serie as $s){
+            $s->genres = $s->genres;
+            $s->abo = false;
+            $tab[] = $s;
+        }
+        return $tab;
     }
 
 }

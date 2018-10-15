@@ -22,7 +22,9 @@ Route::get('/user', function (Request $request) {
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/', 'Api\CompteController@index');
-    Route::get('/serie/{type}', 'Api\CompteController@serieAboLog');
+    Route::get('/serie/{type}', 'Api\SerieController@serieAboLog');
+    Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
 });
 
-Route::get('/serie/{type}', 'Api\CompteController@serieAbo');
+Route::get('/serie/{type}', 'Api\SerieController@serieAbo');
+Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
