@@ -35,7 +35,8 @@ import PasswordReset from '../components/auth/password/reset'
 import theme from './../components/layout/theme'
 import AdminLayout from './../components/layout/layout'
 import Dashboard from './../components/dashboard'
-import ListeSerie from './../components/serie/listeComponent.vue'
+import ListeSerie from './../components/serie/listeComponent'
+import detailComponent from './../components/serie/detailComponent'
 
 const routes = [
     {
@@ -64,9 +65,24 @@ const routes = [
     },
     {
         path: '/serie/:type',
-        name: 'serie',
-        component: ListeSerie,
+        component: theme,
         beforeEnter: ifAuthOrNot,
+        children:[
+            {
+                path:'',
+                name:'serie',
+                component: ListeSerie,
+                beforeEnter: ifAuthOrNot
+            },
+            {
+                path:':slug',
+                name:'serieDetail',
+                component: detailComponent,
+                beforeEnter: ifAuthOrNot
+            },
+
+
+        ]
     },
     {
         path: '/',

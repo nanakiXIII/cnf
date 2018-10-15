@@ -39,7 +39,7 @@
         </nav>
         <nav class="navbar navbar-light bg-white border-bottom-1">
             <div class="container">
-                <span class="navbar-brand mb-0 h1 barre" id="TitreSection"> </span>
+                <span class="navbar-brand mb-0 h1 barre" >{{ titre}}</span>
                 <div class="pull-right">
                     <div v-if="user.name">
                         <router-link :to="{ name: 'dashboard' }" class="btn btn-outline-success col-auto mr-auto">{{ user.name }}</router-link>
@@ -64,6 +64,16 @@
     export default {
         data(){
             return {
+
+            }
+        },
+        props:{
+            titre : String
+        }
+
+        ,
+        watch:{
+            titre(){
             }
         },
         computed: {
@@ -77,6 +87,9 @@
                     .then(() => {
                         this.$router.go(0)
                     })
+            },
+            setMessage(msg) {
+                this.msg = msg;
             }
         }
     }

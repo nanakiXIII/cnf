@@ -1,6 +1,9 @@
 <template>
 
-            <router-view></router-view>
+<div>
+    <router-view></router-view>
+</div>
+
 
 
 </template>
@@ -9,6 +12,12 @@
     export default {
         data(){
             return {
+                titre:'Accueil'
+            }
+        },
+        watch:{
+            titre(){
+                this.$parent.titre = this.titre
             }
         }
     }

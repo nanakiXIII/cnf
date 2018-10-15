@@ -1,7 +1,7 @@
 <template>
     <section class="light">
         <main>
-            <navbar-component></navbar-component>
+            <navbar-component :titre="titre"></navbar-component>
             <router-view></router-view>
         </main>
         <footer>
@@ -29,7 +29,14 @@
     export default {
         data(){
             return {
+                titre:'Accueil'
             }
-        }
+        },
+        watch:{
+            titre(){
+
+            }
+        },
+
     }
 </script>
