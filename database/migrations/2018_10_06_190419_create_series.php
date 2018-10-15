@@ -26,8 +26,8 @@ class CreateSeries extends Migration
             $table->integer('films')->unsigned()->default(0);
             $table->integer('bonus')->unsigned()->default(0);
             $table->integer('scan')->unsigned()->default(0);
-            $table->integer('light-novel')->unsigned()->default(0);
-            $table->integer('visual-novel')->unsigned()->default(0);
+            $table->integer('ln')->unsigned()->default(0);
+            $table->integer('vn')->unsigned()->default(0);
             $table->longText('synopsis');
             $table->longText('staff');
             $table->string('type')->default('Animes');
