@@ -6,10 +6,7 @@
   <li>NPM Install: <strong>npm install</strong></li>
   <li>
     Database: <strong>php artisan migrate --seed</strong>
-    <ul>
-        <li>username: andranikvbadalyan@gmail.com</li>
-        <li>password: secret</li>
-    </ul>
+    
   </li>
   <li>
     Install passport clients: <strong>php artisan passport:install</strong>
