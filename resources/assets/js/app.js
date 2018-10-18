@@ -11,8 +11,12 @@ window.Vue = require('vue');
 
 import { router } from './router/routes';
 import { store } from './vuex/store';
+import vueMoment from 'vue-moment'
+import moment from 'moment'
 
 
+Vue.use(vueMoment,{moment})
+Vue.moment.locale('fr')
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

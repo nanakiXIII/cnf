@@ -37,6 +37,7 @@ import AdminLayout from './../components/layout/layout'
 import Dashboard from './../components/dashboard'
 import ListeSerie from './../components/serie/listeComponent'
 import detailComponent from './../components/serie/detailComponent'
+import Streaming from './../components/serie/streamingComponent'
 
 const routes = [
     {
@@ -76,9 +77,23 @@ const routes = [
             },
             {
                 path:':slug',
-                name:'serieDetail',
-                component: detailComponent,
-                beforeEnter: ifAuthOrNot
+                name:'',
+                component: theme,
+                beforeEnter: ifAuthOrNot,
+                children:[
+                    {
+                        path:'',
+                        name:'serieDetail',
+                        component: detailComponent,
+                        beforeEnter: ifAuthOrNot
+                    },
+                    {
+                        path:':saison/:episode',
+                        name:'streaming',
+                        component: Streaming,
+                        beforeEnter: ifAuthOrNot
+                    },
+                ]
             },
 
 

@@ -3,7 +3,7 @@
         <nav class="navbar navbar-expand-lg navbar-dark bg-nav big-nav sticky-top">
             <div class="container">
                 <a class="navbar-brand" href="#">
-                    <img src="/storage/site/logo.png"  width="120px" alt="">
+                    <img src="/img/logo.png"  width="120px" alt="">
                 </a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
@@ -43,8 +43,10 @@
                 <div class="pull-right">
                     <div v-if="user.name">
                         <router-link :to="{ name: 'dashboard' }" class="btn btn-outline-success col-auto mr-auto">{{ user.name }}</router-link>
+                            <span v-if="user.permission">
+                                <a v-if="this.found(user.permission,'Administration')" href="#" class="btn btn-outline-warning col-auto mr-auto" >Administration</a>
+                            </span>
 
-                        <a href="#" class="btn btn-outline-warning col-auto mr-auto" >Administration</a>
 
                         <a class="btn btn-outline-danger col-auto mr-auto" @click.prevent="logout">Déconnexion</a>
                     </div>
@@ -90,6 +92,15 @@
             },
             setMessage(msg) {
                 this.msg = msg;
+            },
+            found: function (tab, element) {
+                let response = tab.indexOf(element)
+                if (response >= 0){
+                    return true
+                }
+                else{
+                    return false
+                }
             }
         }
     }

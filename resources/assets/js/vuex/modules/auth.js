@@ -90,7 +90,7 @@ const mutations = {
     authError: (state, err) => {
         let errors=err.errors?err.errors:{};
         if(err.error=="invalid_credentials"){
-            errors.invalid_credentials=['The user credentials were incorrect.'];
+            errors.invalid_credentials=['Identifiant ou mot passe incorrect'];
         }
 
         state.status = 'error';

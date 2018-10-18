@@ -1,37 +1,48 @@
 <template>
-    <div class="auth-form text-center">
+    <div class="container">
+        <div class="alert alert-danger mt-3" role="alert" v-if="authErrors.has('name') || authErrors.has('email') || authErrors.has('password')">
+            <div v-text="authErrors.get('name')"></div>
+            <div v-text="authErrors.get('email')"></div>
+            <div v-text="authErrors.get('password')"></div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="auth-form text-center">
+                            <form method="POST" v-on:submit.prevent="register" @keydown="authErrors.clear($event.target.name)">
+                                <router-link :to="{ name: 'login' }">
 
-        <form method="POST" v-on:submit.prevent="register" @keydown="authErrors.clear($event.target.name)">
+                                </router-link>
+                                <div class="form-group row">
+                                    <label for="name" class="sr-only">Pseudo</label>
+                                    <input type="text" id="name" class="form-control" placeholder="Pseudo" required autofocus v-model="name">
+                                </div>
+                                <div class="form-group row">
+                                    <label for="email" class="sr-only">Adresse mail</label>
+                                    <input type="email" id="email" class="form-control" placeholder="Adresse mail" required v-model="email">
+                                </div>
+                                <div class="form-group row">
+                                    <label for="password" class="sr-only">Mot de passe</label>
+                                    <input type="password" id="password" class="form-control" placeholder="Mot de passe" required v-model="password">
+                                </div>
+                                <div class="form-group row">
+                                    <label for="password_confirmation" class="sr-only">Confirmation du mot de passe</label>
+                                    <input type="password" id="password_confirmation" class="form-control" placeholder="Confirmation du mot de passe" required v-model="password_confirmation">
+                                </div>
 
-            <router-link :to="{ name: 'login' }">
-                <img class="mb-4" src="/img/logo.svg" alt="" width="300" height="72">
-            </router-link>
+                                <button class="btn btn-outline-success btn-block mt-2 mb-2" type="submit">Créer un Compte</button>
 
-            <label for="name" class="sr-only">Name</label>
-            <input type="text" id="name" class="form-control" placeholder="Name" required autofocus v-model="name">
+                                Déja inscrit ? <router-link :to="{ name: 'login' }">Connexion</router-link>
 
-            <label for="email" class="sr-only">Email address</label>
-            <input type="email" id="email" class="form-control" placeholder="Email address" required v-model="email">
-
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" class="form-control" placeholder="Password" required v-model="password">
-
-            <label for="password_confirmation" class="sr-only">Confirm Password</label>
-            <input type="password" id="password_confirmation" class="form-control" placeholder="Password Confirmation" required v-model="password_confirmation">
-
-            <div class="alert alert-danger mt-3" role="alert" v-if="authErrors.has('name') || authErrors.has('email') || authErrors.has('password')">
-                <div v-text="authErrors.get('name')"></div>
-                <div v-text="authErrors.get('email')"></div>
-                <div v-text="authErrors.get('password')"></div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button class="btn btn-lg btn-primary btn-block mt-2 mb-2" type="submit">Register</button>
-
-            Have an account? <router-link :to="{ name: 'login' }">Login</router-link>
-
-        </form>
-
+        </div>
     </div>
+
 </template>
 
 
@@ -59,6 +70,9 @@
                         this.$router.push('/dashboard')
                     })
             }
+        },
+        mounted(){
+            this.$parent.titre = "Création d'un compte"
         }
     }
 </script>

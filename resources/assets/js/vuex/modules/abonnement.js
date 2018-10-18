@@ -23,6 +23,7 @@ const actions = {
                 dispatch('authLogout')
             })
     },
+
 }
 
 const mutations = {

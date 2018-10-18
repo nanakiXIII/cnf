@@ -1,32 +1,43 @@
 <template>
-    <div class="auth-form text-center">
+    <div class="container">
+        <div class="alert alert-danger mt-3" role="alert" v-if="authErrors.has('email') || authErrors.has('invalid_credentials')">
+            <div v-text="authErrors.get('invalid_credentials')"></div>
+            <div v-text="authErrors.get('email')"></div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="auth-form text-center">
 
-        <form method="POST" v-on:submit.prevent="login">
-            <img class="mb-4" src="/img/logo.svg" alt="" width="300" height="72">
+                            <form method="POST" v-on:submit.prevent="login">
+                                <div class="form-group row">
+                                    <label for="email" class="sr-only">Identifiant</label>
+                                    <input type="email" id="email" class="form-control" placeholder="Identifiant" required autofocus v-model="email">
+                                </div>
+                                <div class="form-group row">
+                                    <label for="password" class="sr-only">Mot de passe</label>
+                                    <input type="password" id="password" class="form-control" placeholder="Mot de passe" required v-model="password">
+                                </div>
+                                <div class="checkbox mt-2">
+                                    <label>
+                                        <input type="checkbox" value="remember" v-model="remember"> Se souvenir de moi ?
+                                    </label>
+                                </div>
 
-            <p class="text-danger" v-if="authErrors.has('invalid_credentials')" v-text="authErrors.get('invalid_credentials')"></p>
+                                <button class="btn btn-outline-info btn-block mt-2 mb-2" type="submit">Connexion</button>
 
-            <label for="email" class="sr-only">Email address</label>
-            <input type="email" id="email" class="form-control" placeholder="Email address" required autofocus v-model="email">
+                                <router-link class="p-2" :to="{ name: 'password-email' }">Mot de passe oublié</router-link>
 
-            <label for="password" class="sr-only">Password</label>
-            <input type="password" id="password" class="form-control" placeholder="Password" required v-model="password">
-
-            <div class="checkbox mt-2">
-                <label>
-                    <input type="checkbox" value="remember" v-model="remember"> Remember me
-                </label>
+                                <p class="p-2">Pas inscrit ? <router-link :to="{ name: 'register' }">Créer un compte</router-link></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <button class="btn btn-lg btn-primary btn-block mt-2 mb-2" type="submit">Sign in</button>
-
-            <router-link :to="{ name: 'password-email' }">Forgot Password</router-link>
-
-            <p>Don't have an account? <router-link :to="{ name: 'register' }">Register</router-link></p>
-
-        </form>
-
+        </div>
     </div>
+
 </template>
 
 <script>
@@ -51,6 +62,9 @@
                         this.$router.go(-1)
                     })
             }
+        },
+        mounted(){
+            this.$parent.titre = "Connexion"
         }
     }
 </script>

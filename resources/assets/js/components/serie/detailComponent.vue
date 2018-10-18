@@ -50,16 +50,17 @@
                                     <small class="colorise">{{ serie.suivis }} suivis</small>
                                 </div>
                                 <div class="col text-center">
-
-                                    <a class="nostyle colorise" v-if="serie.abo">
+                                    <form method="POST" v-on:submit.prevent="Abonnement">
+                                    <button class="btn btn-link nostyle colorise p-0" type="submit" v-if="serie.abo">
                                         <h1><i class="fas fa-bell-slash  colorise"></i></h1>
                                         <small>Supprimer</small>
-                                    </a>
+                                    </button>
 
-                                    <a class="nostyle colorise" v-else>
+                                    <button class="btn btn-link nostyle colorise p-0" type="submit"  v-else>
                                         <h1><i class="fas fa-bell colorise"></i></h1>
                                         <small>Suivre</small>
-                                    </a>
+                                    </button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -80,7 +81,7 @@
         </div>
         <div class="pt-2" v-if="serie.saisons != ''">
             <div class="container mt-3">
-                <div class="categorie"><i class="icon fas fa-star"></i> <b>Téléchargement</b></div>
+                <div class="categorie"><i class="icon fas fa-star"></i> <b>Téléchargements</b></div>
                 <div class="card" v-for="saison in serie.saisons">
                     <div class="card-header cursor" data-toggle="collapse" :data-target="'#saison'+saison.id" v-if="saison.nosaison == 0">
                         <h5 class="mb-0 col-title" >
@@ -88,7 +89,27 @@
                         </h5>
                     </div>
                     <div :id="'saison'+saison.id" class="collapse" v-bind:class="[ saison.nosaison ? 'show' : '']">
-                        <div class="card-body">
+                        <div class="card-body" v-if="saison.episodes != ''">
+                            <div class="media mb-2" v-for="episode in saison.episodes">
+                                <img class="align-self-center mr-3" src="" alt="" width="150px">
+                                <div class="media-body">
+                                    <h5 class="mt-0">{{ episode.type }} {{ episode.numero }}: {{ episode.name }}</h5>
+                                    <p>
+                                        <div class="btn-group ">
+                                            <a href="" class="btn" v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']">DVD</a>
+                                            <a href="" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']">720P</a>
+                                            <a href="" class="btn" v-bind:class="[ episode.downloadfhd ? 'btn-success' : 'btn-secondary']">1080P</a>
+                                            <router-link :to="{name:'streaming', params:{saison: saison.id, episode:episode.id}}" class="btn" v-bind:class="[ episode.vue ? 'btn-success' : 'btn-secondary']">Streaming !!</router-link>
+                                        </div>
+                                        <small>
+                                            <br>{{episode.downloads}} Téléchargement(s) | {{episode.vues}} vue(s)
+                                        </small>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body text-center" v-else-if="saison.episode != '' && saison.nosaison != true">
+                            Pas de téléchargements disponible pour le moment
                         </div>
                     </div>
                 </div>
@@ -101,6 +122,9 @@
     export default {
         data(){
             return {
+                'abo':'',
+                'serie_id':'',
+                'action':'Abonnement',
                 infos: false,
                 isText: 'Voir plus <i class="fas fa-arrow-alt-circle-down"></i>',
                 isPlus: 'Voir plus <i class="fas fa-arrow-alt-circle-down"></i>',
@@ -138,23 +162,30 @@
                     this.isText = this.isPlus
                 }
             },
-            async titre(){
-                this.donne = await this.series().titre;
-                if (this.donne != undefined){
-                    console.log('oui')
-                    console.log(this.donne)
-                }else{
-                    this.donne = this.serie.titre;
-                    this.titre()
-                    console.log('non')
-                }
-            },
+            Abonnement: function () {
+                this.serie_id = this.serie.id;
+                this.abo = this.serie.abo;
+                const { abo, serie_id, action } = this;
+                this.$store.dispatch('compteRequest', { abo, serie_id, action })
+                    .then(() => {
+                        if (this.$store.getters.isAuthenticated) {
+                            if (this.serie.abo){
+                                this.serie.abo = false
+                                this.serie.suivis-- ;
+                            }else{
+                                this.serie.abo = true
+                                this.serie.suivis++ ;
+                            }
+                        }
+                        else {
+                            this.$router.push('/login');
+                        }
 
-
+                    })
+            }
 
         },
         beforeMount(){
-            this.$appName = 'coucou';
             let type = this.$route.params.type;
             let slug = this.$route.params.slug;
             this.type = type;

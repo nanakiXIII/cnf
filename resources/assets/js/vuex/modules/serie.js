@@ -23,6 +23,30 @@ const actions = {
                 //dispatch('authLogout')
             })
     },
+    episodeRequest: ({commit, dispatch}, payload) => {
+        commit('serieRequest')
+        axios.get('/api/serie/'+payload.type+'/'+payload.slug+'/'+payload.saison+'/'+payload.episode)
+            .then((resp) => {
+                commit('serieSuccess', resp.data);
+            })
+            .catch((err) => {
+                commit('serieError');
+                // if resp is unauthorized, logout, to
+                //dispatch('authLogout')
+            })
+    },
+    episodeRequestLog: ({commit, dispatch}, payload) => {
+        commit('serieRequest')
+        axios.get('/api/compte/serie/'+payload.type+'/'+payload.slug+'/'+payload.saison+'/'+payload.episode)
+            .then((resp) => {
+                commit('serieSuccess', resp.data);
+            })
+            .catch((err) => {
+                commit('serieError');
+                // if resp is unauthorized, logout, to
+                //dispatch('authLogout')
+            })
+    },
     SerieInfoRequest: ({commit, dispatch}, payload) => {
         commit('serieRequest')
         axios.get('/api/serie/'+payload.type+'/'+payload.slug)
