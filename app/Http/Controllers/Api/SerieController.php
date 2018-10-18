@@ -1,9 +1,13 @@
 <?php
 namespace App\Http\Controllers\Api;
 
+use App\Downloads;
+use App\Episodes;
 use App\Http\Controllers\Controller;
 use App\Repository\AccountRepository;
+use App\Saisons;
 use App\Serie;
+use function GuzzleHttp\Promise\is_fulfilled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -38,7 +42,6 @@ class SerieController extends Controller {
     }
     public function infoSerie(Request $request, string $type, string $slug){
         $serie = Serie::where('publication', true)->where('type', $type)->where('slug', $slug)->firstOrFail();
-        $saison = $serie->saisons()->where('publication', true)->get();
         if ($request->user()){
             if (in_array($serie->id, $request->user()->series()->pluck('serie_id')->toArray() )){
                 $serie->abo = true;
@@ -50,11 +53,63 @@ class SerieController extends Controller {
             $serie->abo = false;
         }
         if ($serie->etat != 3){
-            $serie->saisons = $saison;
+            $epi = [];
+            $saison = $serie->saisons()->where('publication', true)->orderBy('type', 'ASC')->orderBy('numero', 'DESC')->get();
+            foreach($saison as $s){
+                $episode = $s->episodes()->where('publication', true)->orderBy('type', 'ASC')->orderBy('numero', 'DESC')->get();
+                $dow = [];
+                foreach ($episode as $e){
+                    if ($request->user()){
+                        if($request->user()->download()->where('episode_id', $e->id)->where('qualite', 'dvd')->first()){
+                            $e->downloaddvd = true;
+                        }
+                        if($request->user()->download()->where('episode_id', $e->id)->where('qualite', 'hd')->first()){
+                            $e->downloadhd = true;
+                        }
+                        if($request->user()->download()->where('episode_id', $e->id)->where('qualite', 'fhd')->first()){
+                            $e->downloadfhd = true;
+                        }
+                        if($request->user()->download()->where('episode_id', $e->id)->where('qualite', 'vue')->first()){
+                            $e->vue = true;
+                        }
+                    }
+                    $e->downloads = count(Downloads::where('episode_id', $e->id)->where('qualite', '!=', 'vue')->get());
+                    $e->vues = count(Downloads::where('episode_id', $e->id)->where('qualite', '=', 'vue')->get());
+                    $dow[] = $e;
+                }
+                $s->episodes = $dow;
+
+                $epi[] = $s;
+            }
+            $serie->saisons = $epi;
         }
 
         $serie->suivis = count($serie->users()->get());
         $serie->genres = $serie->genres;
+        return $serie;
+    }
+    public function infoEpisode(Request $request, string $type, string $slug, int $saison, int $episode){
+        $serie = Serie::where('publication', true)->where('type', $type)->where('slug', $slug)->firstOrFail();
+        $saison = Saisons::find($saison);
+        $episode = Episodes::find($episode);
+        if (isset($request->server()['HTTP_X_FORWARDED_FOR'])){
+            $ip = $request->server()['HTTP_X_FORWARDED_FOR'];
+        }
+        else{
+            $ip = $request->ip();
+        }
+        if ($request->user()){
+            $verif = Downloads::where('episode_id', $episode->id)->where('qualite', 'vue')->where('user_id', $request->user()->id)->first();
+        }else{
+            $verif = Downloads::where('episode_id', $episode->id)->where('qualite', 'vue')->where('user_id', '0')->where('ip_address', $ip)->first();
+        }
+        if ($verif){
+            $serie->verif = $verif;
+        }else{
+            $serie->verif = false;
+        }
+        $serie->getEpisode = $episode;
+        $serie->getSaison = $saison;
         return $serie;
     }
 

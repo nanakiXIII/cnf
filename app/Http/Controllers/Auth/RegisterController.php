@@ -36,8 +36,8 @@ class RegisterController extends Controller
     protected function rules()
     {
         return [
-            'name' => 'required|string|max:80',
-            'email' => 'required|email',
+            'name' => 'required|string|max:80|unique:users',
+            'email' => 'required|email|unique:users',
             'password' => 'required|confirmed|min:6',
         ];
     }

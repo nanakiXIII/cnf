@@ -17,5 +17,11 @@ class Serie extends Model
     public function saisons(){
         return $this->hasMany('App\Saisons');
     }
+    public function episodes(){
+        return $this->hasMany('App\Episodes');
+    }
+    public function download(){
+        return $this->hasMany('App\Downloads', 'serie_id');
+    }
 
 }

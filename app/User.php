@@ -7,10 +7,11 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPasswordNotification;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, Notifiable;
+    use HasApiTokens, Notifiable, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -43,5 +44,8 @@ class User extends Authenticatable
 
     public function series(){
         return $this->belongsToMany('App\Serie');
+    }
+    public function download(){
+        return $this->hasMany('App\Downloads', 'user_id');
     }
 }

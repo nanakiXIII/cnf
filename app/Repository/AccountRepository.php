@@ -36,11 +36,11 @@ class AccountRepository{
         foreach ($serie as $s){
 
             if (in_array($s->id, $abo )){
-                $s->genres = $s->genres;
+                $s->genres = $s->genres()->get();
                 $s->abo = true;
                 $tab[] = $s;
             }else{
-                $s->genres = $s->genres;
+                $s->genres = $s->genres()->get();
                 $s->abo = false;
                 $tab[] = $s;
             }

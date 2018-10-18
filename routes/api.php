@@ -1,8 +1,7 @@
 <?php
 use Illuminate\Http\Request;
-use \App\Serie;
-use \App\Http\Resources\SerieResource;
-use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,15 +15,40 @@ use Illuminate\Support\Facades\Auth;
 */
 
 Route::get('/user', function (Request $request) {
+    //Permission::create(['name' => 'b', 'guard_name' => 'web']);
+    $role = Role::find('2');
+    $role->givePermissionTo('b');
+    $user = $request->user();
+    $tab = [];
+    foreach ($request->user()->roles()->get() as $roles){
+        foreach ($roles->permissions()->pluck('name') as $perm){
+            if (!in_array($perm, $tab)){
+                $tab[] =  $perm;
+            }
+        }
+    }
+    $request->user()->permission = $tab;
+    //$user->assignRole(2);
+    //$user->assignRole('writer');
+    //$user->assignRole('writer');
+
+    //$roles = $user->roles()->pluck('name');
+    //$request->user()->role = $roles;
+    //$request->user()->permission = $request->user()->permissions;
     return $request->user();
 
+//->middleware('role:Test')
+//->middleware('permission:Administration')
 })->middleware('auth:api');
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/', 'Api\CompteController@index');
+    Route::post('/', 'Api\CompteController@update');
     Route::get('/serie/{type}', 'Api\SerieController@serieAboLog');
     Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
+    Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
 });
-
+Route::post('/streaming', 'Api\CompteController@update');
 Route::get('/serie/{type}', 'Api\SerieController@serieAbo');
 Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
+Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
