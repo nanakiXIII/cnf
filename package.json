@@ -21,7 +21,10 @@
     },
     "dependencies": {
         "js-cookie": "^2.2.0",
+        "moment": "^2.22.2",
+        "vue-moment": "^4.0.0",
         "vue-router": "^3.0.1",
+        "vue-video-player": "^5.0.2",
         "vuex": "^3.0.1"
     }
 }
