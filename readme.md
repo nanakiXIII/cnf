@@ -1,6 +1,5 @@
-<p align="center"><img src="http://andranikbadalyan.com/laravelpassportvueauth/img/logo.svg"></p>
-
-<h3>Getting Started:</h3>
+  
+<h3>Chuushin</h3>
 <ol>
   <li>Composer Install: <strong>composer install</strong></li>
   <li>NPM Install: <strong>npm install</strong></li>
