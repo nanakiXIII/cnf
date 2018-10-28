@@ -17,7 +17,6 @@
                 <div class="progress mt-3 mb-3 ml-5 mr-5">
                     <div class="progress-bar bg-success" role="progressbar" :style="progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
-                <pre>{{serie}}</pre>
             </div>
         </div>
         <div class="modal fade" id="modal-vue" tabindex="-1" role="dialog">
