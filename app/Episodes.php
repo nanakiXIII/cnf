@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Episodes extends Model
 {
-    protected $fillable = ['name', 'numero', 'type', 'dvd', 'hd','fhd','image', 'serie_id','saison_id','publication', 'etat', 'streaming'];
+    protected $fillable = ['name', 'numero', 'type', 'dvd', 'hd','fhd','image', 'serie_id','saisons_id','publication', 'etat', 'streaming'];
 
     public function saison(){
         return $this->belongsTo('App\Saisons');
