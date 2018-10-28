@@ -16,8 +16,8 @@ use Spatie\Permission\Models\Permission;
 
 Route::get('/user', function (Request $request) {
     //Permission::create(['name' => 'b', 'guard_name' => 'web']);
-    $role = Role::find('2');
-    $role->givePermissionTo('b');
+    //$role = Role::find('2');
+    //$role->givePermissionTo('b');
     $user = $request->user();
     $tab = [];
     foreach ($request->user()->roles()->get() as $roles){
