@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Saisons extends Model
 {
-    protected $fillable = ['name', 'numero', 'type', 'image', 'serie', 'nosaison', 'slug', 'publication'];
+    protected $fillable = ['name', 'numero', 'type', 'serie_id', 'nosaison', 'slug', 'publication'];
 
     public function serie(){
         return $this->belongsTo('App\Serie');
