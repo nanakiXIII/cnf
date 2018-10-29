@@ -264,6 +264,9 @@ span.info-detail{
     margin: 0px;
     font-size: 30px;
 }
+.list-group .router-link-exact-active {
+    color: #eb3349 !important;
+}
 
 .light{
     background-color: #fafafa;
@@ -357,6 +360,7 @@ span.info-detail{
     background-color: #eb3349 !important;
     color: white;
 }
+
 .light .list-group a{
     text-decoration: none;
     color: black;
