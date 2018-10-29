@@ -21,7 +21,7 @@ class AccountRepository{
 
     public function getAbonnement(user $user){
 
-        return $user->series()->select('serie_id AS id', 'titre', 'slug', 'image', 'serie_user.created_at AS timeDate', 'synopsis')
+        return $user->series()->select('serie_id AS id', 'titre', 'slug', 'image', 'type', 'synopsis')
             ->where('publication', true)
             ->orderBy('titre', 'ASC')->get();
 

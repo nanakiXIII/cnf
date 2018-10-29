@@ -7,7 +7,9 @@
                             <img class="align-self-center mr-3" :src="abonnement.image" width="100px">
                             <div class="row media-body">
                                 <div class="col-md-10">
-                                    <h5 class="mt-0 mb-1">{{ abonnement.titre }}</h5>
+                                    <router-link :to="{ name: 'serieDetail', params: {type: abonnement.type ,slug: abonnement.slug}}">
+                                        <h5 class="mt-0 mb-1">{{ abonnement.titre }}</h5>
+                                    </router-link>
                                     {{ abonnement.synopsis.slice(0, 150) }} ...
                                 </div>
                                 <div class="col-md-2 align-self-center text-center">
