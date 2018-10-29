@@ -39,6 +39,9 @@ import ListeSerie from './../components/serie/listeComponent'
 import detailComponent from './../components/serie/detailComponent'
 import Streaming from './../components/serie/streamingComponent'
 
+import user from './../components/compte/layout'
+import userSuivis from './../components/compte/component/suivis'
+
 const routes = [
     {
         path: '/login',
@@ -100,15 +103,14 @@ const routes = [
         ]
     },
     {
-        path: '/',
-        name: 'layout',
-        component: theme,
-        beforeEnter: ifAuthOrNot,
+        path: '/user',
+        component: user,
+        beforeEnter: ifAuthenticated,
         children: [
             {
-                path: '/dashboard',
+                path: '',
                 name: 'dashboard',
-                component: Dashboard,
+                component: userSuivis,
                 beforeEnter: ifAuthenticated
             },
 
