@@ -99,7 +99,7 @@
                                             <a href="" class="btn" v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']">DVD</a>
                                             <a href="" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']">720P</a>
                                             <a href="" class="btn" v-bind:class="[ episode.downloadfhd ? 'btn-success' : 'btn-secondary']">1080P</a>
-                                            <router-link :to="{name:'streaming', params:{saison: saison.id, episode:episode.id}}" class="btn" v-bind:class="[ episode.vue ? 'btn-success' : 'btn-secondary']">Streaming !!</router-link>
+                                            <router-link :to="{name:'streaming', params:{saison: saison.id, episode:episode.id}}" class="btn" v-bind:class="[ episode.vue ? 'btn-success' : 'btn-secondary']">Streaming</router-link>
                                         </div>
                                         <small>
                                             <br>{{episode.downloads}} Téléchargement(s) | {{episode.vues}} vue(s)

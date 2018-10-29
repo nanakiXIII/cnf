@@ -54,34 +54,37 @@
                 </div>
             </div>
             <div class="row mt-4 border bg-white relative" v-for="serie in series">
-                <div class="triangle" v-if="serie.abo">
-                    <p><i class="fas fa-bookmark"></i></p>
-                </div>
-                <div class="col-md-4 img-news">
-                    <img :src="serie.image">
-                </div>
-                <div class="col-md-8 ">
-                    <div class="card-block px-1">
-                        <router-link :to="{ name: 'serieDetail', params: { slug: serie.slug} }" class="title">
-                            <h4 class="card-title pb-1 pt-3 center-mobile"><b>{{ serie.titre }}</b></h4>
-                        </router-link>
-                        <p class="card-text bg-grey col-md-12 p-3 mb-3">
-                            <span class='info-tooltip'>Auteur</span> {{ serie.auteur }}<br>
-                            <span class='info-tooltip'>Studio</span> {{ serie.studio }}<br>
-                            <span class='info-tooltip'>Année</span> {{ serie.annee }} <br>
-                            <span class='info-tooltip'>Etat</span>
-                            <span class="text-primary" v-if="serie.etat == 0">En Cours</span>
-                            <span class="text-success" v-if="serie.etat == 1">Terminé</span>
-                            <span class="text-warning" v-if="serie.etat == 2">Abandonné</span>
-                            <span class="text-danger" v-if="serie.etat == 3">Licencié</span>
-                            <br>
-                            <span class='info-tooltip'>Genres</span>
-                            <span v-for="genre in serie.genres">
+                <template v-if="serie">
+                    <div class="triangle" v-if="serie.abo">
+                        <p><i class="fas fa-bookmark"></i></p>
+                    </div>
+                    <div class="col-md-4 img-news">
+                        <img :src="serie.image">
+                    </div>
+                    <div class="col-md-8 ">
+                        <div class="card-block px-1">
+                            <router-link :to="{ name: 'serieDetail', params: { slug: serie.slug} }" class="title">
+                                <h4 class="card-title pb-1 pt-3 center-mobile"><b>{{ serie.titre }}</b></h4>
+                            </router-link>
+                            <p class="card-text bg-grey col-md-12 p-3 mb-3">
+                                <span class='info-tooltip'>Auteur</span> {{ serie.auteur }}<br>
+                                <span class='info-tooltip'>Studio</span> {{ serie.studio }}<br>
+                                <span class='info-tooltip'>Année</span> {{ serie.annee }} <br>
+                                <span class='info-tooltip'>Etat</span>
+                                <span class="text-primary" v-if="serie.etat == 0">En Cours</span>
+                                <span class="text-success" v-if="serie.etat == 1">Terminé</span>
+                                <span class="text-warning" v-if="serie.etat == 2">Abandonné</span>
+                                <span class="text-danger" v-if="serie.etat == 3">Licencié</span>
+                                <br>
+                                <span class='info-tooltip'>Genres</span>
+                                <span v-for="genre in serie.genres">
                                 {{ genre.name}}
                             </span>
-                        </p>
+                            </p>
+                        </div>
                     </div>
-                </div>
+                </template>
+
             </div>
         </div>
     </div>
