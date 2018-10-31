@@ -2,8 +2,8 @@
         <div class="row ">
             <div class="col-md-12">
                 <div class="row">
-                    <ul class="list-unstyled">
-                        <li class="media mb-2 bg-white p-2" style="box-shadow: 1px 1px 5px #555;"  v-for="(abonnement, key) in abonnements">
+                    <ul class="list-unstyled" style="width:100%">
+                        <li class="media mb-2 bg-white p-2" style="width:100%;box-shadow: 1px 1px 5px #555;"  v-for="(abonnement, key) in abonnements.abonnement">
                             <img class="align-self-center mr-3" :src="abonnement.image" width="100px">
                             <div class="row media-body">
                                 <div class="col-md-10">
@@ -18,6 +18,13 @@
                                             <h2><i class="fas fa-bell-slash  colorise"></i></h2>
                                         </button>
                                     </form>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="media mb-2 bg-white p-2" style="width:100%;box-shadow: 1px 1px 5px #555;" v-if="abonnements.abonnement ==''">
+                            <div class="row media-body">
+                                <div class="col-md-12 text-center">
+                                    Vous ne suivez pas de série pour le moment
                                 </div>
                             </div>
                         </li>

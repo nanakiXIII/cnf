@@ -1,5 +1,5 @@
 <template>
-    <section class="light">
+    <section :class="theme">
         <main>
             <navbar-component :titre="titre"></navbar-component>
             <router-view></router-view>
@@ -29,14 +29,31 @@
     export default {
         data(){
             return {
-                titre:'Accueil'
+                titre:'Accueil',
+                theme:'light'
             }
         },
         watch:{
-            titre(){
+            theme(){
+            },
+            user(){
+                this.theme = this.user.theme
+            }
+        },
+        computed: {
+            user(){
+                if (this.$store.getters.isAuthenticated) {
+                   return this.$store.getters.getProfile
+                }
 
             }
         },
+        mounted(){
+            if (this.$store.getters.isAuthenticated) {
+                this.theme = this.$store.getters.getProfile.theme;
+            }
+
+        }
 
     }
 </script>

@@ -13,17 +13,17 @@
                             <i class="fas fa-history "></i> Historique
                         </li>
                     </router-link>
-                    <router-link :to="{name:'success'}">
+                    <!--<router-link :to="{name:'success'}">
                         <li class="list-group-item">
                             <i class="fas fa-trophy  "></i> Success
-                        </li>
+                        </li>-->
                     </router-link>
                     <router-link :to="{name:'parametre'}">
                         <li class="list-group-item">
                             <i class="fas fa-cog  "></i> Paramètres
                         </li>
                     </router-link>
-                    <router-link :to="{name:'informations'}">
+                    <!--<router-link :to="{name:'informations'}">
                         <li class="list-group-item">
                             <i class="fas fa-user  "></i> Mes Informations
                         </li>
@@ -32,7 +32,7 @@
                         <li class="list-group-item">
                             <i class="fas fa-user  "></i> API
                         </li>
-                    </router-link>
+                    </router-link>-->
                 </ul>
             </div>
             <div class="col-md-8">
@@ -47,10 +47,16 @@
     export default {
         data(){
             return {
+                theme:''
             }
         },
         computed: {
 
+        },
+        watch:{
+          theme(){
+              this.$parent.theme = this.theme;
+          }
         },
         methods: {
         },
