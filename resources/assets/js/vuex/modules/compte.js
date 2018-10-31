@@ -32,6 +32,13 @@ const actions = {
                 'time': payload.time,
             }
         }
+        if(payload.action=='theme'){
+            data = {
+                'action':payload.action,
+                'theme':payload.theme,
+            }
+        }
+
         commit('compteRequest')
         axios.post(actionUrl, data)
             .then((resp) => {

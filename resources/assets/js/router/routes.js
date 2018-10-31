@@ -41,6 +41,8 @@ import Streaming from './../components/serie/streamingComponent'
 
 import user from './../components/compte/layout'
 import userSuivis from './../components/compte/component/suivis'
+import userHistorique from './../components/compte/component/historique'
+import userParametre from './../components/compte/component/parametre'
 
 const routes = [
     {
@@ -91,7 +93,7 @@ const routes = [
                         beforeEnter: ifAuthOrNot
                     },
                     {
-                        path:':saison/:episode',
+                        path:'saison-:saison/episode-:episode',
                         name:'streaming',
                         component: Streaming,
                         beforeEnter: ifAuthOrNot
@@ -111,6 +113,18 @@ const routes = [
                 path: '',
                 name: 'dashboard',
                 component: userSuivis,
+                beforeEnter: ifAuthenticated
+            },
+            {
+                path: 'historique',
+                name: 'historique',
+                component: userHistorique,
+                beforeEnter: ifAuthenticated
+            },
+            {
+                path: 'parametre',
+                name: 'parametre',
+                component: userParametre,
                 beforeEnter: ifAuthenticated
             },
 
