@@ -59,7 +59,7 @@
             },
             Abonnement: function (serie_id, key) {
                 this.id = serie_id;
-                this.$delete(this.abonnements, key)
+                this.$delete(this.abonnements.abonnement, key)
                 const { abo, id ,action } = this;
 
                 this.$store.dispatch('compteRequest', { abo, serie_id, action })

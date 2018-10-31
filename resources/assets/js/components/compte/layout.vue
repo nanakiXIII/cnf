@@ -16,8 +16,8 @@
                     <!--<router-link :to="{name:'success'}">
                         <li class="list-group-item">
                             <i class="fas fa-trophy  "></i> Success
-                        </li>-->
-                    </router-link>
+                        </li>
+                    </router-link>-->
                     <router-link :to="{name:'parametre'}">
                         <li class="list-group-item">
                             <i class="fas fa-cog  "></i> Paramètres
