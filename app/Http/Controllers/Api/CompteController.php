@@ -88,6 +88,11 @@ class CompteController extends Controller {
                 }
             }
             return [false];
+        }elseif($request->action == "theme"){
+            $user->theme = $request->theme;
+            $user->save();
+             return [true];
+
         }
 
     }
