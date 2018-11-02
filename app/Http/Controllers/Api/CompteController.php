@@ -25,7 +25,7 @@ class CompteController extends Controller {
     }
 
     public function index(Request $request){
-        return $this->accountRepository->getAbonnement($request->user());
+        return $this->accountRepository->getListeAbonnement($request->user());
 
     }
 

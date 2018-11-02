@@ -4,6 +4,7 @@ namespace App\Repository;
 use App\Episodes;
 use App\Serie;
 use App\User;
+use Illuminate\Support\Facades\DB;
 
 class AccountRepository{
     /**
@@ -20,23 +21,53 @@ class AccountRepository{
         $this->user = $user;
     }
 
-    public function getAbonnement(user $user){
+    public function getListeAbonnement(user $user){
         $reponse = new class{};
-        $reponse->abonnement = $user->series()->select('serie_id AS id', 'titre', 'slug', 'image', 'type', 'synopsis')
+        $arraySerie = [];
+        $arrayEpisode= [];
+        $arrayHistorique = [];
+        $serie = $user->series()->select('serie_id AS id', 'titre', 'slug', 'image', 'type', 'synopsis')
             ->where('publication', true)
             ->orderBy('titre', 'ASC')->get();
-        $reponse->historique = Episodes::join('downloads','episodes.id','episode_id')
+        $historique = Episodes::join('downloads','episodes.id','episode_id')
             ->join('series', 'series.id', 'episodes.serie_id')
             ->join('saisons', 'saisons.id', 'episodes.saisons_id')
             ->where('downloads.user_id',$user->id)
             ->where('episodes.publication', true)
             ->orderBy('downloads.updated_at', 'DESC')
             ->select('episodes.image', 'downloads.qualite', 'series.titre', 'episodes.name', 'episodes.numero', 'series.type','series.slug', 'downloads.qualite','episodes.id as episode_id', 'downloads.updated_at', 'episodes.type', 'saisons.id as saison_id', 'series.type as serie_type', 'series.slug as serie_slug', 'saisons.type as saison_type', 'saisons.numero as saison_numero')
-            ->get();
+            ;
+        foreach ($serie as $s){
+            $s->typeFichier = $s->episodes()->select(DB::raw('count(*) as serie_count, type'))->where('publication', true)->groupBy('type')->get();
+            foreach ($s->typeFichier as $f){
+                $vue = Episodes::join('downloads','episodes.id','episode_id')
+                    ->where('downloads.user_id',$user->id)
+                    ->Where('downloads.serie_id', $s->id)
+                    ->where('episodes.type', $f->type )
+                    ->get();
+                $f->historique = count($vue);
+                $f->full = false;
+                if ($f->historique == $f->serie_count){
+                    $f->full = true;
+                }
+                $arrayHistorique[] = $f;
+            }
+            $s->typeFichier = $arrayHistorique;
+            foreach ($s->episodes()->orderBy('type', 'ASC')->orderBy('saisons_id', 'DESC')->orderBy('numero', 'DESC')->get() as $e){
+                if (in_array($e->id, $historique->pluck('episode_id')->toArray() )){
+                    $e->verif = true;
+                }else{
+                    $e->verif = false;
+                }
+                $arrayEpisode[] = $e;
+            }
+            $s->fichier = $arrayEpisode;
+            $s->visible = false;
+            $arraySerie[]= $s;
+        }
+        $reponse->abonnement = $arraySerie;
+        $reponse->historique = $historique->get();
         return json_encode($reponse);
-
-
-
     }
 
     public function getAbonnements(user $user, string $type){
@@ -59,7 +90,4 @@ class AccountRepository{
         }
         return $tab;
     }
-
-
-
 }
