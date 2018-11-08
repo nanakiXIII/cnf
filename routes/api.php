@@ -52,3 +52,5 @@ Route::post('/streaming', 'Api\CompteController@update');
 Route::get('/serie/{type}', 'Api\SerieController@serieAbo');
 Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
 Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
+
+Route::get('/news', 'Api\postController@index');
