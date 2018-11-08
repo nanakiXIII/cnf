@@ -121,7 +121,7 @@
                         class="btn btn-secondary btn-lg btn-block"
                         @click="next()"
                         v-if="page != lastPage">
-                    Voir Plus de news
+                    Voir Plus de nouveautés
                 </button>
             </div>
         </div>
