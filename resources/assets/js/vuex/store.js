@@ -4,6 +4,7 @@ import Vuex from 'vuex';
 import user from './modules/user'
 import auth from './modules/auth'
 import abonnement from './modules/abonnement'
+import news from './modules/news'
 import serie from './modules/serie'
 import compte from './modules/compte'
 
@@ -16,5 +17,6 @@ export const store = new Vuex.Store({
         abonnement,
         serie,
         compte,
+        news,
     }
 });

@@ -9,7 +9,7 @@ const ifNotAuthenticated = (to, from, next) => {
         next();
         return
     }
-    next('/dashboard')
+    next('/user')
 }
 
 const ifAuthenticated = (to, from, next) => {
@@ -35,6 +35,9 @@ import PasswordReset from '../components/auth/password/reset'
 import theme from './../components/layout/theme'
 import AdminLayout from './../components/layout/layout'
 import Dashboard from './../components/dashboard'
+
+import Accueil from './../components/accueil/accueil'
+
 import ListeSerie from './../components/serie/listeComponent'
 import detailComponent from './../components/serie/detailComponent'
 import Streaming from './../components/serie/streamingComponent'
@@ -46,13 +49,19 @@ import userParametre from './../components/compte/component/parametre'
 
 const routes = [
     {
+        path: '/',
+        name: 'accueil',
+        component: Accueil,
+        beforeEnter: ifAuthOrNot,
+    },
+    {
         path: '/login',
         name: 'login',
         component: Login,
         beforeEnter: ifNotAuthenticated,
     },
     {
-        path: '/',
+        path: '/register',
         name: 'register',
         component: Register,
         beforeEnter: ifNotAuthenticated,

@@ -11,7 +11,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="nav-link" href="#">Accueil <span class="sr-only">(current)</span></a>
+                            <router-link :to="{ name:'accueil' }" class="nav-link">Accueil <span class="sr-only">(current)</span></router-link>
                         </li>
                         <li class="nav-item text-white">
                             <a class="nav-link" href="#">Equipes</a>

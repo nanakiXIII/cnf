@@ -58,7 +58,7 @@
                     <div class="triangle" v-if="serie.abo">
                         <p><i class="fas fa-bookmark"></i></p>
                     </div>
-                    <div class="col-md-4 img-news">
+                    <div class="col-md-4 img-news row">
                         <img :src="serie.image">
                     </div>
                     <div class="col-md-8 ">
@@ -190,7 +190,6 @@
                     else {
                         this.$store.dispatch('SerieRequest', {type});
                     }
-
                 }
                 else{
                     this.$router.push('/');

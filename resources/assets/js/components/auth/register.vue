@@ -67,7 +67,7 @@
                 const { action, name, email, password, password_confirmation } = this;
                 this.$store.dispatch('authRequest', { action, name, email, password, password_confirmation })
                     .then(() => {
-                        this.$router.push('/dashboard')
+                        this.$router.push('/user')
                     })
             }
         },
