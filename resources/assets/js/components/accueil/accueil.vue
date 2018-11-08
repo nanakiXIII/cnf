@@ -117,6 +117,7 @@
 
                     </div>
                 </div>
+                {{ test }}
                 <button type="button"
                         class="btn btn-secondary btn-lg btn-block"
                         @click="next()"
@@ -134,6 +135,7 @@
         data(){
                 return {
                     data:{},
+                    test:'',
                     contenu:{},
                     page:1,
                     lastPage:false,
@@ -153,6 +155,8 @@
                     this.lastPage=this.news.pagination.last_page,
                     this.nextPage=this.news.pagination.current_page +1
                     this.contenu = Object.assign(this.data, this.news.data)
+                this.test = Object.keys(this.contenu)
+
             }
         },
         methods: {
