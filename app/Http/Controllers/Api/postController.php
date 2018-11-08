@@ -16,14 +16,17 @@ use Illuminate\Support\Facades\DB;
 class postController extends Controller {
 
 
-    public function index(){
+    public function index(Request $request){
        $post = post::where('publication', true)->orderBy('publish_at', 'DESC')->paginate(10);
        $news = [];
+       $cpt=$request->from;
        foreach ($post as $p){
-           $news['data'][$p->id] = $p;
+           $news['data'][$cpt] = $p;
+           $cpt++;
        }
        $news['pagination'] =
-           ['total' => $post->total(),
+           [
+               'total' => $post->total(),
 
                'per_page' => $post->perPage(),
 
@@ -33,7 +36,8 @@ class postController extends Controller {
 
                'from' => $post->firstItem(),
 
-               'to' => $post->lastItem()];
+               'to' => $post->lastItem()
+           ];
        return $news;
 
     }

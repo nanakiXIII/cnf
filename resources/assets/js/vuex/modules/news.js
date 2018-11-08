@@ -13,7 +13,7 @@ const getters = {
 const actions = {
     NewsRequest: ({commit, dispatch}, payload) => {
         commit('newRequest')
-        axios.get('/api/news?page='+payload.nextPage)
+        axios.get('/api/news?page='+payload.nextPage+'&from='+payload.from)
             .then((resp) => {
                 commit('newSuccess', resp.data);
             })

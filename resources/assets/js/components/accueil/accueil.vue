@@ -97,7 +97,7 @@
                                     <i class="icon fas fa-paint-brush" v-if="n.type == 'Scantrad'"></i>
                                     <i class="icon fas fa-gamepad" v-if="n.type == 'Visual-novel'"></i>
                                     <i class="icon fas fa-globe" v-if="n.type == 'all'"></i>
-                                    <b>{{ n.id }}{{ n.titre }}</b>
+                                    <b>{{ n.titre }}</b>
                                 </h4>
                                 <p class="card-text">
                                     {{ n.contenu.slice(0, 300) }} ...
@@ -117,7 +117,6 @@
 
                     </div>
                 </div>
-                {{ test }}
                 <button type="button"
                         class="btn btn-secondary btn-lg btn-block"
                         @click="next()"
@@ -135,7 +134,7 @@
         data(){
                 return {
                     data:{},
-                    test:'',
+                    from:'1',
                     contenu:{},
                     page:1,
                     lastPage:false,
@@ -151,12 +150,11 @@
         },
         watch:{
             news(){
-                    this.page=this.news.pagination.current_page,
-                    this.lastPage=this.news.pagination.last_page,
-                    this.nextPage=this.news.pagination.current_page +1
-                    this.contenu = Object.assign(this.data, this.news.data)
-                this.test = Object.keys(this.contenu)
-
+                this.page=this.news.pagination.current_page
+                this.lastPage=this.news.pagination.last_page
+                this.nextPage=this.news.pagination.current_page +1
+                this.from = this.news.pagination.from +10
+                this.contenu = Object.assign(this.data, this.news.data)
             }
         },
         methods: {
@@ -164,8 +162,8 @@
                 this.paginate()
             },
             paginate(){
-                const { nextPage, page } = this
-                this.$store.dispatch('NewsRequest', {nextPage});
+                const { nextPage, page, from } = this
+                this.$store.dispatch('NewsRequest', {nextPage, from});
             },
         },
         mounted(){
