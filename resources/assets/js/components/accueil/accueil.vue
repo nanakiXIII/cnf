@@ -165,6 +165,7 @@
             },
         },
         mounted(){
+            this.$parent.titre = "Accueil"
             this.paginate()
 
         }
