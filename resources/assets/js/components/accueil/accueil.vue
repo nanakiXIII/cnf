@@ -97,7 +97,7 @@
                                     <i class="icon fas fa-paint-brush" v-if="n.type == 'Scantrad'"></i>
                                     <i class="icon fas fa-gamepad" v-if="n.type == 'Visual-novel'"></i>
                                     <i class="icon fas fa-globe" v-if="n.type == 'all'"></i>
-                                    <b>{{ n.titre }}</b>
+                                    <b>{{ n.id }}{{ n.titre }}</b>
                                 </h4>
                                 <p class="card-text">
                                     {{ n.contenu.slice(0, 300) }} ...
