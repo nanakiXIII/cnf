@@ -27,10 +27,63 @@
 
 <script>
     export default {
+
         data(){
             return {
                 titre:'Accueil',
-                theme:'light'
+                theme:'light',
+                description:'Siet de la Chuushin no Fansub',
+                image:'/img/logo.png'
+            }
+        },
+        metaInfo () {
+            return {
+                title: "Chuushin",
+                titleTemplate: "%s | "+this.titre,
+                meta: [
+                    {vmid: 'description', name: 'description', content: this.description},
+                    {
+                        'property': 'og:title',
+                        'content': 'Chuushin',
+                        'template': '%s | '+this.titre,
+                        'vmid': 'og:title'
+                    },
+                    {
+                        'property': 'og:description',
+                        'content': this.description,
+                        'vmid': 'og:description'
+                    },
+                    {
+                        'property': 'og:image',
+                        'content': process.env.MIX_APP_URL+this.image,
+                        'vmid': 'og:image'
+                    },
+                    {
+                        'property': 'og:url',
+                        'content': process.env.MIX_APP_URL+this.$route.fullPath,
+                        'vmid': 'og:url'
+                    },
+                    {
+                        'property': 'twitter:card',
+                        'content': "summary_large_image",
+                        'vmid': 'twitter:card'
+                    },
+                    {
+                        'property': 'og:site_name',
+                        'content': "Chuushin no Fansub",
+                        'vmid': 'og:site_name'
+                    },
+                    {
+                        'property': 'twitter:image:alt',
+                        'content': this.description,
+                        'vmid': 'twitter:image:alt'
+                    },
+                    {
+                        'property': 'twitter:site',
+                        'content': "@chuushin_kira",
+                        'vmid': 'twitter:site'
+                    },
+                ]
             }
         },
         watch:{
@@ -38,7 +91,11 @@
             },
             user(){
                 this.theme = this.user.theme
-            }
+            },
+
+        },
+        methods: {
+
         },
         computed: {
             user(){
