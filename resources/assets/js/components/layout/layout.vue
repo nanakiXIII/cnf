@@ -32,7 +32,7 @@
             return {
                 titre:'Accueil',
                 theme:'light',
-                description:'Siet de la Chuushin no Fansub',
+                description:'Site de la Chuushin no Fansub',
                 image:'/img/logo.png'
             }
         },
@@ -59,24 +59,34 @@
                         'vmid': 'og:image'
                     },
                     {
+                        'property': 'og:site_name',
+                        'content': "Chuushin no Fansub",
+                        'vmid': 'og:site_name'
+                    },
+                    {
                         'property': 'og:url',
                         'content': process.env.MIX_APP_URL+this.$route.fullPath,
                         'vmid': 'og:url'
                     },
                     {
                         'property': 'twitter:card',
-                        'content': "summary_large_image",
+                        'content': "summary",
                         'vmid': 'twitter:card'
-                    },
-                    {
-                        'property': 'og:site_name',
-                        'content': "Chuushin no Fansub",
-                        'vmid': 'og:site_name'
                     },
                     {
                         'property': 'twitter:image:alt',
                         'content': this.description,
                         'vmid': 'twitter:image:alt'
+                    },
+                    {
+                        'property': 'twitter:image',
+                        'content': process.env.MIX_APP_URL+this.image,
+                        'vmid': 'twitter:image'
+                    },
+                    {
+                        'property': 'twitter:description',
+                        'content': this.description,
+                        'vmid': 'twitter:description'
                     },
                     {
                         'property': 'twitter:site',
