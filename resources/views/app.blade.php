@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="fr" data-vue-meta-server-rendered>
+<html lang="fr">
 <head>
     <!-- Required meta tags -->
     <meta charset="utf-8">
