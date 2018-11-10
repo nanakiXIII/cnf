@@ -109,7 +109,9 @@
                                         {{ n.publish_at | moment('Do MMMM YYYY') }}
                                     </div>
                                     <div class="col-6 text-right">
-                                        Lire la suite
+                                        <router-link :to="{name:'news', params:{slug:n.slug}}">
+                                            Lire la suite
+                                        </router-link>
                                     </div>
                                 </div>
                             </div>

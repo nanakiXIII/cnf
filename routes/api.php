@@ -54,3 +54,4 @@ Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
 Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
 
 Route::get('/news', 'Api\postController@index');
+Route::get('/news/{slug}', 'Api\postController@show');

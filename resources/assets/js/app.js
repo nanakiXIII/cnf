@@ -14,6 +14,8 @@ import { store } from './vuex/store';
 import vueMoment from 'vue-moment'
 import moment from 'moment'
 import Meta from 'vue-meta'
+import NProgress from 'nprogress'
+import '../../../node_modules/nprogress/nprogress.css'
 
 
 Vue.use(vueMoment,{moment})
@@ -37,7 +39,17 @@ Vue.component('layout-component', require('./components/layout/layout.vue'));
 Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
-Vue.prototype.$appName = 'Accueil'
+
+router.beforeResolve((to, from, next) => {
+    if (to.name) {
+        NProgress.start()
+    }
+    next()
+})
+
+router.afterEach((to, from) => {
+    NProgress.done()
+})
 const app = new Vue({
     el: '#app',
     created(){

@@ -10,7 +10,10 @@ main {
 .cursor{
     cursor: pointer;
 }
-
+.no-decoration, .no-decoration:hover{
+    text-decoration: none;
+    color: grey;
+}
 .bg-orange{
     background-color: #f57c00!important;
 }

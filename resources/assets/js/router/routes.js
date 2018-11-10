@@ -37,6 +37,7 @@ import AdminLayout from './../components/layout/layout'
 import Dashboard from './../components/dashboard'
 
 import Accueil from './../components/accueil/accueil'
+import News from './../components/accueil/news'
 
 import ListeSerie from './../components/serie/listeComponent'
 import detailComponent from './../components/serie/detailComponent'
@@ -52,6 +53,12 @@ const routes = [
         path: '/',
         name: 'accueil',
         component: Accueil,
+        beforeEnter: ifAuthOrNot,
+    },
+    {
+        path: '/news/:slug',
+        name: 'news',
+        component: News,
         beforeEnter: ifAuthOrNot,
     },
     {

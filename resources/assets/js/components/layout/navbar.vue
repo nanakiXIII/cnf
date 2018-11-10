@@ -2,9 +2,9 @@
     <span>
         <nav class="navbar navbar-expand-lg navbar-dark bg-nav big-nav sticky-top">
             <div class="container">
-                <a class="navbar-brand" href="#">
+                <router-link :to="{ name:'accueil' }" class="navbar-brand">
                     <img src="/img/logo.png"  width="120px" alt="">
-                </a>
+                </router-link>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>

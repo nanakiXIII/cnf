@@ -41,6 +41,15 @@ class postController extends Controller {
        return $news;
 
     }
+    public function show(Request $request){
+        $response = new class{};
+        $post = post::where('publication', true)->where('slug', $request->slug)->first();
+        $simulare = post::where('type', $post->type)->orderBy('publish_at', 'DESC')->where('id', '!=', $post->id)->limit(4)->get();
+        $response->simulare = $simulare;
+        $response->news = $post;
+        return json_encode($response);
+
+    }
 
 
 

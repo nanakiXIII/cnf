@@ -22,6 +22,7 @@
     "dependencies": {
         "js-cookie": "^2.2.0",
         "moment": "^2.22.2",
+        "nprogress": "^0.2.0",
         "vue-meta": "^1.5.5",
         "vue-moment": "^4.0.0",
         "vue-router": "^3.0.1",

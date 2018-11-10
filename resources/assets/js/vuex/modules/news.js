@@ -13,7 +13,13 @@ const getters = {
 const actions = {
     NewsRequest: ({commit, dispatch}, payload) => {
         commit('newRequest')
-        axios.get('/api/news?page='+payload.nextPage+'&from='+payload.from)
+        if(payload.slug){
+            var url = "/api/news/"+payload.slug
+        }
+        else{
+            var url = '/api/news?page='+payload.nextPage+'&from='+payload.from
+        }
+        axios.get(url)
             .then((resp) => {
                 commit('newSuccess', resp.data);
             })
