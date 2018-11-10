@@ -27,6 +27,7 @@ Route::get('/user', function (Request $request) {
             }
         }
     }
+    $request->user()->role = $request->user()->roles()->pluck('name');
     $request->user()->permission = $tab;
     //$user->assignRole(2);
     //$user->assignRole('writer');
@@ -55,3 +56,8 @@ Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoE
 
 Route::get('/news', 'Api\postController@index');
 Route::get('/news/{slug}', 'Api\postController@show');
+
+Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix' => 'administration'], function (){
+    Route::get('/membres', 'Api\Administration\utilisateurController@index');
+
+});

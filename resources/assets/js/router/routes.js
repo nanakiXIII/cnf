@@ -48,6 +48,11 @@ import userSuivis from './../components/compte/component/suivis'
 import userHistorique from './../components/compte/component/historique'
 import userParametre from './../components/compte/component/parametre'
 
+import Administration from './../components/administration/dashboard'
+import Utilisateurs from './../components/administration/membres/utilisateurs'
+import AdminNews from './../components/administration/news/news'
+
+
 const routes = [
     {
         path: '/',
@@ -145,6 +150,24 @@ const routes = [
             },
 
         ]
+    },
+    {
+        path: '/administration',
+        name: 'administration',
+        component: Administration,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/utilisateurs',
+        name: 'utilisateurs',
+        component: Utilisateurs,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/news',
+        name: 'AdminNews',
+        component: AdminNews,
+        beforeEnter: ifAuthenticated,
     },
 
 ];

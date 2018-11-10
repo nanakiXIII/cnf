@@ -44,7 +44,7 @@
                     <div v-if="user.name">
                         <router-link :to="{ name: 'dashboard' }" class="btn btn-outline-success col-auto mr-auto">{{ user.name }}</router-link>
                             <span v-if="user.permission">
-                                <a v-if="this.found(user.permission,'Administration')" href="#" class="btn btn-outline-warning col-auto mr-auto" >Administration</a>
+                                <router-link :to="{ name: 'administration' }" v-if="this.found(user.permission,'Administration')" class="btn btn-outline-warning col-auto mr-auto" >Administration</router-link>
                             </span>
 
 
