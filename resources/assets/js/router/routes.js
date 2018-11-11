@@ -50,6 +50,8 @@ import userParametre from './../components/compte/component/parametre'
 
 import Administration from './../components/administration/dashboard'
 import Utilisateurs from './../components/administration/membres/utilisateurs'
+import Postes from './../components/administration/membres/poste'
+
 import AdminNews from './../components/administration/news/news'
 
 
@@ -161,6 +163,12 @@ const routes = [
         path: '/administration/utilisateurs',
         name: 'utilisateurs',
         component: Utilisateurs,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/postes',
+        name: 'AdminPostes',
+        component: Postes,
         beforeEnter: ifAuthenticated,
     },
     {

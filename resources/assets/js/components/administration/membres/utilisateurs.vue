@@ -10,8 +10,11 @@
                     </div>
                     <div class="card-body">
                         <ul class="list-group">
-                            <li class="list-group-item" v-for="m in membres.data" @click="informations(m)">
+                            <li class="list-group-item" v-for="(m, key) in membres.data" @click="informations(m, key)">
+                                <i class="fas fa-grin-tears icon" v-if="m.equipe"></i>
+                                <i class="fas fa-user icon" v-if="!m.equipe"></i>
                                 {{ m.name }}
+
                             </li>
                         </ul>
                     </div>
@@ -43,12 +46,19 @@
                                     <li class="list-group-item"><i class="fas fa-envelope icon"></i> {{ information.email }}</li>
                                     <li class="list-group-item" v-if="information.equipe">
                                         <i class="fas fa-coffee icon"></i>
-                                        {{ information.postes }}
+                                        <span class="badge badge-secondary mr-2" v-for="p in information.poste">
+                                            <i class="fas fa-video" v-if="p.site == 'Animes'"></i>
+                                            <i class="fas fa-book-open" v-if="p.site == 'Light-novel'"></i>
+                                            <i class="fas fa-paint-brush" v-if="p.site == 'Scantrad'"></i>
+                                            <i class="fas fa-gamepad" v-if="p.site == 'Visual-novel'"></i>
+                                            <i class="fas fa-globe" v-if="p.site == 'autre'"></i>
+                                            {{ p.name }}
+                                        </span>
                                     </li>
                                     <li class="list-group-item"><i class="fas fa-grin-tears icon"></i>
                                         {{ information.team }}
                                     </li>
-                                    <li class="list-group-item"><i class="fas fa-calendar icon"></i> {{ information.created_at }}</li>
+                                    <li class="list-group-item"><i class="fas fa-calendar icon"></i> {{ information.created_at | moment( 'Do MMMM YYYY') }}</li>
                                     <li class="list-group-item"><i class="fas fa-user-shield icon"></i>
                                         <span class="badge badge-secondary mr-2" v-for="role in information.role" v-if="information.role">
                                             {{ role }}
@@ -64,20 +74,94 @@
                         </div>
                         <div class="row" v-else>
                             <div class="col-md-12">
-                                <h3 class="titre mb-3">
-                                    Modifier les rôles
-                                </h3>
-                                <form action="" class="row">
+
+                                <form v-on:submit.prevent="formulaire" class="row">
+                                    <div class="col-md-12">
+                                        <h3 class="titre mb-3 border-bottom">
+                                            Gestion des rôles
+                                        </h3>
+                                    </div>
                                     <template v-for="r in membres.roles">
-                                        <div class="col-md-3">
-                                            <label :for="r.id" class="btn btn-info mr-2">{{ r.name }}
-                                                <input type="checkbox" :value="r.id" :id="r.id" class="badgebox" v-model="checkbox">
+                                        <div class="col-lg-3 col-md-6 col-xs-6">
+                                            <label :for="r.id" v-bind:class="[found(information.roleID, r.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2">{{ r.name }}
+                                                <input type="checkbox" :value="r.id" :id="r.id" class="badgebox" v-model="information.roleID">
                                                 <span class="badge">&check;</span>
                                             </label>
                                         </div>
-
                                     </template>
-                                    <button type="button" class="btn btn-success btn-lg btn-block mt-3">Valider</button>
+                                    <div class="col-md-12">
+                                        <h3 class="titre mb-3 border-bottom">
+                                            Gestion de la team
+                                        </h3>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <label for="team" v-bind:class="[information.equipe ? 'btn-success' : 'btn-danger']" class="btn  mr-2"> Fait parti de la team ?
+                                            <input type="checkbox" value="true" id="team" class="badgebox" v-model="information.equipe">
+                                            <span class="badge">&check;</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <h3 class="titre mb-3 border-bottom">
+                                            Gestion des postes
+                                        </h3>
+                                    </div>
+                                    <div class="col-md-4 border-right">
+                                        <h3 class="titre mb-3 border-bottom text-center">
+                                            Animes
+                                        </h3>
+                                        <template v-for="p in membres.postes">
+                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn  mr-2" v-if="p.site == 'Animes'"> {{ p.name }}
+                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
+                                                <span class="badge">&check;</span>
+                                            </label>
+                                        </template>
+                                    </div>
+                                    <div class="col-md-4 border-right">
+                                        <h3 class="titre mb-3 border-bottom text-center">
+                                            Scans
+                                        </h3>
+                                        <template v-for="p in membres.postes">
+                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Scantrad'"> {{ p.name }}
+                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
+                                                <span class="badge">&check;</span>
+                                            </label>
+                                        </template>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h3 class="titre mb-3 border-bottom text-center">
+                                            LN
+                                        </h3>
+                                        <template v-for="p in membres.postes">
+                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Light-novel'"> {{ p.name }}
+                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
+                                                <span class="badge">&check;</span>
+                                            </label>
+                                        </template>
+                                    </div>
+                                    <div class="col-md-4 border-right">
+                                        <h3 class="titre mb-3 border-bottom text-center">
+                                           VN
+                                        </h3>
+                                        <template v-for="p in membres.postes">
+                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Visual-novel'"> {{ p.name }}
+                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
+                                                <span class="badge">&check;</span>
+                                            </label>
+                                        </template>
+                                    </div>
+                                    <div class="col-md-4 border-right">
+                                        <h3 class="titre mb-3 border-bottom text-center">
+                                            Autres
+                                        </h3>
+                                        <template v-for="p in membres.postes">
+                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Autre'"> {{ p.name }}
+                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
+                                                <span class="badge">&check;</span>
+                                            </label>
+                                        </template>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-success btn-lg btn-block mt-3">Valider</button>
                                 </form>
                             </div>
                         </div>
@@ -89,13 +173,16 @@
     </div>
 </template>
 <script>
+    var pluck = require('object.pluck');
     export default {
         data(){
             return {
                data:"liste",
                 information:false,
                 modification:false,
-                checkbox:[],
+                action:'roles',
+                cle:false,
+
             }
 
 
@@ -109,8 +196,11 @@
             }
         },
         watch:{
-            news(){
-
+            membres(){
+                if(this.cle){
+                    this.informations(this.membres.data[this.cle], this.cle)
+                    this.information = this.membres.data[this.cle]
+                }
             }
         },
         methods: {
@@ -123,10 +213,12 @@
                     return false
                 }
             },
-            informations(info){
+            informations(info, key){
+                this.cle = key
                 this.modification = false;
                 this.information = info
-                this.checkbox = this.information.roleID
+
+
             },
             paginate(){
                 const { data } = this
@@ -139,11 +231,20 @@
                     this.modification = true
                 }
             },
+            formulaire: function () {
+                const { action } = this;
+                const { posteID, id, equipe , roleID } = this.information;
+                this.$store.dispatch('FormulaireRequest', { action, posteID, id, equipe, roleID })
+                    .then(() => {
+                        setTimeout(function () { this.paginate() }.bind(this), 1000)
+                        this.modification = false;
+
+                    })
+            }
         },
         mounted(){
             this.$parent.titre = "Gestion des utilisateurs"
             this.paginate()
-
         }
     }
 </script>

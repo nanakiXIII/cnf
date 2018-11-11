@@ -1,8 +1,5 @@
 <template>
-    <div class="col-md-12 mt-5">
-        <pre style="color: #0D47A1;">
-           {{ user }}
-        </pre>
+    <div class="container mt-5">
         <div id="accordion ">
             <div class="card">
                 <div class="card-header" id="headingOne">
@@ -35,7 +32,7 @@
                 </div>
                 <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
                     <div class="card-body">
-                        
+
                     </div>
                 </div>
             </div>
@@ -54,14 +51,15 @@
                                 <h1><i class="fas fa-users"></i></h1>
                                 <small>Utilisateurs</small>
                             </router-link>
+                            <router-link :to="{name:'AdminPostes'}" class="col-md-2 text-center no-decoration">
+                                <h1><i class="fas fa-user-plus"></i></h1>
+                                <small>Postes</small>
+                            </router-link>
                             <div class="col-md-2 text-center">
                                 <h1><i class="fas fa-user-shield"></i></h1>
                                 <small>Permissions</small>
                             </div>
-                            <div class="col-md-2 text-center">
-                                <h1><i class="fas fa-user-plus"></i></h1>
-                                <small>Equipes</small>
-                            </div>
+
                             <div class="col-md-2 text-center">
                                 <h1><i class="fas fa-user-tag"></i></h1>
                                 <small>Rôles</small>

@@ -45,6 +45,9 @@ class User extends Authenticatable
     public function series(){
         return $this->belongsToMany('App\Serie');
     }
+    public function competence(){
+        return $this->belongsToMany('App\postes');
+    }
     public function download(){
         return $this->hasMany('App\Downloads', 'user_id');
     }
