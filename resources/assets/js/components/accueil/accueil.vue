@@ -87,7 +87,7 @@
                 <div class="card card-news mb-3" v-for="n in contenu">
                     <div class="row ">
                         <div class="col-md-3 img-news">
-                            <img :data-src="n.image" class="" alt="Chargement...">
+                            <img :data-src="n.image" class="lazyload" alt="Chargement...">
                         </div>
                         <div class="col-md-9 ">
                             <div class="card-block px-1">
@@ -109,7 +109,7 @@
                                         {{ n.publish_at | moment('Do MMMM YYYY') }}
                                     </div>
                                     <div class="col-6 text-right">
-                                        <router-link :to="{name:'news', params:{slug:n.slug}}">
+                                        <router-link :to="{name:'news', params:{slug:n.slug}}" :title="n.titre">
                                             Lire la suite
                                         </router-link>
                                     </div>
