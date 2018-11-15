@@ -87,7 +87,7 @@
                 <div class="card card-news mb-3" v-for="n in contenu">
                     <div class="row ">
                         <div class="col-md-3 img-news">
-                            <img :src="n.image" class="">
+                            <img :data-src="n.image" class="" alt="Chargement...">
                         </div>
                         <div class="col-md-9 ">
                             <div class="card-block px-1">
