@@ -137,7 +137,7 @@
         mounted(){
             this.$parent.titre = "Ajouter une série"
 
-                fetch('/',{
+                fetch('https://www.animeka.com/animes/detail/naruto.html',{
                     headers:{'Content-Type': 'text/html'},
                     credentials: 'include',
                     mode: 'no-cors',
