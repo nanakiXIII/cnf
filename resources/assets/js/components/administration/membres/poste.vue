@@ -18,37 +18,72 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <ul class="list-group col-xs-6 col-lg-4">
-                                <li class="list-group-item list-group-item-warning text-center"><b>Animes</b></li>
-                                <li class="list-group-item cursor" v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Animes'">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
-                            <ul class="list-group col-xs-6 col-lg-4">
-                                <li class="list-group-item list-group-item-warning text-center"><b>Scantrad</b></li>
-                                <li class="list-group-item cursor" v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Scantrad'">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
-                            <ul class="list-group col-xs-6 col-lg-4">
-                                <li class="list-group-item list-group-item-warning text-center"><b>LN</b></li>
-                                <li class="list-group-item cursor" v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Light-novel'">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
-                            <ul class="list-group col-xs-6 col-lg-4">
-                                <li class="list-group-item list-group-item-warning text-center"><b>VN</b></li>
-                                <li class="list-group-item cursor" v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Visual-novel'">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
-                            <ul class="list-group col-xs-6 col-lg-4">
-                                <li class="list-group-item list-group-item-warning text-center"><b>Autres</b></li>
-                                <li class="list-group-item cursor" v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Autre'">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
+                        <div class="row col-list">
+                            <div class="col-md-4 t3">
+                                <div class="col-head text-center">
+                                    <span class="fas fa-video" aria-hidden="true"></span>
+                                    <h2>Animes</h2>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Animes'" class="text-center">
+                                        <p class="option">
+                                            {{ m.name }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 t3">
+                                <div class="col-head text-center">
+                                    <span class="fas fa-paint-brush" aria-hidden="true"></span>
+                                    <h2>Scantrad</h2>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Scantrad'" class="text-center">
+                                        <p class="option">
+                                            {{ m.name }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 t3">
+                                <div class="col-head text-center">
+                                    <span class="fas fa-book-open" aria-hidden="true"></span>
+                                    <h2>Light Novel</h2>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Light-novel'" class="text-center">
+                                        <p class="option">
+                                            {{ m.name }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 t3">
+                                <div class="col-head text-center">
+                                    <span class="fas fa-gamepad" aria-hidden="true"></span>
+                                    <h2>Visual Novel</h2>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Visual-novel'" class="text-center">
+                                        <p class="option">
+                                            {{ m.name }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="col-md-4 t3">
+                                <div class="col-head text-center">
+                                    <span class="fas fa-globe" aria-hidden="true"></span>
+                                    <h2>Autres</h2>
+                                </div>
+                                <ul class="list-unstyled">
+                                    <li v-for="m in membres.postes" @click="informations(m)" v-if="m.site == 'Autre'" class="text-center">
+                                        <p class="option">
+                                            {{ m.name }}
+                                        </p>
+                                    </li>
+                                </ul>
+                            </div>
                         </div>
                     </div>
                 </div>

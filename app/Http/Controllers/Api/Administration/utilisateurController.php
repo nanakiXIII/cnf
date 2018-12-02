@@ -8,6 +8,7 @@ use App\postes;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
 
@@ -19,6 +20,7 @@ class utilisateurController extends Controller {
         $us = [];
         $rolesAll = Role::all();
         $Postes = postes::all();
+        $Permission = Permission::all();
         foreach($user as $u){
             $tab = [];
             foreach ($u->roles()->get() as $roles){
@@ -35,8 +37,16 @@ class utilisateurController extends Controller {
             $u->roleID = $u->roles()->pluck('id');
             $us['data'][] = $u;
         }
+        $idArray = 0;
+        foreach ($rolesAll as $r){
+            $us['roles'][$idArray] = $r;
+            $us['roles'][$idArray]['permissions'] = $r->permissions()->pluck('name');
+            $us['roles'][$idArray]['permissionsID'] = $r->permissions()->pluck('id');
+            $idArray++;
+        }
         $us['postes'] = $Postes;
-        $us['roles'] = $rolesAll;
+
+        $us['perm'] = $Permission;
         return $us;
 
     }
@@ -73,6 +83,19 @@ class utilisateurController extends Controller {
             $poste->save();
              return $poste;
         }
+        elseif ($request->action == "permissionMod"){
+
+            $request->validate(
+                [
+                    'name' => 'required|string',
+                ]
+            );
+
+            $permisison = Permission::findOrFail($request->id);
+            $permisison->name = $request->name;
+            $permisison->save();
+            return $permisison;
+        }
         elseif ($request->action == "postes"){
 
             $request->validate(
@@ -85,6 +108,41 @@ class utilisateurController extends Controller {
             $poste = postes::create(['name' => $request->name, 'site' => $request->site]);
             return $poste;
         }
+        elseif ($request->action == "permission"){
+            $request->validate(
+                [
+                    'name' => 'required|string',
+                ]
+            );
+
+            $permission = Permission::create(['name' => $request->name, 'guard_name' => 'web']);
+            return $permission;
+        }
+        elseif ($request->action == "Aroles"){
+
+            $request->validate(
+                [
+                    'name' => 'required|string',
+                ]
+            );
+
+            $role = Role::create(['name' => $request->name, 'guard_name' => 'web']);
+            $role->save();
+            return ['id'=> $role->id, 'name'=> $role->name, 'permissionsID'=> []];
+        }
+        elseif ($request->action == "rolesMod"){
+
+            $request->validate(
+                [
+                    'name' => 'required|string',
+                ]
+            );
+
+            $role = Role::find($request->id);
+            $role->permissions()->sync($request->permissions);
+            $role->save();
+            return ['id'=> $role->id, 'name'=> $role->name, 'permissionsID'=> $request->permissions, 'permissions' => $role->permissions()->pluck('name')];
+        }
         elseif ($request->action == "delete"){
             $request->validate(
                 [
@@ -93,6 +151,22 @@ class utilisateurController extends Controller {
             );
             $poste = postes::findOrFail($request->id);
             $poste->delete();
+            return [true];
+        }
+        elseif ($request->action == "permissionDelete"){
+            $request->validate(
+                [
+                    'id' => 'required|integer',
+                ]
+            );
+            $permisison = Permission::findOrFail($request->id);
+            $permisison->delete();
+            return [true];
+        }
+        elseif ($request->action == "rolesDelete"){
+            $role = Role::find($request->id);
+            $role->permissions()->detach();
+            $role->delete();
             return [true];
         }
 

@@ -48,10 +48,31 @@ const actions = {
                     'postes': payload.posteID
                 }
             }
+            if(payload.action=='Aroles'){
+                data = {
+                    'action':payload.action,
+                    'name':payload.name,
+                }
+            }
+            if(payload.action=='rolesMod'){
+                data = {
+                    'id': payload.id,
+                    'action':payload.action,
+                    'permissions':payload.permissionsID,
+                    'name':payload.name,
+                }
+            }
             if(payload.action=='postesMod'){
                 data = {
                     'action':payload.action,
                     'site':payload.site,
+                    'name':payload.name,
+                    'id': payload.id,
+                }
+            }
+            if(payload.action=='permissionMod'){
+                data = {
+                    'action':payload.action,
                     'name':payload.name,
                     'id': payload.id,
                 }
@@ -63,7 +84,13 @@ const actions = {
                     'name':payload.name,
                 }
             }
-            if(payload.action=='delete'){
+            if(payload.action=='permission'){
+                data = {
+                    'action':payload.action,
+                    'name':payload.name,
+                }
+            }
+            if(payload.action=='permissionDelete' || payload.action=='rolesDelete' || payload.action=='delete'){
                 data = {
                     'action':payload.action,
                     'id':payload.id,
@@ -107,8 +134,7 @@ const mutations = {
 
         let errors={};
 
-        state.errors=['Identifiant ou mot passe incorrect'];
-
+        state.errors=err.message
 
         state.status = 'error';
         state.hasLoadedOnce = true;

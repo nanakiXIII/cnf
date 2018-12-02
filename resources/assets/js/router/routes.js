@@ -51,6 +51,10 @@ import userParametre from './../components/compte/component/parametre'
 import Administration from './../components/administration/dashboard'
 import Utilisateurs from './../components/administration/membres/utilisateurs'
 import Postes from './../components/administration/membres/poste'
+import Permission from './../components/administration/membres/permission'
+import Role from './../components/administration/membres/roles'
+
+import SerieAjouter from './../components/administration/series/ajouter'
 
 import AdminNews from './../components/administration/news/news'
 
@@ -172,9 +176,27 @@ const routes = [
         beforeEnter: ifAuthenticated,
     },
     {
+        path: '/administration/permissions',
+        name: 'AdminPermissions',
+        component: Permission,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/roles',
+        name: 'AdminRoles',
+        component: Role,
+        beforeEnter: ifAuthenticated,
+    },
+    {
         path: '/administration/news',
         name: 'AdminNews',
         component: AdminNews,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/serie/add',
+        name: 'AdminSerieADD',
+        component: SerieAjouter,
         beforeEnter: ifAuthenticated,
     },
 

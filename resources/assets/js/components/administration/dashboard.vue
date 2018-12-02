@@ -55,20 +55,77 @@
                                 <h1><i class="fas fa-user-plus"></i></h1>
                                 <small>Postes</small>
                             </router-link>
-                            <div class="col-md-2 text-center">
+                            <router-link :to="{name:'AdminPermissions'}" class="col-md-2 text-center no-decoration">
                                 <h1><i class="fas fa-user-shield"></i></h1>
                                 <small>Permissions</small>
-                            </div>
-
-                            <div class="col-md-2 text-center">
+                            </router-link>
+                            <router-link :to="{name:'AdminRoles'}" class="col-md-2 text-center no-decoration">
                                 <h1><i class="fas fa-user-tag"></i></h1>
                                 <small>Rôles</small>
-                            </div>
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-warning text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-folder"></i> Gestion des séries
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <router-link :to="{name:'AdminSerieADD'}" class="col-md-6 text-center text-success no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-folder-plus"></i></h1>
+                                <small>Ajouter une Série</small>
+                            </router-link>
+                            <router-link :to="{name:'AdminPostes'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-folder-open"></i></h1>
+                                <small>Liste des Série</small>
+                            </router-link>
+                            <router-link :to="{name:'AdminPermissions'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-tags"></i></h1>
+                                <small>Gestion des Genres</small>
+                            </router-link>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users"></i> Gestion des utilisateurs
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <router-link :to="{name:'utilisateurs'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-users"></i></h1>
+                                <small>Utilisateurs</small>
+                            </router-link>
+                            <router-link :to="{name:'AdminPostes'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-user-plus"></i></h1>
+                                <small>Postes</small>
+                            </router-link>
+                            <router-link :to="{name:'AdminPermissions'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-user-shield"></i></h1>
+                                <small>Permissions</small>
+                            </router-link>
+                            <router-link :to="{name:'AdminRoles'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                                <h1 class="mb-0"><i class="fas fa-user-tag"></i></h1>
+                                <small>Rôles</small>
+                            </router-link>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </div>
 </template>
 <script>
