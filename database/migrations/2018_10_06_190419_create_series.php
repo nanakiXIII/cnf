@@ -18,7 +18,7 @@ class CreateSeries extends Migration
             $table->string('titre');
             $table->string('titre_original');
             $table->string('titre_alternatif');
-            $table->year('annee');
+            $table->string('annee');
             $table->string('studio');
             $table->string('auteur');
             $table->integer('episode')->unsigned()->default(0);

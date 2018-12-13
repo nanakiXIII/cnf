@@ -7,13 +7,243 @@
                         <div class="row">
                             <div class="col-md-10">
                                 <h5 class="mb-0">
-                                    <i class="fas fa-folder-plus"></i> Ajouter une série
+                                    <i class="fas fa-folder-plus"></i> Ajouter une série {{ data }}
                                 </h5>
                             </div>
                         </div>
                     </div>
                     <div class="card-body">
-                        {{ someData }}
+                        <template v-if="data == 'Ajouter'">
+                            <ul class="chec-radio" v-if="!choix">
+                                <li class="pz">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="choix" class="pro-chx" value="Animeka" v-model="choix">
+                                        <div class="clab">Animeka</div>
+                                    </label>
+                                </li>
+                                <li class="pz">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="choix" class="pro-chx" value="Nautiljon" v-model="choix">
+                                        <div class="clab">Nautiljon</div>
+                                    </label>
+                                </li>
+                                <li class="pz">
+                                    <label class="radio-inline">
+                                        <input type="radio" name="choix" class="pro-chx" value="Manuel" v-model="choix">
+                                        <div class="clab">Manuellement</div>
+                                    </label>
+                                </li>
+                            </ul>
+                            <form v-if="choix == 'Animeka' || choix == 'Nautiljon'" v-on:submit.prevent="formulaire">
+                                <div class="alert alert-danger" role="alert" v-if="erreurs">
+                                    Une erreur est survenue<br>
+                                    "{{ erreur }}"
+                                </div>
+                                <div class="form-group" >
+                                    <label for="url">{{ choix }}</label>
+                                    <input type="text" class="form-control" id="url" required :placeholder="placeholder" v-model="url">
+                                </div>
+                                <button type="button" @click="choix = ''; data = 'Ajouter'" class="btn btn-warning">Annuler</button>
+                                <button type="submit" class="btn btn-success" v-if="!search">Recherche</button>
+                                <span class="btn btn-outline-success" v-if="search">
+                                Recherche en cours
+                                <i class="fas fa-sync-alt rotation"></i>
+                            </span>
+                            </form>
+                        </template>
+
+                        <form v-if="data == 'formulaire'" v-on:submit.prevent="formulaire">
+                            <div class="alert alert-danger" role="alert" v-if="erreurs">
+                                Une erreur est survenue<br>
+                                "{{ erreur }}"
+                            </div>
+                            <pre v-if="debug">
+                                {{ response }}
+                            </pre>
+                            <div class="row border mb-1 pt-1">
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="titre">Titre</label>
+                                    <input type="text" class="form-control" id="titre" v-model.trim="response.titre" required>
+                                </div>
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="titre_original">Titre Original</label>
+                                    <input type="text" class="form-control" id="titre_original" v-model.trim="information.titre_original" required>
+                                </div>
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="titre_alternatif">Titre Alternatif</label>
+                                    <input type="text" class="form-control" id="titre_alternatif" v-model.trim="information.titre_alternatif" required>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 pt-1">
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="studio">Studio</label>
+                                    <input type="text" class="form-control" id="studio" v-model.trim="information.studio" required>
+                                </div>
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="auteur">Auteur</label>
+                                    <input type="text" class="form-control" id="auteur" v-model.trim="information.auteur" required>
+                                </div>
+                                <div class="form-group col-md-6" v-if="information">
+                                    <label for="annee">Année de production</label>
+                                    <input type="text" class="form-control" id="annee" v-model.trim="information.annee" required>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 ">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="synopsis">Synopsis</label>
+                                        <textarea class="form-control" id="synopsis" v-model="information.synopsis" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 ">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="staff">Staff</label>
+                                        <textarea class="form-control" id="staff" v-model="information.staff" rows="3" required></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 ">
+                                <div class="col-md-12">
+                                    Etat de la série
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="etat" id="encours" value="0" v-model="information.etat" checked>
+                                        <label class="form-check-label" for="encours">
+                                            En cours
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="etat" id="termine" value="1" v-model="information.etat">
+                                        <label class="form-check-label" for="termine">
+                                            Terminé
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="etat" id="abandonne" value="2" v-model="information.etat">
+                                        <label class="form-check-label" for="abandonne">
+                                            Abandonné
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="etat" id="licence" value="3" v-model="information.etat">
+                                        <label class="form-check-label" for="licence">
+                                            Licencié
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 pt-1">
+                                <div class="form-group col-md-12" v-if="information">
+                                    <label for="type">Type de série</label>
+                                    <select type="select" class="form-control" id="type" v-model="information.type" required>
+                                        <option value="0" disabled selected>Selectionnez une option</option>
+                                        <option value="Animes">Animés</option>
+                                        <option value="Scantrad">Scantrad</option>
+                                        <option value="Light-novel">Light Novel</option>
+                                        <option value="Visual-novel">Visual Novel</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Animes'">
+                                    <label for="episode">Episodes</label>
+                                    <input type="number" class="form-control" id="episode" v-model="information.episode" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Animes'">
+                                    <label for="oav">OAVS</label>
+                                    <input type="number" class="form-control" id="oav" v-model="information.oav" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Animes'">
+                                    <label for="films">Films</label>
+                                    <input type="number" class="form-control" id="films" v-model="information.films" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Animes'">
+                                    <label for="bonus">Bonus</label>
+                                    <input type="number" class="form-control" id="bonus" v-model="information.bonus" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Scantrad'">
+                                    <label for="scan">Tomes</label>
+                                    <input type="number" class="form-control" id="scan" v-model="information.scan" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Scantrad'">
+                                    <label for="chapitre">Chapitres</label>
+                                    <input type="number" class="form-control" id="chapitre" v-model="information.episode" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Light-novel'">
+                                    <label for="ln">Tomes</label>
+                                    <input type="number" class="form-control" id="ln" v-model="information.ln" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Light-novel'">
+                                    <label for="lnChapitre">Chapitres</label>
+                                    <input type="number" class="form-control" id="lnChapitre" v-model="information.episode" min="0">
+                                </div>
+                                <div class="form-group col-md-6" v-if="information.type == 'Visual-novel'">
+                                    <label for="vn">Visual Novel</label>
+                                    <input type="number" class="form-control" id="vn" v-model="information.vn" min="0">
+                                </div>
+                            </div>
+                            <div class="row border mb-1 " v-if="information.genres">
+                                <div class="col-md-12 p-2 text-center">
+                                   {{ information.genres }}
+                                </div>
+                            </div>
+                            <div class="row border pt-3 mb-1">
+                                <div class="col-md-12">
+                                    Genres
+                                </div>
+                                <template v-for="g in genres">
+                                    <div class="col-lg-3 col-md-4 col-xs-4" v-if="information.genre">
+                                        <label :for="g.id" v-bind:class="[found(information.genre, g.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2">{{ g.name }}
+                                            <input type="checkbox" :value="g.id" :id="g.id" class="badgebox" v-model="information.genre">
+                                            <span class="badge">&check;</span>
+                                        </label>
+                                    </div>
+                                </template>
+                            </div>
+                            <div class="row border pt-3 pb-3 mb-1">
+                                <div class="col-md-12">
+                                    Choix de l'image
+                                </div>
+                                <div class="col-md-6 text-center" v-if="choix != 'Manuel'">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="imageChoix" id="manuel" value="manuel" v-model="information.imageChoix">
+                                        <label class="form-check-label" for="manuel">
+                                            Manuellement
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center" v-if="choix != 'Manuel'">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="imageChoix" id="auto" value="auto" v-model="information.imageChoix">
+                                        <label class="form-check-label" for="auto">
+                                            Automatiquement
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-3" v-if="information.imageChoix == 'manuel'">
+                                    <div class="custom-file">
+                                        <input type="file" class="custom-file-input" id="image">
+                                        <label class="custom-file-label" for="image">Selectionner une image</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 mt-3" v-if="information.imageChoix == 'auto'">
+                                    <img v-for="i in information.image" :src="i.url" alt="" width="100%" class="col-md-4 mb-2">
+                                </div>
+                            </div>
+                            <div class="row mt-4">
+                                <div class="col-md-6 text-left">
+                                    <button type="button" @click="choix = ''; data = 'Ajouter'" class="btn btn-warning">Annuler</button>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <button type="button" @click="choix = ''; data = 'Ajouter'" class="btn btn-success">Enregistrer</button>
+                                </div>
+                            </div>
+
+
+                        </form>
                     </div>
                 </div>
             </div>
@@ -21,49 +251,71 @@
     </div>
 </template>
 <script>
-    let cheerio = require('cheerio');
     export default {
         data(){
             return {
-                data:"liste",
-                information:false,
-                action:'postes',
-                user_id:'',
-                modalAction:'',
-                sauvegarde:false,
-                erreurs: false,
-                someData: null
+                action:"",
+                data:"Ajouter",
+                choix:"",
+                url:"",
+                sauvegarde:true,
+                search:false,
+                erreurs:"",
+                information:{},
+                debug:false
             }
 
 
         },
         computed: {
-            retour(){
-                return this.$store.getters.getReponse
-            },
-
-            membres(){
-                return this.$store.getters.getMembres;
-            },
-            user(){
-                return this.$store.getters.getProfile
+            serie(){
+                return this.$store.getters.getSeries
             },
             erreur(){
-                return this.$store.getters.getErrorM
-            }
+                return this.$store.getters.getErrorSerie
+            },
+            response(){
+                return this.$store.getters.getReponseSerie
+            },
+
         },
         watch:{
-            retour(){
-                if (this.action == 'postes'){
-                    this.informations(this.retour)
-                    this.membres.postes.push(this.retour)
+            choix(){
+                if(this.choix == 'Animeka'){
+                    this.placeholder = "https://www.animeka.com/animes/detail/..."
+                    this.action = "Information"
+                }
+                else if(this.choix == 'Nautiljon'){
+                    this.placeholder = "https://www.nautiljon.com/..."
+                    this.action = "Information"
+                }
+                else if(this.choix == 'Manuel'){
+                    this.data = 'formulaire'
+                    this.information.etat = 0
+                    this.information.imageChoix = 'manuel'
+                    this.information.type = '0'
+                    this.information.genre = []
+
                 }
             },
             erreur(){
                 this.erreurs = this.erreur
+                this.search = false
+                if (this.action == "Information"){
+                    this.data = "ajouter"
+                }
             },
-            information(){
-                this.erreurs = false
+            response(){
+                if (this.action == "Information"){
+                    this.information = this.response
+                    this.search = false;
+                    this.data = 'formulaire'
+                    this.genres =  this.response.newGenre
+
+                }
+            },
+            serie(){
+                this.genres = this.serie;
             }
         },
         methods: {
@@ -76,55 +328,26 @@
                     return false
                 }
             },
-            informations(info){
-                this.sauvegarde = false
-                this.information = info
-                this.modalAction = "modifier"
-                this.action = "postesMod"
-                $('#modal-vue').modal('show');
-            },
             paginate(){
                 const { data } = this
-                this.$store.dispatch('MembresRequest', {data});
-            },
-            nouveau(){
-                this.information = {}
-                this.information.name = null
-                this.information.site = "Animes"
-                this.information.id = null
-                this.modalAction = "nouveau"
-                this.action = "postes"
-                $('#modal-vue').modal('show');
-            },
-            condition(){
-                this.modalAction = 'supprimer'
-            },
-            supprimer(etat){
-                if(etat){
-                    this.action = "delete"
-                    this.formulaire()
-
-                }else{
-                    this.modalAction = 'modifier'
-                }
-
+                this.$store.dispatch('SeriesRequest', {data});
             },
             formulaire() {
-                const { action } = this;
-                const { id, site, name} = this.information
-                console.log(id, action)
+                this.data = "Ajouter"
+                this.erreurs = "";
+                const { action, url, choix } = this;
+                const info = this.information
+                if (action == "Information"){this.search = true}
                 this.sauvegarde = true
-                this.$store.dispatch('FormulaireRequest', { action, id, site, name })
+                this.$store.dispatch('FormulaireSerieRequest', { action, url, choix, info})
                     .then(() => {
                         if (!this.erreurs){
-                            if (action == 'delete'){
-                                this.information.name = null
-                                this.information.site = null
-                                this.information.id = null
-                                $('#modal-vue').modal('hide');
+                            if (this.action == "Information"){
+
                             }
+
                         }else{
-                            this.action = "modifier"
+
                         }
                         setTimeout(function () { this.sauvegarde = false }.bind(this), 1000)
 
@@ -136,19 +359,6 @@
         },
         mounted(){
             this.$parent.titre = "Ajouter une série"
-
-                fetch('https://www.animeka.com/animes/detail/naruto.html',{
-                    headers:{'Content-Type': 'text/html'},
-                    credentials: 'include',
-                    mode: 'no-cors',
-                }).then(function(response) {
-                    console.log(response)
-                    return response.text()
-
-                }).then(function(body) {
-                    console.log(body)
-                })
-
             this.paginate()
         }
     }

@@ -60,4 +60,6 @@ Route::get('/news/{slug}', 'Api\postController@show');
 Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix' => 'administration'], function (){
     Route::get('/membres', 'Api\Administration\utilisateurController@index');
     Route::post('/membres', 'Api\Administration\utilisateurController@update');
+    Route::get('/Series', 'Api\Administration\serieController@index');
+    Route::post('/Series', 'Api\Administration\serieController@update');
 });

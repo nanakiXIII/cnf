@@ -9,6 +9,7 @@ import serie from './modules/serie'
 import compte from './modules/compte'
 
 import AdminMembre from './modules/administration/membres'
+import AdminSeries from './modules/administration/serie'
 
 Vue.use(Vuex);
 
@@ -21,5 +22,6 @@ export const store = new Vuex.Store({
         compte,
         news,
         AdminMembre,
+        AdminSeries,
     }
 });
