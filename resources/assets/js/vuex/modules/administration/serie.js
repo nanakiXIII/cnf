@@ -44,58 +44,36 @@ const actions = {
                     'action':payload.action,
                     'url':payload.url,
                     'choix':payload.choix,
-                    'para': payload.info
                 }
             }
-            if(payload.action=='Aroles'){
-                data = {
-                    'action':payload.action,
-                    'name':payload.name,
-                }
+            if(payload.action == 'newSerie'){
+                data = new FormData();
+                data.append('action', payload.action)
+                data.append('titre', payload.titre)
+                data.append('titre_alternatif', payload.titre_alternatif)
+                data.append('titre_original', payload.titre_original)
+                data.append('studio', payload.studio)
+                data.append('auteur', payload.auteur)
+                data.append('annee', payload.annee)
+                data.append('synopsis', payload.synopsis)
+                data.append('staff', payload.staff)
+                data.append('etat', payload.etat)
+                data.append('type', payload.type)
+                data.append('episode', payload.episode)
+                data.append('oav', payload.oav)
+                data.append('film', payload.films)
+                data.append('bonus', payload.bonus)
+                data.append('ln', payload.ln)
+                data.append('scan', payload.scan)
+                data.append('vn', payload.vn)
+                data.append('genre', payload.genre)
+                data.append('imageChoix', payload.imageChoix)
+                data.append('imagecheck', payload.imagecheck)
+                data.append('file', payload.file)
             }
-            if(payload.action=='rolesMod'){
-                data = {
-                    'id': payload.id,
-                    'action':payload.action,
-                    'permissions':payload.permissionsID,
-                    'name':payload.name,
-                }
-            }
-            if(payload.action=='postesMod'){
-                data = {
-                    'action':payload.action,
-                    'site':payload.site,
-                    'name':payload.name,
-                    'id': payload.id,
-                }
-            }
-            if(payload.action=='permissionMod'){
-                data = {
-                    'action':payload.action,
-                    'name':payload.name,
-                    'id': payload.id,
-                }
-            }
-            if(payload.action=='postes'){
-                data = {
-                    'action':payload.action,
-                    'site':payload.site,
-                    'name':payload.name,
-                }
-            }
-            if(payload.action=='permission'){
-                data = {
-                    'action':payload.action,
-                    'name':payload.name,
-                }
-            }
-            if(payload.action=='permissionDelete' || payload.action=='rolesDelete' || payload.action=='delete'){
-                data = {
-                    'action':payload.action,
-                    'id':payload.id,
-                }
-            }
-            axios.post(url, data)
+
+            var config =  { headers: {'Content-Type': 'application/json;charset=utf-8;multipart/form-data; boundary=' + Math.random().toString().substr(2)}}
+            axios.post(url, data,config)
                 .then((resp) => {
                     commit('FormulaireSeriesuccess', resp.data);
                 })

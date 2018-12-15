@@ -7,7 +7,7 @@
                         <div class="row">
                             <div class="col-md-10">
                                 <h5 class="mb-0">
-                                    <i class="fas fa-folder-plus"></i> Ajouter une série {{ data }}
+                                    <i class="fas fa-folder-plus"></i> Ajouter une série
                                 </h5>
                             </div>
                         </div>
@@ -52,18 +52,18 @@
                             </form>
                         </template>
 
-                        <form v-if="data == 'formulaire'" v-on:submit.prevent="formulaire">
+                        <form v-if="data == 'formulaire'" v-on:submit.prevent="formulaire" enctype="multipart/form-data">
                             <div class="alert alert-danger" role="alert" v-if="erreurs">
                                 Une erreur est survenue<br>
                                 "{{ erreur }}"
                             </div>
                             <pre v-if="debug">
-                                {{ response }}
+                                {{ information }}
                             </pre>
                             <div class="row border mb-1 pt-1">
                                 <div class="form-group col-md-6" v-if="information">
                                     <label for="titre">Titre</label>
-                                    <input type="text" class="form-control" id="titre" v-model.trim="response.titre" required>
+                                    <input type="text" class="form-control" id="titre" v-model.trim="information.titre" required>
                                 </div>
                                 <div class="form-group col-md-6" v-if="information">
                                     <label for="titre_original">Titre Original</label>
@@ -225,12 +225,15 @@
                                 </div>
                                 <div class="col-md-12 mt-3" v-if="information.imageChoix == 'manuel'">
                                     <div class="custom-file">
-                                        <input type="file" class="custom-file-input" id="image">
-                                        <label class="custom-file-label" for="image">Selectionner une image</label>
+                                        <input type="file" class="custom-file-input" id="image" ref="file" accept="image/*" v-on:change="handleFileUpload()">
+                                        <label class="custom-file-label" for="image" >{{imageTitre}}</label>
                                     </div>
                                 </div>
                                 <div class="col-md-12 mt-3" v-if="information.imageChoix == 'auto'">
-                                    <img v-for="i in information.image" :src="i.url" alt="" width="100%" class="col-md-4 mb-2">
+                                    <label v-for="i in information.image" class="col-md-4 mb-2">
+                                        <input type="radio" name="image" :value="i.url" class="radio-img" v-model="information.imagecheck">
+                                        <img :src="i.url" width="100%" >
+                                    </label>
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -238,11 +241,9 @@
                                     <button type="button" @click="choix = ''; data = 'Ajouter'" class="btn btn-warning">Annuler</button>
                                 </div>
                                 <div class="col-md-6 text-right">
-                                    <button type="button" @click="choix = ''; data = 'Ajouter'" class="btn btn-success">Enregistrer</button>
+                                    <button type="submit" @click="action = 'newSerie'" class="btn btn-success">Enregistrer</button>
                                 </div>
                             </div>
-
-
                         </form>
                     </div>
                 </div>
@@ -262,7 +263,9 @@
                 search:false,
                 erreurs:"",
                 information:{},
-                debug:false
+                debug:false,
+                imageTitre: 'Selectionner une image',
+                file:{}
             }
 
 
@@ -295,14 +298,14 @@
                     this.information.imageChoix = 'manuel'
                     this.information.type = '0'
                     this.information.genre = []
-
                 }
+
             },
             erreur(){
                 this.erreurs = this.erreur
                 this.search = false
                 if (this.action == "Information"){
-                    this.data = "ajouter"
+                    this.data = "Ajouter"
                 }
             },
             response(){
@@ -332,19 +335,24 @@
                 const { data } = this
                 this.$store.dispatch('SeriesRequest', {data});
             },
+            handleFileUpload(){
+                const fileInput = document.querySelector( '#image' );
+                this.file = fileInput.files[0];
+                this.imageTitre = this.$refs.file.files[0].name
+                console.log(this.file)
+            },
             formulaire() {
-                this.data = "Ajouter"
+
+                //this.data = "Ajouter"
                 this.erreurs = "";
-                const { action, url, choix } = this;
-                const info = this.information
+                const { action, url, choix, file } = this;
+                const { titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck  } = this.information
                 if (action == "Information"){this.search = true}
                 this.sauvegarde = true
-                this.$store.dispatch('FormulaireSerieRequest', { action, url, choix, info})
+                this.$store.dispatch('FormulaireSerieRequest', { action, url, choix, titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck, file})
                     .then(() => {
                         if (!this.erreurs){
-                            if (this.action == "Information"){
 
-                            }
 
                         }else{
 
