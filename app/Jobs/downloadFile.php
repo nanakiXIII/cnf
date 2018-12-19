@@ -11,7 +11,6 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use NotificationChannels\Discord\Discord;
 
 class downloadFile implements ShouldQueue
 {
@@ -49,15 +48,8 @@ class downloadFile implements ShouldQueue
      */
     public function handle()
     {
-        $url ="http://cnfddl.mass-download.net/";
-        $episode = Episodes::find($this->episodes);
-
-            $serie = Serie::find($episode->serie_id);
-            $saison = Saisons::find($episode->saisons_id);
-
-            $discord = 253979896303321089;
-            $array = ["content" => 'oui'];
-            $channel = app(Discord::class)->send($discord, $array );
-
+        $discord = 253979896303321089;
+        $array = ["content"=>"coucou je suis la"];
+        $channel = app(Discord::class)->send($discord, $array );
     }
 }
