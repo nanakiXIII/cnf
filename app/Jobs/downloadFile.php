@@ -49,8 +49,23 @@ class downloadFile implements ShouldQueue
      */
     public function handle()
     {
-        $discord = 253979896303321089;
-        $array = ["content"=>"coucou je suis la"];
-        $channel = app(Discord::class)->send($discord, $array );
+        $url ="http://cnfddl.mass-download.net/";
+        $episode = Episodes::find($this->episodes);
+        if ($episode){
+            $serie = Serie::find($episode->serie_id);
+            $saison = Saisons::find($episode->saisons_id);
+            //$extension = pathinfo($episode[$this->qualiter], PATHINFO_EXTENSION);
+            //$basename = pathinfo($episode[$this->qualiter], PATHINFO_BASENAME);
+            //$filename = pathinfo($episode[$this->qualiter], PATHINFO_FILENAME);
+            //$file = file_get_contents($url.$episode[$this->qualiter]);
+            //$save = file_put_contents(storage_path('app/public/'.$episode->id.'.'.$extension), $file);
+            $discord = 253979896303321089;
+            $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
+                'description' => 'Téléchargement terminé',
+                'author' =>['name' => $this->user->name,
+                    'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
+                'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
+            $channel = app(Discord::class)->send($discord, $array );
+        }
     }
 }
