@@ -100,7 +100,7 @@ class FichierController extends Controller {
                                             'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
                                 'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
             $channel = app(Discord::class)->send($discord, $array );
-            //downloadFile::dispatch($episode, $request->streaming, $request->user());
+            downloadFile::dispatch($episode, $request->streaming, $request->user());
         }
         else{
             $reponse->data = false;
