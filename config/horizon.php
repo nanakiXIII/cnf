@@ -107,6 +107,7 @@ return [
                 'balance' => 'simple',
                 'processes' => 10,
                 'tries' => 3,
+                'timeout' => 3600,
             ],
         ],
 
@@ -115,8 +116,9 @@ return [
                 'connection' => 'redis',
                 'queue' => ['default'],
                 'balance' => 'simple',
-                'processes' => 3,
+                'processes' => 10,
                 'tries' => 3,
+                'timeout' => 3600,
             ],
         ],
     ],
