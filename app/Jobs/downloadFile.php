@@ -51,6 +51,8 @@ class downloadFile implements ShouldQueue
         $url ="http://cnfddl.mass-download.net/";
         $episode = Episodes::find($this->episodes);
         if ($episode){
+            $serie = Serie::find($episode->serie_id);
+            $saison = Saisons::find($episode->saisons_id);
             
             $discord = 253979896303321089;
             $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
