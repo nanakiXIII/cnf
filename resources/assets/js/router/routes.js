@@ -55,6 +55,8 @@ import Permission from './../components/administration/membres/permission'
 import Role from './../components/administration/membres/roles'
 
 import SerieAjouter from './../components/administration/series/ajouter'
+import ListeSerieAdmin from './../components/administration/series/liste'
+import FichierAdmin from './../components/administration/series/fichier'
 
 import AdminNews from './../components/administration/news/news'
 
@@ -194,9 +196,21 @@ const routes = [
         beforeEnter: ifAuthenticated,
     },
     {
-        path: '/administration/serie/add',
+        path: '/administration/series/add',
         name: 'AdminSerieADD',
         component: SerieAjouter,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/series/',
+        name: 'AdminSerie',
+        component: ListeSerieAdmin,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/series/:type/:slug',
+        name: 'AdminSerieFichier',
+        component: FichierAdmin,
         beforeEnter: ifAuthenticated,
     },
 

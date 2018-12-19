@@ -3,12 +3,15 @@ import Vue from 'vue'
 const state = {
     status: '',
     Series: {},
+    info:{},
     Formulaire: {},
-    errors: {}
+    errors: {},
+    image:false,
 }
 
 const getters = {
     getSeries: state => state.Series,
+    getSeriesInfo: state => state.info,
     isSeriesLoaded: state => !!state.Series.name,
     getReponseSerie: state => state.Formulaire,
     getErrorSerie: state => state.errors,
@@ -17,11 +20,15 @@ const getters = {
 const actions = {
     SeriesRequest: ({commit, dispatch}, payload) => {
         commit('seriesRequest')
-        if(payload.data == 'liste'){
+        if(payload.data == 'Ajouter'){
             var url = '/api/administration/Series'
         }
-        else{
-            var url = '/api/administration/Series?data='+payload.data
+        else if(payload.data == 'image'){
+            var url = '/api/administration/Series/image/'+encodeURI(payload.option)
+            state.image = true
+        }
+        else if(payload.data == "detail"){
+            var url = '/api/administration/Series/detail/'+payload.type+'/'+payload.slug
         }
         axios.get(url)
             .then((resp) => {
@@ -46,7 +53,45 @@ const actions = {
                     'choix':payload.choix,
                 }
             }
-            if(payload.action == 'newSerie'){
+            if(payload.action=='nouvelleSaison'){
+                url = '/api/administration/saison'
+                data = {
+                    'action':payload.action,
+                    'name':payload.name,
+                    'numero':payload.numero,
+                    'idSerie':payload.idSerie,
+                    'type':payload.type,
+                    'nosaison':payload.nosaison,
+                    'publication':payload.publication,
+                }
+            }
+            if(payload.action=='modifierSaison'){
+                url = '/api/administration/saison'
+                data = {
+                    'action':payload.action,
+                    'name':payload.name,
+                    'numero':payload.numero,
+                    'idSerie':payload.idSerie,
+                    'type':payload.type,
+                    'nosaison':payload.nosaison,
+                    'publication':payload.publication,
+                    'id':payload.id,
+                    '_method': 'PUT'
+
+                }
+            }
+            if(payload.action=='deleteSaison'){
+                console.log(payload.idSerie)
+                url = '/api/administration/saison'
+                data = {
+                    'action':payload.action,
+                    'idSerie':payload.idSerie,
+                    'id':payload.id,
+                    '_method': 'DELETE'
+
+                }
+            }
+            if(payload.action == 'newSerie' || payload.action == 'modifierSerie'){
                 data = new FormData();
                 data.append('action', payload.action)
                 data.append('titre', payload.titre)
@@ -70,19 +115,38 @@ const actions = {
                 data.append('imageChoix', payload.imageChoix)
                 data.append('imagecheck', payload.imagecheck)
                 data.append('file', payload.file)
+                data.append('publication', payload.publication)
+                if(payload.action == 'modifierSerie'){
+                    data.append('_method', 'PUT');
+                    data.append('id', payload.id);
+                    data.append('genreID', payload.genreID);
+                }
+
+
+            }
+            if(payload.action == "delete"){
+                console.log(payload.idDelete)
+                data = {
+                    'action':payload.action,
+                    'id':payload.idDelete,
+                    '_method': 'DELETE'
+                }
             }
 
             var config =  { headers: {'Content-Type': 'application/json;charset=utf-8;multipart/form-data; boundary=' + Math.random().toString().substr(2)}}
-            axios.post(url, data,config)
-                .then((resp) => {
-                    commit('FormulaireSeriesuccess', resp.data);
-                })
-                .catch((err) => {
-                    commit('FormulaireSerieError', err.response.data);
-                    reject(err);
-                    // if resp is unauthorized, logout, to
-                    //dispatch('authLogout')
-                })
+                axios.post(url, data,config)
+                    .then((resp) => {
+                        commit('FormulaireSeriesuccess', resp.data);
+                    })
+                    .catch((err) => {
+                        commit('FormulaireSerieError', err.response.data);
+                        reject(err);
+                        // if resp is unauthorized, logout, to
+                        //dispatch('authLogout')
+                    })
+
+
+
         }
 
     },
@@ -94,8 +158,16 @@ const mutations = {
         state.status = 'loading';
     },
     Seriesuccess: (state, resp) => {
-        state.status = 'success';
-        Vue.set(state, 'Series', resp);
+
+        if(state.image){
+            state.image = false
+            state.status = 'success';
+            Vue.set(state, 'info', resp);
+        }else{
+            state.status = 'success';
+            Vue.set(state, 'Series', resp);
+        }
+
     },
     seriesError: (state) => {
         state.status = 'error';

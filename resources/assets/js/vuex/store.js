@@ -10,6 +10,8 @@ import compte from './modules/compte'
 
 import AdminMembre from './modules/administration/membres'
 import AdminSeries from './modules/administration/serie'
+import AdminStatistique from './modules/administration/statistique'
+import AdminFichier from './modules/administration/fichier'
 
 Vue.use(Vuex);
 
@@ -23,5 +25,7 @@ export const store = new Vuex.Store({
         news,
         AdminMembre,
         AdminSeries,
+        AdminStatistique,
+        AdminFichier,
     }
 });

@@ -83,7 +83,7 @@
                                 <h1 class="mb-0"><i class="fas fa-folder-plus"></i></h1>
                                 <small>Ajouter une Série</small>
                             </router-link>
-                            <router-link :to="{name:'AdminPostes'}" class="col-md-6 text-center text-info no-decoration mb-2">
+                            <router-link :to="{name:'AdminSerie'}" class="col-md-6 text-center text-info no-decoration mb-2">
                                 <h1 class="mb-0"><i class="fas fa-folder-open"></i></h1>
                                 <small>Liste des Série</small>
                             </router-link>

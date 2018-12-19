@@ -60,6 +60,20 @@ Route::get('/news/{slug}', 'Api\postController@show');
 Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix' => 'administration'], function (){
     Route::get('/membres', 'Api\Administration\utilisateurController@index');
     Route::post('/membres', 'Api\Administration\utilisateurController@update');
+
     Route::get('/Series', 'Api\Administration\serieController@index');
-    Route::post('/Series', 'Api\Administration\serieController@update');
+    Route::get('/Series/image/{option}', 'Api\Administration\serieController@images');
+    Route::get('/Series/detail/{type}/{slug}', 'Api\Administration\serieController@show');
+    Route::get('/Series/detail/{type}/{slug}/statistique', 'Api\Administration\serieController@statistique');
+    Route::post('/Series', 'Api\Administration\serieController@create');
+    Route::delete('/Series', 'Api\Administration\serieController@delete');
+    Route::put('/Series', 'Api\Administration\serieController@update');
+
+    Route::post('/saison/', 'Api\Administration\SaisonController@create');
+    Route::put('/saison/', 'Api\Administration\SaisonController@update');
+    Route::delete('/saison/', 'Api\Administration\SaisonController@delete');
+
+    Route::get('/Fichier/ftp', 'Api\Administration\fichierController@index');
+    Route::get('/Fichier/ftp/update', 'Api\Administration\fichierController@ftpUpdate');
+    Route::post('/Fichier', 'Api\Administration\fichierController@create');
 });

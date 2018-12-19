@@ -52,7 +52,7 @@
                             </form>
                         </template>
 
-                        <form v-if="data == 'formulaire'" v-on:submit.prevent="formulaire" enctype="multipart/form-data">
+                        <form v-if="data == 'formulaire' && sauvegarde == false" v-on:submit.prevent="formulaire" enctype="multipart/form-data">
                             <div class="alert alert-danger" role="alert" v-if="erreurs">
                                 Une erreur est survenue<br>
                                 "{{ erreur }}"
@@ -60,6 +60,27 @@
                             <pre v-if="debug">
                                 {{ information }}
                             </pre>
+                            <div class="row border pt-3 pb-3 mb-1">
+                                <div class="col-md-12">
+                                    Publication
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="publication" id="enligne" value="1" v-model="information.publication">
+                                        <label class="form-check-label text-success" for="enligne">
+                                            Visible
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-center">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="publication" id="offligne" value="0" v-model="information.publication">
+                                        <label class="form-check-label text-danger" for="offligne">
+                                            Non Visible
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="row border mb-1 pt-1">
                                 <div class="form-group col-md-6" v-if="information">
                                     <label for="titre">Titre</label>
@@ -144,8 +165,8 @@
                                         <option value="0" disabled selected>Selectionnez une option</option>
                                         <option value="Animes">Animés</option>
                                         <option value="Scantrad">Scantrad</option>
-                                        <option value="Light-novel">Light Novel</option>
-                                        <option value="Visual-novel">Visual Novel</option>
+                                        <option value="Light-Novel">Light Novel</option>
+                                        <option value="Visual-Novel">Visual Novel</option>
                                     </select>
                                 </div>
                                 <div class="form-group col-md-6" v-if="information.type == 'Animes'">
@@ -172,15 +193,15 @@
                                     <label for="chapitre">Chapitres</label>
                                     <input type="number" class="form-control" id="chapitre" v-model="information.episode" min="0">
                                 </div>
-                                <div class="form-group col-md-6" v-if="information.type == 'Light-novel'">
+                                <div class="form-group col-md-6" v-if="information.type == 'Light-Novel'">
                                     <label for="ln">Tomes</label>
                                     <input type="number" class="form-control" id="ln" v-model="information.ln" min="0">
                                 </div>
-                                <div class="form-group col-md-6" v-if="information.type == 'Light-novel'">
+                                <div class="form-group col-md-6" v-if="information.type == 'Light-Novel'">
                                     <label for="lnChapitre">Chapitres</label>
                                     <input type="number" class="form-control" id="lnChapitre" v-model="information.episode" min="0">
                                 </div>
-                                <div class="form-group col-md-6" v-if="information.type == 'Visual-novel'">
+                                <div class="form-group col-md-6" v-if="information.type == 'Visual-Novel'">
                                     <label for="vn">Visual Novel</label>
                                     <input type="number" class="form-control" id="vn" v-model="information.vn" min="0">
                                 </div>
@@ -245,6 +266,17 @@
                                 </div>
                             </div>
                         </form>
+                        <div v-if="sauvegarde == true" class="text-center">
+                            <h1 v-if="validate == false">
+                            <span class="btn btn-outline-success" v-if="sauvegarde">
+                                Sauvegarde en cours
+                                <i class="fas fa-sync-alt rotation"></i>
+                            </span>
+                            </h1>
+                            <div class="alert alert-success" role="alert" v-if="validate == true">
+                                La série {{ response.serie.titre }} a bien été ajoutée
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -259,8 +291,9 @@
                 data:"Ajouter",
                 choix:"",
                 url:"",
-                sauvegarde:true,
+                sauvegarde:false,
                 search:false,
+                validate:false,
                 erreurs:"",
                 information:{},
                 debug:false,
@@ -316,9 +349,15 @@
                     this.genres =  this.response.newGenre
 
                 }
+                if (this.response.data == true && this.response.action == 'newSerie'){
+                    setTimeout(function () { this.validate = true; }.bind(this), 1000)
+                    setTimeout(function () { this.validate = false; this.sauvegarde = false; this.information = {}; this.choix = ""; this.data = 'Ajouter'; this.url = null }.bind(this), 3000)
+                }
             },
             serie(){
-                this.genres = this.serie;
+                if (this.serie){
+                    this.genres = this.serie.genre;
+                }
             }
         },
         methods: {
@@ -346,18 +385,12 @@
                 //this.data = "Ajouter"
                 this.erreurs = "";
                 const { action, url, choix, file } = this;
-                const { titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck  } = this.information
+                const { titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck, publication  } = this.information
                 if (action == "Information"){this.search = true}
-                this.sauvegarde = true
-                this.$store.dispatch('FormulaireSerieRequest', { action, url, choix, titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck, file})
+                if(this.action == "newSerie"){this.sauvegarde = true}
+
+                this.$store.dispatch('FormulaireSerieRequest', { action, url, choix, titre, titre_original, titre_alternatif, studio, auteur, annee, synopsis, staff, etat, type, episode, oav, films, bonus, ln, scan, vn, genre, imageChoix, imagecheck, file, publication})
                     .then(() => {
-                        if (!this.erreurs){
-
-
-                        }else{
-
-                        }
-                        setTimeout(function () { this.sauvegarde = false }.bind(this), 1000)
 
                     })
                     .catch(()=>{

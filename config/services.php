@@ -39,5 +39,8 @@ return [
         'id' => env('VUE_CLIENT_ID'),
         'secret' => env('VUE_CLIENT_SECRET'),
     ],
+    'discord' => [
+        'token' => env('BOT'),
+    ],
 
 ];
