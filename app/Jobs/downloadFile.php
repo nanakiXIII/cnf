@@ -50,7 +50,7 @@ class downloadFile implements ShouldQueue
     public function handle()
     {
         $url ="http://cnfddl.mass-download.net/";
-        $episode = Episodes::find($this->episodes);
+        $episode = Episodes::find($this->episodes->id);
         if ($episode){
             $serie = Serie::find($episode->serie_id);
             $saison = Saisons::find($episode->saisons_id);
