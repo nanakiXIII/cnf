@@ -49,14 +49,11 @@ class downloadFile implements ShouldQueue
     public function handle()
     {
         $url ="http://cnfddl.mass-download.net/";
-        $episode = Episodes::find($this->episodes->id);
-        if ($episode){
-            $serie = Serie::find($episode->serie_id);
-            $saison = Saisons::find($episode->saisons_id);
+
 
             $discord = 253979896303321089;
             $array = ["content" => 'oui'];
             $channel = app(Discord::class)->send($discord, $array );
-        }
+        
     }
 }
