@@ -73,7 +73,7 @@ Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix
     Route::put('/saison/', 'Api\Administration\SaisonController@update');
     Route::delete('/saison/', 'Api\Administration\SaisonController@delete');
 
-    Route::get('/Fichier/ftp', 'Api\Administration\fichierController@index');
-    Route::get('/Fichier/ftp/update', 'Api\Administration\fichierController@ftpUpdate');
-    Route::post('/Fichier', 'Api\Administration\fichierController@create');
+    Route::get('/Fichier/ftp', 'Api\Administration\FichierController@index');
+    Route::get('/Fichier/ftp/update', 'Api\Administration\FichierController@ftpUpdate');
+    Route::post('/Fichier', 'Api\Administration\FichierController@create');
 });
