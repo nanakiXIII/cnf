@@ -55,11 +55,7 @@ class downloadFile implements ShouldQueue
             $saison = Saisons::find($episode->saisons_id);
 
             $discord = 253979896303321089;
-            $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                'description' => 'Téléchargement terminé',
-                'author' =>['name' => $this->user->name,
-                    'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-                'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
+            $array = ["content" => 'oui'];
             $channel = app(Discord::class)->send($discord, $array );
         }
     }
