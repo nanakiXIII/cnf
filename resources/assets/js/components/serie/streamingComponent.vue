@@ -108,11 +108,10 @@
         watch: {
             infos() {
                 this.$parent.titre = this.infos.titre
-
+                this.playerOptions.sources = [{"src" : "/storage/serie/"+this.serie.type+"/"+this.serie.slug+"/videos/"+this.serie.getEpisode.id+"/"+this.serie.getEpisode.id+".mp4",type: "video/mp4"}]
                 this.serie_id = this.infos.id
                 if (this.infos.getEpisode){
                     this.episode_id = this.infos.getEpisode.id
-                    this.playerOptions.sources = [{"src" : "/storage/serie/"+this.serie.type+"/"+this.serie.slug+"/videos/"+this.serie.getEpisode.id+"/"+this.serie.getEpisode.id+".mp4",type: "video/mp4"}]
                 }
                 if(this.infos.verif && this.etat ){
                     if (this.infos.verif.time != undefined){
