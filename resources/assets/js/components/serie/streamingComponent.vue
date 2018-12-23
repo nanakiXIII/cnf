@@ -81,7 +81,7 @@
                     playbackRates: [0.7, 1.0, 1.5, 2.0],
                     sources: [{
                         type: "video/mp4",
-                        src: "/storage/10.mp4"
+                        src: ""
                     }],
                     poster: "/static/images/author.jpg",
                 }
@@ -90,6 +90,7 @@
         computed: {
             serie(){
                 this.infos = this.$store.getters.getSerie;
+
                 return this.infos
             },
             player() {
@@ -103,9 +104,11 @@
         watch: {
             infos() {
                 this.$parent.titre = this.infos.titre
+
                 this.serie_id = this.infos.id
                 if (this.infos.getEpisode){
                     this.episode_id = this.infos.getEpisode.id
+                    this.playerOptions.sources = [{"src" : "/storage/serie/"+this.serie.type+"/"+this.serie.slug+"/videos/"+this.serie.getEpisode.id+"/"+this.serie.getEpisode.id+".mp4",type: "video/mp4"}]
                 }
                 if(this.infos.verif && this.etat ){
                     if (this.infos.verif.time != undefined){
