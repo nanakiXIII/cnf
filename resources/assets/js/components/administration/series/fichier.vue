@@ -89,7 +89,7 @@
                         <div :id="'saison'+saison.id" class="collapse">
                             <div class="card-body" v-if="saison.episodes != ''">
                                 <div class="media mb-2" v-for="episode in saison.episodes">
-                                    <img class="align-self-center mr-3" src="" alt="" width="150px">
+                                    <img class="align-self-center mr-3" :src="episode.image" alt="Chargement" width="150px">
                                     <div class="media-body">
                                         <h5 class="mt-0">{{ episode.type }} {{ episode.numero }}: {{ episode.name }}</h5>
                                         <p>
