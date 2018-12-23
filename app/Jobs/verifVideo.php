@@ -58,7 +58,7 @@ class verifVideo implements ShouldQueue
          if ($file){
              $episode->etat = 4;
              $episode->streaming = "stream";
-             Storage::delete($episode->id.'.mkv');
+             Storage::disk('public')->delete('/'.$episode->id.'.mkv');
              $discord = 253979896303321089;
              $array = ["embed" =>['title'=>"[Terminé] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                  'description' => "Vidéo disponible pour le streaming",
