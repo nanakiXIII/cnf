@@ -12,6 +12,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Support\Facades\Storage;
+use NotificationChannels\Discord\Discord;
 
 class verifVideo implements ShouldQueue
 {
@@ -58,6 +59,14 @@ class verifVideo implements ShouldQueue
              $episode->etat = 4;
              $episode->streaming = "stream";
              Storage::delete($episode->id.'.mkv');
+             $discord = 253979896303321089;
+             $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
+                 'description' => "Encodage terminé",
+                 'author' =>['name' => $this->user->name,
+                     'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
+                 'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
+             $channel = app(Discord::class)->send($discord, $array );
+             $episode->save();
          }
 
     }

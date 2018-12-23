@@ -72,7 +72,7 @@ class moveVideo implements ShouldQueue
                             'description' => "Encodage terminé",
                             'author' =>['name' => $this->user->name,
                                 'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-                            'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
+                            'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
                         $channel = app(Discord::class)->send($discord, $array );
                         $episode->etat = 3;
                         $episode->save();
@@ -83,7 +83,7 @@ class moveVideo implements ShouldQueue
                     if ($i == 2){
                         $i =0;
                     }
-                    $channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
+                    //$channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
 
                 }
 
