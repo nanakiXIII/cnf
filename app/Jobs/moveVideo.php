@@ -61,12 +61,12 @@ class moveVideo implements ShouldQueue
             {
                 $taille[$i] = filesize($dossier.'/'.$this->fichier);
                 $taille[$i+1] = 0;
-                sleep(20);
+                sleep(5);
 
 
                 if ($taille[1] == $taille[2]){
                     if ($episode->etat == 1){
-                        Storage::move($this->fichier, "serie/$serie->type/$serie->slug/videos/$episode->id/$this->fichier");
+                        Storage::disk('public')->move($this->fichier, "serie/$serie->type/$serie->slug/videos/$episode->id/$this->fichier");
                         verifVideo::dispatch($episode,$this->user, $this->fichier);
                         $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                             'description' => "Encodage terminé",
