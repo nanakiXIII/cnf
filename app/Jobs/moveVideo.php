@@ -61,7 +61,7 @@ class moveVideo implements ShouldQueue
             {
                 $taille[$i] = filesize($dossier.'/'.$this->fichier);
                 $taille[$i+1] = 0;
-                sleep(20);
+                sleep(100);
 
 
                 if ($taille[1] == $taille[2]){
