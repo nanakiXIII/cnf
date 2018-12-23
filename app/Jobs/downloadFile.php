@@ -63,11 +63,13 @@ class downloadFile implements ShouldQueue
         if ($episode){
             $extension = pathinfo($episode[$this->qualiter], PATHINFO_EXTENSION);
             $basename = pathinfo($episode[$this->qualiter], PATHINFO_BASENAME);
-            $filename = pathinfo($episode[$this->qualiter], PATHINFO_FILENAME);
+            $filename = $episode->id.'.'.$extension;
             $file = file_get_contents($url.$episode[$this->qualiter]);
-            $save = file_put_contents(storage_path('app/public/'.$episode->id.'.'.$extension), $file);
+            $save = file_put_contents(storage_path('app/public/'.$filename), $file);
             if ($save){
-
+                $episode->etat = 1;
+                $episode->save();
+                encodageVideo::dispatch($episode, $this->user, $filename);
                 $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                     'description' => 'Téléchargement terminé',
                     'author' =>['name' => $this->user->name,
