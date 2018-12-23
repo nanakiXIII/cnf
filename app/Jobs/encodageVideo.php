@@ -50,23 +50,15 @@ class encodageVideo implements ShouldQueue
      */
     public function handle()
     {
+        $basename = pathinfo($this->fichier, PATHINFO_BASENAME);
+        $filename = pathinfo($this->fichier, PATHINFO_FILENAME);
+        $dossier = storage_path("app/public");
         $discord = 253979896303321089;
         $episode = Episodes::find($this->episodes->id);
         $serie = Serie::find($episode->serie_id);
         $saison = Saisons::find($episode->saisons_id);
-        $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-            'description' => "Début de l'encodage",
-            'author' =>['name' => $this->user->name,
-                'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-            'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
-        $channel = app(Discord::class)->send($discord, $array );
-        $basename = pathinfo($this->fichier, PATHINFO_BASENAME);
-        $filename = pathinfo($this->fichier, PATHINFO_FILENAME);
-        $dossier = storage_path("app/public");
-        chdir($dossier);
-        $shell = shell_exec("ffmpeg -i $basename -vf subtitles=$basename -strict -2 $filename.mp4");
 
-        if ( !is_null($shell)){
+        if (file_exists($dossier.'/'.$filename.'.mp4')){
             $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                 'description' => "Encodage terminé",
                 'author' =>['name' => $this->user->name,
@@ -74,6 +66,22 @@ class encodageVideo implements ShouldQueue
                 'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
             $channel = app(Discord::class)->send($discord, $array );
         }
+        else{
+            $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
+                'description' => "Début de l'encodage",
+                'author' =>['name' => $this->user->name,
+                    'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
+                'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
+            $channel = app(Discord::class)->send($discord, $array );
+
+            chdir($dossier);
+            $shell = shell_exec("ffmpeg -i $basename -vf subtitles=$basename -strict -2 $filename.mp4");
+        }
+
+
+
+
+
 
     }
 }
