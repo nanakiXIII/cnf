@@ -83,7 +83,7 @@ class moveVideo implements ShouldQueue
                     if ($i == 2){
                         $i =0;
                     }
-                    //$channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
+                    $channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
 
                 }
 
