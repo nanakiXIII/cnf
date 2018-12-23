@@ -2,6 +2,9 @@
     <div>
         <div class="bg-img p-3">
             <div class="container relative p-4">
+                <pre>
+                    {{playerOptions}}
+                </pre>
                 <video-player  v-if="playerOptions.sources"
                                 class="video-player-box"
                                style="width: 100%!important;"
