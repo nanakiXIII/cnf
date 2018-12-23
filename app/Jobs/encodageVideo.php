@@ -72,6 +72,7 @@ class encodageVideo implements ShouldQueue
 
             chdir($dossier);
             $shell = shell_exec("ffmpeg -i $basename -vf subtitles=$basename -strict -2 $filename.mp4");
+            sleep(1200);
         }
 
 
