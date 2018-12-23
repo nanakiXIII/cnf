@@ -1,10 +1,7 @@
 <template>
     <div>
         <div class="bg-img p-3">
-            <div class="container relative p-4">
-                <pre>
-                    {{playerOptions}}
-                </pre>
+            <div class="container relative p-4" v-if="source == true">
                 <video-player  v-if="playerOptions.sources"
                                 class="video-player-box"
                                style="width: 100%!important;"
@@ -77,16 +74,14 @@
                 duration:'',
                 etat:false,
                 timeStatic:'',
+                source:false,
                 playerOptions: {
                     // videojs options
+                    preload:'none',
                     height: '400',
                     muted: false,
                     language: 'fr',
                     playbackRates: [0.7, 1.0, 1.5, 2.0],
-                    sources: [{
-                        type: "video/mp4",
-                        src: ""
-                    }],
                     poster: "/static/images/author.jpg",
                 }
             }
@@ -112,16 +107,18 @@
                 if (this.infos.getEpisode){
                     this.episode_id = this.infos.getEpisode.id
                 }
-                if(this.infos.verif && this.etat ){
+                if(this.infos.verif && this.etat && this.source == true){
                     if (this.infos.verif.time != undefined){
                         $('#modal-vue').modal('show');
-                        this.player.currentTime(this.infos.verif.time)
+                        //this.player.currentTime(this.infos.verif.time)
                     }
 
                 }
             },
             serie(){
                 this.playerOptions.sources = [{"src" : "/storage/serie/"+this.serie.type+"/"+this.serie.slug+"/videos/"+this.serie.getEpisode.id+"/"+this.serie.getEpisode.id+".mp4",type: "video/mp4"}]
+                this.playerOptions.poster = this.serie.getEpisode.image
+                this.source = true
                 this.etat = true
             }
         },
@@ -174,6 +171,7 @@
             },
             continu:function () {
                 this.player.play()
+                this.player.currentTime(this.infos.verif.time)
             }
 
         },
