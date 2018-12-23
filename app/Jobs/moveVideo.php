@@ -34,10 +34,10 @@ class moveVideo implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(Episodes $episode, User $user, String $fichier)
+    public function __construct(Episodes $episodes, User $user, String $fichier)
     {
         //
-        $this->episode = $episode;
+        $this->episodes = $episodes;
         $this->user = $user;
         $this->fichier = $fichier;
     }
