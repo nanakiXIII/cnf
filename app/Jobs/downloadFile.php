@@ -70,18 +70,9 @@ class downloadFile implements ShouldQueue
             if ($save){
                 $episode->etat = 1;
                 $episode->save();
-                $video = FFMpeg::fromDisk('public')->open($episode->id.'.mkv');
-                $time = $video->getDurationInSeconds();
-                $temp= round($time / 15);
-                for ($i=5; $i < $time; $i += $temp){
-                    $video->getFrameFromSeconds($i)->export()
-                        ->toDisk('public')
-                        ->save("serie/$serie->type/$serie->slug/videos/$episode->id/images/$i.jpg");
-                }
-                $temps = $temp+5;
-                $episode->image = "/storage/serie/$serie->type/$serie->slug/videos/$episode->id/images/$temps.jpg";
-                $episode->save();
+                imageVideo::dispatch($episode);
                 encodageVideo::dispatch($episode, $this->user, $filename);
+
                 $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                     'description' => 'Téléchargement terminé',
                     'author' =>['name' => $this->user->name,
