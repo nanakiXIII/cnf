@@ -60,8 +60,8 @@ class verifVideo implements ShouldQueue
              $episode->streaming = "stream";
              Storage::delete($episode->id.'.mkv');
              $discord = 253979896303321089;
-             $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                 'description' => "Encodage terminé",
+             $array = ["embed" =>['title'=>"[Terminé] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
+                 'description' => "Vidéo disponible pour le streaming",
                  'author' =>['name' => $this->user->name,
                      'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
                  'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
