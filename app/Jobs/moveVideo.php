@@ -11,6 +11,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Storage;
 use NotificationChannels\Discord\Discord;
 
 class moveVideo implements ShouldQueue
@@ -55,31 +56,41 @@ class moveVideo implements ShouldQueue
         $serie = Serie::find($episode->serie_id);
         $saison = Saisons::find($episode->saisons_id);
         $taille = [];
+        if ($episode-> etat == 1){
+            for ($i = 1; $i <= 10; $i++)
+            {
+                $taille[$i] = filesize($dossier.'/'.$this->fichier);
+                $taille[$i+1] = 0;
+                sleep(60);
 
-        for ($i = 1; $i <= 10; $i++)
-        {
-            $taille[$i] = filesize($dossier.'/'.$this->fichier);
-            $taille[$i+1] = 0;
-            sleep(60);
 
+                if ($taille[1] == $taille[2]){
+                    $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
+                        'description' => "Encodage terminé",
+                        'author' =>['name' => $this->user->name,
+                            'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
+                        'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
+                    $channel = app(Discord::class)->send($discord, $array );
+                    $episode->etat = 2;
+                    $episode->save();
+                    Storage::move($this->fichier, "serie/$serie->type/$serie->slug/videos/$episode->id/$this->fichier");
+                    $episode->etat = 3;
+                    $episode->save();
+                    verifVideo::dispatch($episode,$this->user, $this->fichier);
 
-            if ($taille[1] == $taille[2]){
-                $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                    'description' => "Encodage terminé $taille[1] / $taille[2]",
-                    'author' =>['name' => $this->user->name,
-                        'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-                    'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
-                $channel = app(Discord::class)->send($discord, $array );
-                break;
-            }else{
-                if ($i == 2){
-                    $i =1;
+                    break;
+                }else{
+                    if ($i == 2){
+                        $i =1;
+                    }
+                    $channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
+
                 }
-                $channel = app(Discord::class)->send($discord, ['content' => "$taille[1] / $taille[2]"] );
 
             }
-
         }
+
+
 
     }
 }

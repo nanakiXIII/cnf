@@ -6,6 +6,7 @@ use App\Episodes;
 use App\Saisons;
 use App\Serie;
 use App\User;
+use FFMpeg\FFMpeg;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
@@ -68,6 +69,17 @@ class downloadFile implements ShouldQueue
             $save = file_put_contents(storage_path('app/public/'.$filename), $file);
             if ($save){
                 $episode->etat = 1;
+                $episode->save();
+                $video = FFMpeg::fromDisk('public')->open($episode->id.'.mkv');
+                $time = $video->getDurationInSeconds();
+                $temp= round($time / 15);
+                for ($i=5; $i < $time; $i += $temp){
+                    $video->getFrameFromSeconds($i)->export()
+                        ->toDisk('public')
+                        ->save("serie/$serie->type/$serie->slug/videos/$episode->id/images/$i.jpg");
+                }
+                $temps = $temp+5;
+                $episode->image = "/storage/serie/$serie->type/$serie->slug/videos/$episode->id/images/$temps.jpg";
                 $episode->save();
                 encodageVideo::dispatch($episode, $this->user, $filename);
                 $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
