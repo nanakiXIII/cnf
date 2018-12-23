@@ -19,7 +19,7 @@ class moveVideo implements ShouldQueue
     /**
      * @var Episodes
      */
-    private $episode;
+    private $episodes;
     /**
      * @var User
      */
