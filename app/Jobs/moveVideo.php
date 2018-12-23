@@ -60,18 +60,17 @@ class moveVideo implements ShouldQueue
             $taille1 = filesize($dossier.'/'.$this->fichier);
             sleep(60);
             $taille2 = filesize($dossier.'/'.$this->fichier);
+
             if ($taille1 == $taille2){
                 $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                    'description' => "Encodage terminé",
+                    'description' => "Encodage terminé $taille1 / $taille2",
                     'author' =>['name' => $this->user->name,
                         'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
                     'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
                 $channel = app(Discord::class)->send($discord, $array );
-                $i = 10;
                 break;
             }else{
                 $i =0;
-                $i ++;
             }
 
         }
