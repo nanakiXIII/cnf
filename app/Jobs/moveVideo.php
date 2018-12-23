@@ -66,11 +66,7 @@ class moveVideo implements ShouldQueue
 
                 if ($taille[1] == $taille[2]){
                     if ($episode->etat == 1){
-                        $episode->etat = 2;
-                        $episode->save();
                         Storage::move($this->fichier, "serie/$serie->type/$serie->slug/videos/$episode->id/$this->fichier");
-                        $episode->etat = 3;
-                        $episode->save();
                         verifVideo::dispatch($episode,$this->user, $this->fichier);
                         $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
                             'description' => "Encodage terminé",
@@ -78,6 +74,8 @@ class moveVideo implements ShouldQueue
                                 'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
                             'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
                         $channel = app(Discord::class)->send($discord, $array );
+                        $episode->etat = 3;
+                        $episode->save();
                     }
 
                     break;
