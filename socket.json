@@ -1,0 +1,5 @@
+{
+  "name": "chuushin",
+  "script": "laravel-echo-server",
+  "args": "start"
+}
