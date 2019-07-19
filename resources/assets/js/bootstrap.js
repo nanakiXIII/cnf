@@ -50,6 +50,13 @@ if (bearer) {
     window.axios.defaults.headers.common['Authorization'] = bearer
 }
 
+import Echo from "laravel-echo"
+
+window.Echo = new Echo({
+    broadcaster: 'socket.io',
+    host: window.location.hostname + ':6001'
+
+});
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting

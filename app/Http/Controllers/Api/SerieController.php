@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 use App\Downloads;
 use App\Episodes;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ProjetsCollection;
+use App\Http\Resources\ProjetsResource;
 use App\Repository\AccountRepository;
 use App\Saisons;
 use App\Serie;
@@ -24,6 +26,17 @@ class SerieController extends Controller {
     public function __construct(AccountRepository $accountRepository)
     {
         $this->accountRepository = $accountRepository;
+    }
+
+    public function index(Request $request)
+    {
+        $projet= Serie::where('publication', 1)->orderBy('etat')->orderBy('titre')->get();
+        return new ProjetsCollection($projet);
+    }
+    public function show(Request $request)
+    {
+        $projet= Serie::where('publication', 1)->where('type', $request->type)->where('slug', $request->slug)->firstOrFail();
+        return new ProjetsResource($projet);
     }
 
     public function serieAboLog(Request $request, string $type){

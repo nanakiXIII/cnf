@@ -12,6 +12,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Support\Facades\Storage;
 use NotificationChannels\Discord\Discord;
 
 class downloadFile implements ShouldQueue
@@ -50,37 +51,34 @@ class downloadFile implements ShouldQueue
      */
     public function handle()
     {
-        $discord = 253979896303321089;
         $episode = Episodes::find($this->episodes->id);
-        $serie = Serie::find($episode->serie_id);
-        $saison = Saisons::find($episode->saisons_id);
-        $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-            'description' => 'Lancement du téléchargement',
-            'author' =>['name' => $this->user->name,
-                'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-            'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
-        $channel = app(Discord::class)->send($discord, $array );
-        $url ="http://cnfddl.mass-download.net/";
+        $url =env('URL_DL');
         if ($episode){
-            $extension = pathinfo($episode[$this->qualiter], PATHINFO_EXTENSION);
-            $basename = pathinfo($episode[$this->qualiter], PATHINFO_BASENAME);
+            if ($episode->dvd != 'non'){
+                $fichier = $episode->dvd;
+                $qualiter = 'dvd';
+            }
+            elseif($episode->dvd != 'non'){
+                $fichier = $episode->hd;
+                $qualiter = 'hd';
+            }
+            else{
+                $fichier = $episode->fhd;
+                $qualiter = 'fhd';
+            }
+            $extension = pathinfo($fichier, PATHINFO_EXTENSION);
+            $basename = pathinfo($fichier, PATHINFO_BASENAME);
             $filename = $episode->id.'.'.$extension;
-            $file = file_get_contents($url.$episode[$this->qualiter]);
-            $save = file_put_contents(storage_path('app/public/'.$filename), $file);
+            $file = file_get_contents($url.$fichier);
+            $save = file_put_contents(storage_path("app/public/".$filename), $file);
+            $save = Storage::disk('public')->move($filename, "serie/$episode->serie_id/$episode->saisons_id/$episode->id/$filename");
+
             if ($save){
                 $episode->etat = 1;
                 $episode->save();
                 imageVideo::dispatch($episode);
                 encodageVideo::dispatch($episode, $this->user, $filename);
-
-                $array = ["embed" =>['title'=>"[DL] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                    'description' => 'Téléchargement terminé',
-                    'author' =>['name' => $this->user->name,
-                        'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-                    'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
-                $channel = app(Discord::class)->send($discord, $array );
             }
-
         }
     }
 }

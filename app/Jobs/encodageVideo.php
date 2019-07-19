@@ -52,33 +52,15 @@ class encodageVideo implements ShouldQueue
     {
         $basename = pathinfo($this->fichier, PATHINFO_BASENAME);
         $filename = pathinfo($this->fichier, PATHINFO_FILENAME);
-        $dossier = storage_path("app/public");
-        $discord = 253979896303321089;
         $episode = Episodes::find($this->episodes->id);
-        $serie = Serie::find($episode->serie_id);
-        $saison = Saisons::find($episode->saisons_id);
-
+        $dossier = storage_path("app/public/serie/$episode->serie_id/$episode->saisons_id/$episode->id/");
         if (file_exists($dossier.'/'.$filename.'.mp4')){
-
-            moveVideo::dispatch($episode, $this->user, "$filename.mp4");
+            //moveVideo::dispatch($episode, $this->user, "$filename.mp4");
         }
         else{
-            $array = ["embed" =>['title'=>"[EN] $serie->titre $saison->type $saison->numero: $episode->type $episode->numero ",
-                'description' => "Début de l'encodage",
-                'author' =>['name' => $this->user->name,
-                    'icon_url' => 'https://image.chuushin-no-fansub.fr/avatar/733296.gif'],
-                'thumbnail' => ['url' => env('APP_URL').$serie->image]]];
-            $channel = app(Discord::class)->send($discord, $array );
-
             chdir($dossier);
             $shell = shell_exec("ffmpeg -i $basename -vf subtitles=$basename -strict -2 $filename.mp4");
             sleep(1200);
         }
-
-
-
-
-
-
     }
 }

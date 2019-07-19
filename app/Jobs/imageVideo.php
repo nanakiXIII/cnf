@@ -38,22 +38,18 @@ class imageVideo implements ShouldQueue
      */
     public function handle()
     {
-        $discord = 253979896303321089;
         $episode = Episodes::find($this->episodes->id);
-        $serie = Serie::find($episode->serie_id);
-        $saison = Saisons::find($episode->saisons_id);
         if ($episode) {
-
-            $video = FFMpeg::fromDisk('public')->open($episode->id.'.mkv');
+            $video = FFMpeg::fromDisk('public')->open("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
             $time = $video->getDurationInSeconds();
             $temp = round($time / 15);
             for ($i = 5; $i < $time; $i += $temp) {
                 $video->getFrameFromSeconds($i)->export()
                     ->toDisk('public')
-                    ->save("serie/$serie->type/$serie->slug/videos/$episode->id/images/$i.jpg");
+                    ->save("serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/$i.jpg");
             }
             $temps = $temp + 5;
-            $episode->image = "/storage/serie/$serie->type/$serie->slug/videos/$episode->id/images/$temps.jpg";
+            $episode->image = "/storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/$temps.jpg";
             $episode->save();
         }
     }

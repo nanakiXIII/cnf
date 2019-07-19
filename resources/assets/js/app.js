@@ -12,21 +12,25 @@ window.Vue = require('vue');
 import { router } from './router/routes';
 import { store } from './vuex/store';
 import vueMoment from 'vue-moment'
+import Notifications from 'vue-notification'
 import moment from 'moment'
 import Meta from 'vue-meta'
 import NProgress from 'nprogress'
 import '../../../node_modules/nprogress/nprogress.css'
+import VuejsDialog from 'vuejs-dialog';
+import 'vuejs-dialog/dist/vuejs-dialog.min.css';
 
-
-Vue.use(vueMoment,{moment})
-Vue.use(Meta)
-Vue.moment.locale('fr')
+Vue.use(vueMoment,{moment});
+Vue.use(Meta);
+Vue.use(Notifications);
+Vue.use(VuejsDialog);
+Vue.moment.locale('fr');
 Vue.use(Meta, {
     keyName: 'metaInfo', // the component option name that vue-meta looks for meta info on.
     attribute: 'data-vue-meta', // the attribute name vue-meta adds to the tags it observes
     ssrAttribute: 'data-vue-meta-server-rendered', // the attribute name that lets vue-meta know that meta info has already been server-rendered
     tagIDKeyName: 'vmid' // the property name that vue-meta uses to determine whether to overwrite or append a tag
-})
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -52,6 +56,8 @@ router.afterEach((to, from) => {
 })
 const app = new Vue({
     el: '#app',
+    // voir pour chargement ...
+
     created(){
         if (this.$store.getters.isAuthenticated) {
             this.$store.dispatch('userRequest');

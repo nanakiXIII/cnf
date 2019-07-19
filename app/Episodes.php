@@ -15,4 +15,7 @@ class Episodes extends Model
     public function serie(){
         return $this->belongsTo('App\Serie');
     }
+    public function news(){
+        return $this->belongsToMany('App\post');
+    }
 }

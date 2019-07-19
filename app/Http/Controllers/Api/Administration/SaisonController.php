@@ -26,13 +26,13 @@ class SaisonController extends Controller {
 
     public function create(request $request){
         $reponse = new class{};
-        $serie = Serie::findOrFail($request->idSerie);
+        $serie = Serie::findOrFail($request->id);
         if ($serie){
             $saison = Saisons::create([
                 'name' => $request->name,
                 'numero' => $request->numero,
                 'type' => $request->type,
-                'serie_id' => $request->idSerie,
+                'serie_id' => $request->id,
                 'publication' => $request->publication,
                 'nosaison' => $request->nosaison,
             ]);
@@ -45,7 +45,6 @@ class SaisonController extends Controller {
                 $reponse->saison = null;
             }
         }
-        $reponse->action = $request->action;
         return json_encode($reponse);
 
 
@@ -54,8 +53,7 @@ class SaisonController extends Controller {
         $reponse = new class{};
         $reponse->data = false;
         $reponse->saison = null;
-        $reponse->action = $request->action;
-        $serie = Serie::findOrFail($request->idSerie);
+        $serie = Serie::findOrFail($request->serie_id);
         if ($serie){
             $saison = Saisons::findOrFail($request->id);
             if ($saison){
@@ -63,7 +61,7 @@ class SaisonController extends Controller {
                     'name' => $request->name,
                     'numero' => $request->numero,
                     'type' => $request->type,
-                    'serie_id' => $request->idSerie,
+                    'serie_id' => $request->serie_id,
                     'publication' => $request->publication,
                     'nosaison' => $request->nosaison,
                 ]);
@@ -79,14 +77,10 @@ class SaisonController extends Controller {
         $reponse = new class{};
         $reponse->data = false;
         $reponse->saison = null;
-        $reponse->action = $request->action;
-        $serie = Serie::findOrFail($request->idSerie);
-        if ($serie){
-            $saison = Saisons::findOrFail($request->id);
+        $saison = Saisons::findOrFail($request->id);
             if ($saison){
                 $saison->delete();
                 $reponse->data = true;
-            }
         }
         return json_encode($reponse);
 

@@ -6,6 +6,7 @@ use App\Episodes;
 use App\Ftp;
 use App\Http\Controllers\Controller;
 use App\Jobs\downloadFile;
+use App\Jobs\ExtractArchiveJob;
 use App\Saisons;
 use App\Serie;
 use Carbon\Carbon;
@@ -47,10 +48,6 @@ class FichierController extends Controller {
 
     public function ftpUpdate(Request $request){
 
-
-    $test = ['content'=>'Sa marche','body'=>'je ne sais pas', "tts" =>false];
-
-
         $files = Storage::disk('ftp')->allFiles();
         $files = array_filter($files, function($str){
             return strpos($str, "_h5ai") === false;
@@ -62,26 +59,45 @@ class FichierController extends Controller {
         $reponse = new class{};
         $reponse->data = true;
         $reponse->fichier = $files;
-        $reponse->date = Carbon::now()->addHour(1);
-        $reponse->action = "MiseAJour";
-
+        $reponse->date = Carbon::now();
 
         return json_encode($reponse);
 
     }
 
+    public function archive(request $request){
+        if ($request->hasFile('file')){
+            $request->file->storeAs('public/', $request->file->getClientOriginalName());
+        }
+        return "ok";
+
+
+    }
+
     public function create(request $request){
         $reponse = new class{};
-        $serie = Serie::findOrFail($request->idSerie);
+
         $saison = Saisons::findOrFail($request->idSaison);
+        $serie = Serie::findOrFail($saison->serie_id);
+        if ($request->type == 'Chapitre'){
+            $dvd = 'non';
+            $hd = "serie/".$saison->serie->id."/$saison->id/$request->file";
+            $fhd = 'non';
+            Storage::disk('public')->move($request->file,"serie/".$saison->serie->id."/$saison->id/$request->file");
+        }
+        else{
+            $dvd = $request->dvd;
+            $hd = $request->hd;
+            $fhd = $request->fhd;
+        }
         if ($saison){
             $episode = Episodes::create([
                 "name" => $request->name,
                 "numero" => $request->numero,
                 "type" => $request->type,
-                "dvd" => $request->dvd,
-                "hd" => $request->hd,
-                "fhd" => $request->fhd,
+                "dvd" => $dvd,
+                "hd" => $hd,
+                "fhd" => $fhd,
                 "publication" => $request->publication,
                 "serie_id" => $request->idSerie,
                 "saisons_id" => $request->idSaison,
@@ -90,10 +106,16 @@ class FichierController extends Controller {
             ]);
             if ($episode){
                 $reponse->data = true;
-                $reponse->action = "nouveauEpisode";
                 $reponse->episode = $episode;
+                if ($episode->type == 'Chapitre'){
+                    ExtractArchiveJob::dispatch($episode);
+                    //downloadFile::dispatch($episode, $request->streaming, $request->user());
+                }
+                else{
+                    downloadFile::dispatch($episode, $request->streaming, $request->user());
+                }
             }
-            downloadFile::dispatch($episode, $request->streaming, $request->user());
+            //downloadFile::dispatch($episode, $request->streaming, $request->user());
         }
         else{
             $reponse->data = false;
@@ -106,11 +128,83 @@ class FichierController extends Controller {
 
     }
     public function update(request $request){
+        $reponse = new class{};
 
+        $saison = Saisons::findOrFail($request->saisons_id);
+        $episode = Episodes::findOrFail($request->id);
+        if ($episode){
+            if ($request->type == 'Chapitre'){
+                if ($request->file){
+                    Storage::disk('public')->delete($episode->hd);
+                    Storage::disk('public')->deleteDirectory("serie/".$saison->serie->id."/".$saison->id.'/'.$episode->id);
+                    $hd = "serie/".$saison->serie->id."/$saison->id/$request->file";
+                    Storage::disk('public')->move($request->file,"serie/".$saison->serie->id."/$saison->id/$request->file");
+                    $episode->streaming = 0;
+                }else{
+                    $hd = $episode->hd;
+                }
+                $dvd = 'non';
+                $fhd = 'non';
+
+            }
+            else{
+                $dvd = $request->dvd;
+                $hd = $request->hd;
+                $fhd = $request->fhd;
+                if ($request->dvd != $episode->dvd){
+                    $episode->streaming = 0;
+                }
+                if ($request->hd != $episode->hd){
+                    $episode->streaming = 0;
+                }
+                if ($request->fhd != $episode->fhd){
+                    $episode->streaming = 0;
+                }
+            }
+        }
+
+        if ($episode){
+
+                $episode->name = $request->name;
+                $episode->numero = $request->numero;
+                $episode->type = $request->type;
+                $episode->dvd = $dvd;
+                $episode->hd = $hd;
+                $episode->fhd = $fhd;
+                $episode->publication = $request->publication;
+                $episode->serie_id = $request->serie_id;
+                $episode->saisons_id = $request->saisons_id;
+                $episode->etat = 0;
+                $episode->save();
+
+                $reponse->data = true;
+                $reponse->episode = $episode;
+
+            //downloadFile::dispatch($episode, $request->streaming, $request->user());
+        }
+        else{
+            $reponse->data = false;
+            $reponse->episode = null;
+        }
+
+        return json_encode($reponse);
 
     }
     public function delete(request $request){
-
+        $response = [
+            'statut' => '200',
+            'error' => false,
+            'success' => false,
+            'data' => null
+        ];
+        $episode = Episodes::findOrFail($request->id);
+        if ($episode){
+            Storage::disk('public')->delete($episode->hd);
+            Storage::disk('public')->deleteDirectory("serie/".$episode->serie_id."/".$episode->saions_id.'/'.$episode->id);
+            $episode->delete();
+            $response['success'] = true;
+        }
+        return response()->json($response);
 
     }
 

@@ -16,7 +16,7 @@ use Spatie\Permission\Models\Permission;
 
 Route::get('/user', function (Request $request) {
     //Permission::create(['name' => 'b', 'guard_name' => 'web']);
-    //$role = Role::find('2');
+    //$role = Role::find('1');
     //$role->givePermissionTo('b');
     $user = $request->user();
     $tab = [];
@@ -29,7 +29,7 @@ Route::get('/user', function (Request $request) {
     }
     $request->user()->role = $request->user()->roles()->pluck('name');
     $request->user()->permission = $tab;
-    //$user->assignRole(2);
+    //$user->assignRole(1);
     //$user->assignRole('writer');
     //$user->assignRole('writer');
 
@@ -50,8 +50,10 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
 });
 Route::post('/streaming', 'Api\CompteController@update');
-Route::get('/serie/{type}', 'Api\SerieController@serieAbo');
-Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
+Route::get('/projets', 'Api\SerieController@index');
+Route::get('/projets/{type}/{slug}', 'Api\SerieController@show');
+
+
 Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
 
 Route::get('/news', 'Api\postController@index');
@@ -61,19 +63,58 @@ Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix
     Route::get('/membres', 'Api\Administration\utilisateurController@index');
     Route::post('/membres', 'Api\Administration\utilisateurController@update');
 
-    Route::get('/Series', 'Api\Administration\serieController@index');
-    Route::get('/Series/image/{option}', 'Api\Administration\serieController@images');
-    Route::get('/Series/detail/{type}/{slug}', 'Api\Administration\serieController@show');
-    Route::get('/Series/detail/{type}/{slug}/statistique', 'Api\Administration\serieController@statistique');
-    Route::post('/Series', 'Api\Administration\serieController@create');
-    Route::delete('/Series', 'Api\Administration\serieController@delete');
-    Route::put('/Series', 'Api\Administration\serieController@update');
 
+
+
+
+
+
+
+
+
+    Route::post('/series/informations', 'Api\Administration\serieController@informations');
+
+
+    //Gestion des séries
+    Route::post('/series', 'Api\Administration\serieController@create');
+    Route::get('/series', 'Api\Administration\serieController@index');
+    Route::get('/series/{slug}/{id}', 'Api\Administration\serieController@show');
+    Route::put('/series', 'Api\Administration\serieController@update');
+    Route::delete('/series/{id}', 'Api\Administration\serieController@delete')->middleware('permission:Supprimer');
+
+    //gestion des saisons
     Route::post('/saison/', 'Api\Administration\SaisonController@create');
     Route::put('/saison/', 'Api\Administration\SaisonController@update');
-    Route::delete('/saison/', 'Api\Administration\SaisonController@delete');
+    Route::delete('/saison/{id}', 'Api\Administration\SaisonController@delete')->middleware('permission:Supprimer');
 
-    Route::get('/Fichier/ftp', 'Api\Administration\FichierController@index');
-    Route::get('/Fichier/ftp/update', 'Api\Administration\FichierController@ftpUpdate');
-    Route::post('/Fichier', 'Api\Administration\FichierController@create');
+    //gestion du ftp
+    Route::get('/fichier/ftp/update', 'Api\Administration\FichierController@ftpUpdate');
+    Route::get('/fichier/ftp', 'Api\Administration\FichierController@index');
+
+    //Gestion des fichier
+    Route::post('/fichier', 'Api\Administration\FichierController@create');
+    Route::put('/fichier', 'Api\Administration\FichierController@update');
+    Route::delete('/fichier/{id}', 'Api\Administration\FichierController@delete')->middleware('permission:Supprimer');
+    Route::post('/fichier/archive', 'Api\Administration\FichierController@archive');
+
+
+    //Gestion des genres
+    Route::get('/genres', 'Api\Administration\genresController@index');
+    Route::post('/genres', 'Api\Administration\genresController@create');
+    Route::put('/genres', 'Api\Administration\genresController@update');
+    Route::delete('/genres/destroy/{id}', 'Api\Administration\genresController@destroy')->middleware('permission:Supprimer');
+
+    //GEstion des news
+    Route::get('/news', 'Api\Administration\newsController@index');
+    Route::get('/news/{id}/{slug}', 'Api\Administration\newsController@show');
+    Route::post('/news/image', 'Api\Administration\newsController@image');
+    Route::post('/news', 'Api\Administration\newsController@create');
+    Route::put('/news', 'Api\Administration\newsController@update');
+    Route::delete('/news/{id}', 'Api\Administration\newsController@delete')->middleware('permission:Supprimer');
+
+    //statistiques
+    Route::get('/statistique/serie/{id}', 'Api\Administration\serieController@statistique');
+
+    //dashboard
+    Route::get('/dashboard', 'Api\Administration\dashboardController@index');
 });

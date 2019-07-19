@@ -16,11 +16,11 @@ class CreateSeries extends Migration
         Schema::create('series', function (Blueprint $table) {
             $table->increments('id');
             $table->string('titre');
-            $table->string('titre_original');
-            $table->string('titre_alternatif');
+            $table->string('titre_original')->nullable();
+            $table->string('titre_alternatif')->nullable();
             $table->string('annee');
             $table->string('studio');
-            $table->string('auteur');
+            $table->string('auteur')->nullable();
             $table->integer('episode')->unsigned()->default(0);
             $table->integer('oav')->unsigned()->default(0);
             $table->integer('films')->unsigned()->default(0);
@@ -28,8 +28,8 @@ class CreateSeries extends Migration
             $table->integer('scan')->unsigned()->default(0);
             $table->integer('ln')->unsigned()->default(0);
             $table->integer('vn')->unsigned()->default(0);
-            $table->longText('synopsis');
-            $table->longText('staff');
+            $table->longText('synopsis')->nullable();
+            $table->longText('staff')->nullable();
             $table->string('type')->default('Animes');
             $table->boolean('publication')->default(false);
             $table->string('slug');

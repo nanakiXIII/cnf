@@ -12,4 +12,7 @@ class post extends Model
         'updated_at',
         'publish_at'
     ];
+    public function fichiers(){
+        return $this->belongsToMany('App\Episodes');
+    }
 }

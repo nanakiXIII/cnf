@@ -53,12 +53,16 @@ import Utilisateurs from './../components/administration/membres/utilisateurs'
 import Postes from './../components/administration/membres/poste'
 import Permission from './../components/administration/membres/permission'
 import Role from './../components/administration/membres/roles'
+import AdminGenres from './../components/administration/genres/genres'
 
-import SerieAjouter from './../components/administration/series/ajouter'
+import SerieAjouter from './../components/administration/series/newSerie'
+import FicheSerieAdmin from './../components/administration/series/fiche'
 import ListeSerieAdmin from './../components/administration/series/liste'
 import FichierAdmin from './../components/administration/series/fichier'
 
 import AdminNews from './../components/administration/news/news'
+import AdminNewNews from './../components/administration/news/newNews'
+import AdminModNews from './../components/administration/news/modnews'
 
 
 const routes = [
@@ -99,18 +103,18 @@ const routes = [
         beforeEnter: ifNotAuthenticated,
     },
     {
-        path: '/serie/:type',
+        path: '/projets/',
         component: theme,
         beforeEnter: ifAuthOrNot,
         children:[
             {
                 path:'',
-                name:'serie',
+                name:'projets',
                 component: ListeSerie,
                 beforeEnter: ifAuthOrNot
             },
             {
-                path:':slug',
+                path:':type/:slug',
                 name:'',
                 component: theme,
                 beforeEnter: ifAuthOrNot,
@@ -196,6 +200,24 @@ const routes = [
         beforeEnter: ifAuthenticated,
     },
     {
+        path: '/administration/news/add',
+        name: 'AdminNewNews',
+        component: AdminNewNews,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/news/:id/:slug',
+        name: 'AdminModNews',
+        component: AdminModNews,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/genres',
+        name: 'AdminGenres',
+        component: AdminGenres,
+        beforeEnter: ifAuthenticated,
+    },
+    {
         path: '/administration/series/add',
         name: 'AdminSerieADD',
         component: SerieAjouter,
@@ -208,7 +230,13 @@ const routes = [
         beforeEnter: ifAuthenticated,
     },
     {
-        path: '/administration/series/:type/:slug',
+        path: '/administration/series/:id/:slug/update',
+        name: 'AdminSerieFiche',
+        component: FicheSerieAdmin,
+        beforeEnter: ifAuthenticated,
+    },
+    {
+        path: '/administration/series/:id/:slug/fichiers',
         name: 'AdminSerieFichier',
         component: FichierAdmin,
         beforeEnter: ifAuthenticated,

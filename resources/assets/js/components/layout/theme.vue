@@ -1,7 +1,7 @@
 <template>
 
 <div>
-    <router-view></router-view>
+    <router-view :type="type"></router-view>
 </div>
 
 
@@ -12,12 +12,18 @@
     export default {
         data(){
             return {
-                titre:'Accueil'
+                titre:'Accueil',
             }
+        },
+        props:{
+           type : String,
         },
         watch:{
             titre(){
                 this.$parent.titre = this.titre
+            },
+            type(){
+
             }
         }
     }

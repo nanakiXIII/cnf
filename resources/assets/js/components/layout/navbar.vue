@@ -11,21 +11,13 @@
                 <div class="collapse navbar-collapse" id="navbarNavDropdown">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <router-link title="Home" :to="{ name:'accueil' }" class="nav-link">Accueil <span class="sr-only">(current)</span></router-link>
+                            <router-link title="Home" :to="{ name:'accueil' }" class="nav-link">Accueil</router-link>
                         </li>
                         <li class="nav-item text-white">
                             <a class="nav-link" title="Equipes" href="#">Equipes</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" title="Nos Projets" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Nos Projets
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <router-link title="Animes" :to="{ name: 'serie', params: { type: 'Animes' }}" class="dropdown-item" >Animés</router-link>
-                                <router-link title="Scantrad" :to="{ name: 'serie', params: { type: 'Scantrad' }}" class="dropdown-item" >Scantrad</router-link>
-                                <router-link title="Light novel" :to="{ name: 'serie', params: { type: 'Light-Novel' }}" class="dropdown-item" >Light-Novel</router-link>
-                                <router-link title="Visual novel" :to="{ name: 'serie', params: { type: 'Visual-Novel' }}" class="dropdown-item" >Visual-Novel</router-link>
-                            </div>
+                        <li class="nav-item">
+                            <router-link class="nav-link" title="Equipes" :to="{ name: 'projets'}" >Nos Projets</router-link>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" title="Contact" href="#">Nous Contacter</a>
@@ -33,27 +25,74 @@
                         <li class="nav-item">
                             <a class="nav-link" title="Partenaires" href="#">Partenaires</a>
                         </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" title="Mon compte" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <template v-if="!user.name">Mon Compte</template>
+                                <template v-else="">{{user.name}}</template>
+
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <router-link title="Login" v-if="!user.name" :to="{ name: 'login'}" class="dropdown-item" >Se Connecter</router-link>
+                                <router-link title="Register" v-if="!user.name" :to="{ name: 'register'}" class="dropdown-item" >S'enregistrer</router-link>
+                                <router-link title="Mon profile" v-if="user.name" :to="{ name: 'dashboard'}" class="dropdown-item" >Mon Profil</router-link>
+                                <router-link title="Register" v-if="user.name && this.found(user.permission,'Administration')" :to="{ name: 'administration'}" class="dropdown-item" >Administration</router-link>
+                                <a title="Logout" href="#" v-if="user.name"  class="dropdown-item" @click.prevent="logout" >Déconnexion</a>
+                            </div>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
         <nav class="navbar navbar-light bg-white border-bottom-1">
             <div class="container">
-                <span class="navbar-brand mb-0 h1 barre" >{{ titre}}</span>
+                <span class="navbar-brand mb-0 h1 barre no-mobile" >{{ titre}}</span>
                 <div class="pull-right">
-                    <div v-if="user.name">
-                        <router-link :to="{ name: 'dashboard' }" class="btn btn-outline-success col-auto mr-auto">{{ user.name }}</router-link>
-                            <span v-if="user.permission">
-                                <router-link title="Administration" :to="{ name: 'administration' }" v-if="this.found(user.permission,'Administration')" class="btn btn-outline-warning col-auto mr-auto" >Administration</router-link>
-                            </span>
-
-
-                        <a class="btn btn-outline-danger col-auto mr-auto" title="Déconnexion" @click.prevent="logout">Déconnexion</a>
-                    </div>
-                    <div v-else>
-                        <router-link title="Login" :to="{ name: 'login' }" class="btn btn-outline-success col-auto mr-auto">Se Connecter</router-link>
-                        <router-link title="Register" :to="{ name: 'register' }" class="btn btn-outline-primary col-auto mr-auto">S'enregistrer</router-link>
-                    </div>
+                    <div class="btn-group btn-group-justified" v-if="$route.name == 'projets'" role="group" aria-label="Recherche des types">
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            v-bind:class="{'colorise':(type === 'all')}"
+                                            @click="type = 'all'"
+                                    >
+                                        <i class="fas fa-globe"></i> <template class="no-mobile">All</template>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            v-bind:class="{'colorise':(type === 'Animes')}"
+                                            @click="type = 'Animes'"
+                                    >
+                                        <i class="fas fa-video"></i> <template class="no-mobile">Animés</template>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            v-bind:class="{'colorise':(type === 'Scantrad')}"
+                                            @click="type = 'Scantrad'"
+                                    >
+                                        <i class="fas fa-paint-brush"></i> <template class="no-mobile">Scantrad</template></button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            v-bind:class="{'colorise':(type === 'Light-Novel')}"
+                                            @click="type = 'Light-Novel'"
+                                    >
+                                        <i class="fas fa-book-open"></i> <template class="no-mobile">Light Novel</template>
+                                    </button>
+                                </div>
+                                <div class="btn-group" role="group">
+                                    <button type="button"
+                                            class="btn btn-default"
+                                            v-bind:class="{'colorise':(type === 'Visual-Novel')}"
+                                            @click="type = 'Visual-Novel'"
+                                    >
+                                        <i class="fas fa-gamepad"></i> <template class="no-mobile">Visual Novel</template>
+                                    </button>
+                                </div>
+                            </div>
                 </div>
             </div>
         </nav>
@@ -66,16 +105,17 @@
     export default {
         data(){
             return {
-
+                type:'all'
             }
         },
         props:{
-            titre : String
+            titre : String,
         }
 
         ,
         watch:{
-            titre(){
+            type(){
+                this.$parent.type = this.type
             }
         },
         computed: {

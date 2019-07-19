@@ -1,8 +1,23 @@
 <template>
     <section :class="theme">
         <main>
-            <navbar-component :titre="titre"></navbar-component>
-            <router-view></router-view>
+            <navbar-component :titre="titre" ></navbar-component>
+            <router-view :user="user" :type="type"></router-view>
+            <notifications group="foo" position="top right">
+                <template slot="body" slot-scope="props">
+                    <div class="toast mt-2" role="alert" aria-live="assertive" aria-atomic="true" style="opacity: 1">
+                        <div class="toast-header">
+                            <strong class="mr-auto">{{props.item.title}}</strong>
+                            <small class="text-muted">just now</small>
+                            <button type="button" class="ml-2 mb-1 close" @click="props.close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="toast-body" v-html="props.item.text"></div>
+                    </div>
+
+                </template>
+            </notifications>
         </main>
         <footer>
             <div class="bg-grey p-5 mt-5 footer">
@@ -33,7 +48,8 @@
                 titre:'Accueil',
                 theme:'light',
                 description:'Site de la Chuushin no Fansub',
-                image:'/img/logo.png'
+                image:'/img/logo.png',
+                type:'all'
             }
         },
         metaInfo () {
@@ -100,12 +116,27 @@
             theme(){
             },
             user(){
+                this.listenForActivity();
                 this.theme = this.user.theme
             },
 
         },
         methods: {
+            feed(){
 
+            },
+            listenForActivity() {
+                Echo.private('activity.' + this.user.equipe)
+                   .listen('ActivityLogged', (e) => {
+                       this.$notify({
+                           group: 'foo',
+                           title: "Nouvelle activité",
+                           text: e.data.description,
+                       });
+                       console.log(e.data.description);
+                       //this.feed.unshift(e.data);
+                   });
+            }
         },
         computed: {
             user(){
@@ -118,7 +149,9 @@
         mounted(){
             if (this.$store.getters.isAuthenticated) {
                 this.theme = this.$store.getters.getProfile.theme;
+
             }
+
 
         }
 
