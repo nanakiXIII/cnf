@@ -45,11 +45,12 @@
 
         data(){
             return {
+                etat : false,
                 titre:'Accueil',
                 theme:'light',
                 description:'Site de la Chuushin no Fansub',
                 image:'/img/logo.png',
-                type:'all'
+                type:'all',
             }
         },
         metaInfo () {
@@ -116,42 +117,49 @@
             theme(){
             },
             user(){
-                this.listenForActivity();
-                this.theme = this.user.theme
+                if(this.etat == false){
+                    this.etat = true;
+                    this.listenForActivity();
+                    this.listenUser();
+                    this.theme = this.user.data.theme
+                }
             },
 
         },
         methods: {
-            feed(){
+            reload(){
 
             },
             listenForActivity() {
-                Echo.private('activity.' + this.user.equipe)
-                   .listen('ActivityLogged', (e) => {
-                       this.$notify({
-                           group: 'foo',
-                           title: "Nouvelle activité",
-                           text: e.data.description,
-                       });
-                       console.log(e.data.description);
-                       //this.feed.unshift(e.data);
-                   });
-            }
+                //Echo.private('activity.' + this.user.data.equipe)
+                //   .listen('ActivityLogged', (e) => {
+                //       this.$notify({
+                //           group: 'foo',
+                //           title: "Nouvelle activité",
+                //           text: e.data.description,
+                //       });
+                //       console.log(e.data.description);
+                //       //this.feed.unshift(e.data);
+                //   });
+            },
+            listenUser(){
+                Echo.private('App.User.' + this.user.data.id)
+                    .listen('userEvent', (e) => {
+                       if(e.param == 'reload'){
+                           this.$store.dispatch('userRequest');
+                       }
+                    })
+            },
+
         },
         computed: {
             user(){
                 if (this.$store.getters.isAuthenticated) {
-                   return this.$store.getters.getProfile
+                    return this.$store.getters.getProfile
                 }
-
             }
         },
         mounted(){
-            if (this.$store.getters.isAuthenticated) {
-                this.theme = this.$store.getters.getProfile.theme;
-
-            }
-
 
         }
 

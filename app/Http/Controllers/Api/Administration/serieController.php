@@ -49,7 +49,7 @@ class serieController extends Controller {
     public function statistique(Request $request){
         $reponse = new class{};
         $serie = Serie::findOrFail($request->id);
-        $vue = Downloads::where('serie_id', $serie->id)->get()->groupBy(function($val) {
+        $vue = Downloads::where('serie_id', $serie->id)->orderBy('created_at')->get()->groupBy(function($val) {
             return Carbon::parse($val->created_at)->format('F Y');
         });
         $vues = [];

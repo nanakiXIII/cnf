@@ -1,52 +1,82 @@
 <template>
     <div>
         <div class="bg-img p-3">
-            <div class="container relative p-4" v-if="source == true">
-                <video-player  v-if="playerOptions.sources"
-                                class="video-player-box"
-                               style="width: 100%!important;"
-                               ref="videoPlayer"
-                               :options="playerOptions"
-                               :playsinline="true"
-                               customEventName="customstatechangedeventname"
-                               @play="onPlayerPlay($event)"
-                               @pause="onPlayerPause($event)"
-                               @ended="onPlayerEnded($event)"
+            <div class="container relative p-4">
+                <div class="row">
+                    <div class="col-md-8" v-show="player != null">
+                        <video ref="videoPlayer" class="video-js"
                                @timeupdate="onPlayerTimeupdate($event)"
-                               @ready="playerReadied">
-                </video-player>
-                <div class="progress mt-3 mb-3 ml-5 mr-5">
-                    <div class="progress-bar bg-success" role="progressbar" :style="progress" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                               @play="onPlayerPlay($event)"
+                               >
+
+                        </video>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="list-group" v-if="playlist.length != 0">
+                            <button type="button"
+                                    v-for="p in playlist"
+                                    v-bind:class="[ p.id == playlist[currentItem].id ? 'active' : 'bg-white']"
+                                    class="list-group-item list-group-item-action"
+                                    @click="choix(p.playlistItemId_ -1)">
+                                {{p.episode.type }} {{p.episode.numero }}: {{p.episode.name }}
+                            </button>
+                        </div>
+                        <div v-else="">
+                            <div class="col-md-12 text-center">
+                                <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
+                                    <span class="sr-only">Chargement ...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="modal fade" id="modal-vue" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Vous avez déjà regardé cette vidéo</h4>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-
-                    <div class="modal-body" v-if="serie.verif">
-                        Date de visionnage: {{ serie.verif.updated_at | moment("dddd Do MMMM YYYY") }} <br>
-                        Visionné: {{ convertSecondsToTime(serie.verif.time) }} / {{ convertSecondsToTime(duration)  }}
-                    </div>
-
-                    <!-- Modal Actions -->
-                    <div class="modal-footer">
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-primary" data-dismiss="modal" @click="reset">
-                                <i class="fas fa-undo"></i>
-                                Retour au début
-                            </button>
+        <div class="container mt-3">
+            <div class="row " v-if="playlist.length != 0">
+                <div class="col-md-12" v-if="playlist[currentItem].episode.stream && playlist[currentItem].episode.time > 30">
+                    <div class="alert alert-secondary" role="alert">
+                        <i class="fas fa-exclamation-triangle mr-2"></i>
+                        Reprendre la lecture à <b>{{convertSecondsToTime(playlist[currentItem].episode.time)}}</b>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-success btn-sm" @click="reprendre()">Reprendre</button>
                         </div>
-                        <div class="col-md-6 text-right">
-                            <button type="button" class="btn btn-outline-success" data-dismiss="modal" @click="continu">
-                                Continuer
-                                <i class="fas fa-play-circle"></i>
-                            </button>
+                    </div>
+                </div>
+
+
+                <div class="col-md-4">
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-lg btn-block"
+                            @click="choix('precedent')"
+                            v-if="player.playlist.currentIndex() != 0">
+                        Précédent
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <router-link :to="{ name: 'serieDetail', params: { type: encodeURI(projet.type) , slug: projet.slug} }" type="button" class="btn btn-outline-secondary btn-lg btn-block">Fiche</router-link>
+                </div>
+                <div class="col-md-4">
+                    <button type="button"
+                            class="btn btn-outline-secondary btn-lg btn-block"
+                            @click="choix('suivant')"
+                            v-if="player.playlist.currentIndex() != player.playlist.lastIndex()">
+                        Suivant
+                    </button>
+                </div>
+                <div class="col-md-12" v-show="episodes.name">
+                    <div class="media mt-3 border shadow-sm p-3 bg-white rounded">
+                        <img class="align-self-center mr-3" :src="playlist[currentItem].episode.image" alt="" width="150px">
+                        <div class="media-body">
+                            <h5 class="mt-1">{{ playlist[currentItem].episode.type }} {{ playlist[currentItem].episode.numero }}: {{ playlist[currentItem].episode.name }}</h5>
+                            <p>
+                            <div class="pull-right">
+                                <a v-show="playlist[currentItem].episode.dvd != 'non'" :href="playlist[currentItem].episode.dvd" @click="dl('dvd',playlist[currentItem].episode)" class="btn" v-bind:class="[ playlist[currentItem].episode.downloaddvd ? 'btn-success' : 'btn-secondary']" target="_blank">DVD</a>
+                                <a v-show="playlist[currentItem].episode.hd != 'non'"  :href="playlist[currentItem].episode.hd" @click="dl('hd', playlist[currentItem].episode)" class="btn" v-bind:class="[ playlist[currentItem].episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">720P</a>
+                                <a v-show="playlist[currentItem].episode.fhd != 'non'" :href="playlist[currentItem].episode.fhd" @click="dl('fhd',playlist[currentItem].episode)" class="btn" v-bind:class="[ playlist[currentItem].episode.downloadfhd ? 'btn-success' : 'btn-secondary']" target="_blank">1080P</a>
+                            </div>
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -57,92 +87,74 @@
 
 <script>
     import 'video.js/dist/video-js.css'
-    import { videoPlayer } from 'vue-video-player'
+    import videojs from 'video.js'
+    import * as playlist from 'videojs-playlist'
     export default {
-        components:{
-            videoPlayer
-        },
         data() {
             return {
-                infos:'',
-                log: false,
-                action:'streaming',
-                secure:'',
-                serie_id:'',
-                episode_id:'',
-                time: '0',
-                duration:'',
-                etat:false,
-                timeStatic:'',
-                source:false,
-                playerOptions: {
-                    // videojs options
-                    preload:'none',
-                    height: '400',
-                    muted: false,
-                    language: 'fr',
-                    playbackRates: [0.7, 1.0, 1.5, 2.0],
-                    poster: "/static/images/author.jpg",
-                }
+                info:'',
+                projet:{},
+                saisons: {},
+                episodes:{},
+                player: null,
+                options: {
+                    autoplay: false,
+                    controls: true,
+                    responsive:true,
+                    height: '500',
+                },
+                playlist:[],
+                currentItem:0,
+                ready:false,
+
             }
         },
         computed: {
-            serie(){
-                this.infos = this.$store.getters.getSerie;
 
-                return this.infos
-            },
-            player() {
-                return this.$refs.videoPlayer.player
-            },
-            progress:function(){
-                return 'width: ' + ( Math.round((this.time*100) / this.duration ) ) + '%';
-            },
 
         },
         watch: {
-            infos() {
-                this.$parent.titre = this.infos.titre
-                this.serie_id = this.infos.id
-                if (this.infos.getEpisode){
-                    this.episode_id = this.infos.getEpisode.id
-                }
-                if(this.infos.verif && this.etat && this.source == true){
-                    if (this.infos.verif.time != undefined){
-                        $('#modal-vue').modal('show');
-                        //this.player.currentTime(this.infos.verif.time)
-                    }
-
-                }
+            projet(){
+                this.saisons = this.projet.saisons.find(element => {
+                     return element.numero == this.$route.params.saison
+                })
             },
-            serie(){
-                this.playerOptions.sources = [{"src" : "/storage/serie/"+this.serie.type+"/"+this.serie.slug+"/videos/"+this.serie.getEpisode.id+"/"+this.serie.getEpisode.id+".mp4",type: "video/mp4"}]
-                this.playerOptions.poster = this.serie.getEpisode.image
-                this.source = true
-                this.etat = true
+            saisons(){
+                this.episodes = this.saisons.episodes.find(element => {
+                    return element.numero == this.$route.params.episode
+                })
+            },
+            episodes(){
+                this.$parent.titre = "Lecture de " + this.projet.titre + " " + this.episodes.type + " " + this.episodes.numero
+                var video = 0
+                this.saisons.episodes.forEach(episode =>{
+                    if(episode.id == this.episodes.id){
+                        this.currentItem = video
+
+                    }
+                    this.playlist.push({
+                        sources: [{
+                            src: "/storage/serie/"+this.projet.id+"/"+this.saisons.id+'/'+episode.id+"/"+episode.id+".mp4",
+                            type: 'video/mp4'
+                        }],
+                        poster: episode.image,
+                        id:episode.id,
+                        episode: episode
+                    })
+                    video++
+                });
+                this.init()
+            },
+            ready(){
+                console.log(this.player.duration());
             }
+
         },
 
         methods:{
-            // listen event
-            onPlayerPlay(player) {
-                this.etat = "Play"
-                this.streaming()
-            },
-            onPlayerPause(player) {
-                this.etat = "Pause"
-            },
-            onPlayerEnded(player) {
-                this.etat = "Fini !"
-            },
-            onPlayerTimeupdate(player) {
-                this.time = player.currentTime()
-                this.duration = player.duration();
-                this.multiple(this.time);
-            },
-            playerReadied(player) {
-                this.duration = player.duration();
-                this.etat = "Ready"
+            reprendre(){
+                this.player.currentTime(this.playlist[this.currentItem].episode.time)
+                this.player.play();
             },
             convertSecondsToTime: function(time) {
                 let seconds = Math.floor(time % 60);
@@ -150,67 +162,69 @@
                 let minutes = Math.floor(time / 60 % 60);
                 return `${minutes}:${seconds}`
             },
+            getInfo(type, slug){
+                axios.get('/api/projets/'+type+'/'+slug)
+                    .then(response => {
+                        this.projet = response.data.data
+                    })
+            },
+            onPlayerPlay(player) {
+                this.dl('vue', this.playlist[this.currentItem].episode)
+            },
+            onPlayerTimeupdate(player) {
+                this.multiple(this.player.currentTime());
+                console.log(this.player.duration());
+            },
             multiple:function (time) {
                 let round = Math.round(time)
-                if ( round % 10 == 0) {
+                if ( round % 30 == 0) {
                     if (round != this.secure){
-                        this.streaming()
-                        this.secure = round
+                        this.dl('vue', this.playlist[this.currentItem].episode)
                     }
                 }
             },
-            streaming: function () {
-                const { episode_id, serie_id, action, time, log } = this;
-                this.$store.dispatch('compteRequest', { episode_id, serie_id, action, time, log })
-
+            choix(info){
+                if(info == 'precedent'){
+                    this.player.playlist.previous();
+                }else if (info == 'suivant'){
+                    this.player.playlist.next();
+                }
+                else{
+                    this.player.playlist.currentItem(info);
+                }
+                this.currentItem = this.player.playlist.currentIndex()
+                this.$parent.titre = "Lecture de " + this.projet.titre + " " + this.playlist[this.currentItem].episode.type + " " + this.playlist[this.currentItem].episode.numero
             },
-            reset:function () {
-                this.player.currentTime(0)
-                this.time = 0
-                this.player.play()
+            dl:function(qualiter, episode){
+                var episode_id = episode.id;
+                var serie_id = this.projet.id;
+                var duration =this.player.currentTime();
+                axios.post('/api/telechargements', {serie_id, qualiter, episode_id, duration})
+                    .then(response => {
+                        if(qualiter == 'hd'){
+                            episode.downloadhd = true;
+                        }
+                        if(qualiter == 'fhd'){
+                            episode.downloadfhd = true;
+                        }
+                        if(qualiter == 'dvd'){
+                            episode.downloaddvd = true;
+                        }
+                    })
             },
-            continu:function () {
-                this.player.play()
-                this.player.currentTime(this.infos.verif.time)
+            init(){
+                this.player = videojs(this.$refs.videoPlayer, this.options, () => {
+                    console.log("duratin", this.player.duration());
+                })
+                this.player.playlist(this.playlist,this.currentItem);
             }
 
         },
         beforeMount(){
-            let type = this.$route.params.type;
-            let slug = this.$route.params.slug;
-            let saison = this.$route.params.saison;
-            let episode = this.$route.params.episode;
-            this.type = type;
-            this.slug = slug;
-            this.saison = saison;
-            this.episode = episode;
-            if (this.$store.getters.isAuthenticated) {
-                this.log = true;
-            }
-            if(!type){
-                this.$router.push('/');
-            }
-            if(type === 'Animes' || type === 'Scantrad' || type === 'Light-Novel' || type === 'Visual-Novel'){
-                if(episode && saison && slug){
-                    console.log(saison)
-                    if (this.$store.getters.isAuthenticated) {
-                        this.log = true;
-                        this.$store.dispatch('episodeRequestLog', {type, slug, saison,episode});
-                    }else{
-                        this.$store.dispatch('episodeRequest', {type, slug, saison,episode});
-                    }
-
-                }
-                else{
-                    this.$router.push('/');
-                }
-            }
-            else{
-                this.$router.push('/');
-            }
+            this.getInfo(this.$route.params.type, this.$route.params.slug)
+            this.$parent.titre = "chargements ..."
         },
         mounted(){
-
 
         }
     }

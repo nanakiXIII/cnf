@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
+
+class userResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return array
+     */
+    public function toArray($request)
+    {
+        $tab = [];
+        foreach ($request->user()->roles()->get() as $roles){
+            foreach ($roles->permissions()->pluck('name') as $perm){
+                if (!in_array($perm, $tab)){
+                    $tab[] =  $perm;
+                }
+            }
+        }
+
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'email' => $this->email,
+            'theme' => $this->theme,
+            'avatar' => $this->avatar,
+            'notification' => $this->nitification,
+            'team' => $this->team,
+            'postes' => $this->postes,
+            'equipe' => $this->equipe,
+            'role' => $this->roles()->pluck('name'),
+            'permission' => $tab,
+            'telechargement' => downloadResource::collection($this->download()->where('qualite', 'hd')->orWhere('qualite', 'dvd')->orWhere("qualite", 'fhd')->groupBy('episode_id')->get()),
+            'visionnage' => $this->download()->where('qualite', 'vue')->get() ,
+            'lecture' => $this->download()->where('qualite', 'lu')->get() ,
+            'suivis' => ProjetsResource::collection($this->series) ,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at
+
+        ];
+    }
+}
+

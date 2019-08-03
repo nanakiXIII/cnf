@@ -27,16 +27,16 @@
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" title="Mon compte" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <template v-if="!user.name">Mon Compte</template>
-                                <template v-else="">{{user.name}}</template>
+                                <template v-if="!user.data">Mon Compte</template>
+                                <template v-else="">{{user.data.name}}</template>
 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <router-link title="Login" v-if="!user.name" :to="{ name: 'login'}" class="dropdown-item" >Se Connecter</router-link>
-                                <router-link title="Register" v-if="!user.name" :to="{ name: 'register'}" class="dropdown-item" >S'enregistrer</router-link>
-                                <router-link title="Mon profile" v-if="user.name" :to="{ name: 'dashboard'}" class="dropdown-item" >Mon Profil</router-link>
-                                <router-link title="Register" v-if="user.name && this.found(user.permission,'Administration')" :to="{ name: 'administration'}" class="dropdown-item" >Administration</router-link>
-                                <a title="Logout" href="#" v-if="user.name"  class="dropdown-item" @click.prevent="logout" >Déconnexion</a>
+                                <router-link title="Login" v-if="!user" :to="{ name: 'login'}" class="dropdown-item" >Se Connecter</router-link>
+                                <router-link title="Register" v-if="!user" :to="{ name: 'register'}" class="dropdown-item" >S'enregistrer</router-link>
+                                <router-link title="Mon profile" v-if="user" :to="{ name: 'dashboard'}" class="dropdown-item" >Mon Profil</router-link>
+                                <router-link title="Register" v-if="user.data && this.found(user.data.permission,'Administration')" :to="{ name: 'administration'}" class="dropdown-item" >Administration</router-link>
+                                <a title="Logout" href="#" v-if="user"  class="dropdown-item" @click.prevent="logout" >Déconnexion</a>
                             </div>
                         </li>
                     </ul>

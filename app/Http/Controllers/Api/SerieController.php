@@ -3,17 +3,20 @@ namespace App\Http\Controllers\Api;
 
 use App\Downloads;
 use App\Episodes;
+use App\Events\userEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjetsCollection;
 use App\Http\Resources\ProjetsResource;
 use App\Repository\AccountRepository;
 use App\Saisons;
 use App\Serie;
+use App\User;
 use function GuzzleHttp\Promise\is_fulfilled;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class SerieController extends Controller {
@@ -38,7 +41,67 @@ class SerieController extends Controller {
         $projet= Serie::where('publication', 1)->where('type', $request->type)->where('slug', $request->slug)->firstOrFail();
         return new ProjetsResource($projet);
     }
+    public function telechargement(Request $request){
+        $serie = Serie::find($request->serie_id);
+        if ($serie){
+            if ($request->user('api')){
+                $user = $request->user('api')->id;
+                $ip = 0;
+                $check = true;
+            }else{
+                $user = 0;
+                $ip = $request->ip();
+                $check = false;
+            }
+            if ($check){
+                $dowload = Downloads::where('user_id', $request->user('api')->id)
+                    ->where("serie_id", $request->serie_id)
+                    ->where('episode_id', $request->episode_id)
+                    ->where('qualite', $request->qualiter)
+                    ->first();
+                if (!$dowload){
+                    $dowload = Downloads::create([
+                        'episode_id' => $request->episode_id,
+                        'user_id' => $user,
+                        'serie_id' => $request->serie_id,
+                        'qualite' => $request->qualiter,
+                        'time' => 0,
+                        'ip_address' => $ip
+                    ]);
+                }
+                else{
+                    if ($request->qualiter == 'vue'){
+                        $dowload->time = $request->duration;
+                        $dowload->save();
+                    }
 
+                }
+            }else{
+                $dowload = Downloads::where('ip_address', $request->ip())
+                    ->where("serie_id", $request->serie_id)
+                    ->where('episode_id', $request->episode_id)
+                    ->where('qualite', $request->qualiter)
+                    ->first();
+                if (!$dowload){
+                    $dowload = Downloads::create([
+                        'episode_id' => $request->episode_id,
+                        'user_id' => $user,
+                        'serie_id' => $request->serie_id,
+                        'qualite' => $request->qualiter,
+                        'time' => 0,
+                        'ip_address' => $ip
+                    ]);
+                }
+            }
+
+            if ($dowload){
+                broadcast(new userEvent($request->user('api'), 'reload'));
+                return [true];
+            }
+        }
+
+
+    }
     public function serieAboLog(Request $request, string $type){
         return $this->accountRepository->getAbonnements($request->user(), $type);
 
@@ -96,7 +159,6 @@ class SerieController extends Controller {
             }
             $serie->saisons = $epi;
         }
-
         $serie->suivis = count($serie->users()->get());
         $serie->genres = $serie->genres;
         return $serie;

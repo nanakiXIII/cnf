@@ -58,9 +58,10 @@ class ProjetsResource extends JsonResource
             'publication' => $this->publication,
             'image' => "/storage/images/images/".$this->image,
             'banniere' => $banniere,
-            'episodes' => count($this->episodes),
-            'saisons' => SaisonResource::collection($this->saisons),
+            'episodes' => count($this->episodes()->where('publication', '1')->get()),
+            'saisons' => SaisonResource::collection($this->saisons()->where('publication', '1')->get()),
             'abo' => $abo,
+            'abonnement' => count($this->users)
         ];
     }
 }

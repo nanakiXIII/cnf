@@ -14,33 +14,7 @@ use Spatie\Permission\Models\Permission;
 |
 */
 
-Route::get('/user', function (Request $request) {
-    //Permission::create(['name' => 'b', 'guard_name' => 'web']);
-    //$role = Role::find('1');
-    //$role->givePermissionTo('b');
-    $user = $request->user();
-    $tab = [];
-    foreach ($request->user()->roles()->get() as $roles){
-        foreach ($roles->permissions()->pluck('name') as $perm){
-            if (!in_array($perm, $tab)){
-                $tab[] =  $perm;
-            }
-        }
-    }
-    $request->user()->role = $request->user()->roles()->pluck('name');
-    $request->user()->permission = $tab;
-    //$user->assignRole(1);
-    //$user->assignRole('writer');
-    //$user->assignRole('writer');
-
-    //$roles = $user->roles()->pluck('name');
-    //$request->user()->role = $roles;
-    //$request->user()->permission = $request->user()->permissions;
-    return $request->user();
-
-//->middleware('role:Test')
-//->middleware('permission:Administration')
-})->middleware('auth:api');
+Route::get('/user', 'Api\userController@show')->middleware('auth:api');
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/', 'Api\CompteController@index');
@@ -48,7 +22,13 @@ Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/serie/{type}', 'Api\SerieController@serieAboLog');
     Route::get('/serie/{type}/{slug}', 'Api\SerieController@infoSerie');
     Route::get('/serie/{type}/{slug}/{saison}/{episode}', 'Api\SerieController@infoEpisode');
+
+    // Gestions des abonnements
+    Route::post('/abonnement', 'Api\CompteController@abonnement');
 });
+// Téléchargements
+Route::post('/telechargements', 'Api\SerieController@telechargement');
+
 Route::post('/streaming', 'Api\CompteController@update');
 Route::get('/projets', 'Api\SerieController@index');
 Route::get('/projets/{type}/{slug}', 'Api\SerieController@show');

@@ -51,34 +51,40 @@ class downloadFile implements ShouldQueue
      */
     public function handle()
     {
-        $episode = Episodes::find($this->episodes->id);
         $url =env('URL_DL');
-        if ($episode){
-            if ($episode->dvd != 'non'){
-                $fichier = $episode->dvd;
-                $qualiter = 'dvd';
-            }
-            elseif($episode->dvd != 'non'){
-                $fichier = $episode->hd;
-                $qualiter = 'hd';
-            }
-            else{
-                $fichier = $episode->fhd;
-                $qualiter = 'fhd';
-            }
-            $extension = pathinfo($fichier, PATHINFO_EXTENSION);
-            $basename = pathinfo($fichier, PATHINFO_BASENAME);
-            $filename = $episode->id.'.'.$extension;
-            $file = file_get_contents($url.$fichier);
-            $save = file_put_contents(storage_path("app/public/".$filename), $file);
-            $save = Storage::disk('public')->move($filename, "serie/$episode->serie_id/$episode->saisons_id/$episode->id/$filename");
+        $episode = Episodes::find($this->episodes->id);
 
-            if ($save){
+
+        if ($episode){
+            if ($episode->etat == 0){
+                if ($episode->dvd != 'non'){
+                    $fichier = $episode->dvd;
+                    $qualiter = 'dvd';
+                }
+                elseif($episode->dvd != 'non'){
+                    $fichier = $episode->hd;
+                    $qualiter = 'hd';
+                }
+                else{
+                    $fichier = $episode->fhd;
+                    $qualiter = 'fhd';
+                }
+                $extension = pathinfo($fichier, PATHINFO_EXTENSION);
+                $basename = pathinfo($fichier, PATHINFO_BASENAME);
+                $filename = $episode->id.'.'.$extension;
+                $file = file_get_contents($url.$fichier);
+                $save = file_put_contents(storage_path("app/public/".$filename), $file);
                 $episode->etat = 1;
                 $episode->save();
-                imageVideo::dispatch($episode);
-                encodageVideo::dispatch($episode, $this->user, $filename);
+                if ($save){
+                    $save = Storage::disk('public')->move($filename, "serie/$episode->serie_id/$episode->saisons_id/$episode->id/$filename");
+                    $episode->etat = 2;
+                    $episode->save();
+                    imageVideo::dispatch($episode);
+                    encodageVideo::dispatch($episode, $this->user, $filename);
+                }
             }
+
         }
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Storage;
 
 class EpisodeResource extends JsonResource
 {
@@ -14,16 +15,48 @@ class EpisodeResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->user('api') && $this->download()->where('user_id', $request->user('api')->id)->where('qualite', 'dvd')->first()){
+            $downloadDvd = true;
+        }else{
+            $downloadDvd = false;
+        }
+        if ($request->user('api') && $this->download()->where('user_id', $request->user('api')->id)->where('qualite', 'hd')->first()){
+            $downloadHd = true;
+        }else{
+            $downloadHd = false;
+        }
+        if ($request->user('api') && $this->download()->where('user_id', $request->user('api')->id)->where('qualite', 'fhd')->first()){
+            $downloadFhd = true;
+        }else{
+            $downloadFhd = false;
+        }
+        if ($request->user('api') && $visio = $this->download()->where('user_id', $request->user('api')->id)->where('qualite', 'vue')->first()){
+            $stream = true;
+            $time = $visio->time;
+        }else{
+            $stream = false;
+            $time = 0;
+        }
+        if ($request->user('api') && $visio = $this->download()->where('user_id', $request->user('api')->id)->where('qualite', 'lu')->first()){
+            $stream = true;
+            $time = 0;
+        }else{
+            $stream = false;
+            $time = 0;
+        }
 
         if ($this->dvd == 'non'){
             $dvd = $this->dvd;
         }else{
             $dvd = env('URL_DL').$this->dvd;
         }
-        if ($this->hd == 'non'){
+        if ($this->hd == 'non' || $this->type == 'Chapitre'){
             $hd = $this->hd;
+            $lecture = Storage::disk('public')->files($this->streaming);
         }else{
+
             $hd = env('URL_DL').$this->hd;
+            $lecture = null;
         }
         if ($this->fhd == 'non'){
             $fhd = $this->fhd;
@@ -44,7 +77,13 @@ class EpisodeResource extends JsonResource
             'saisons_id' => $this->saisons_id,
             'etat' => $this->etat,
             'streaming' => $this->streaming,
-            'publication' => $this->publication
+            'publication' => $this->publication,
+            'downloaddvd' => $downloadDvd,
+            'downloadhd' => $downloadHd,
+            'downloadfhd' => $downloadFhd,
+            'stream' => $stream,
+            'time' => $time,
+            'lecture' => $lecture
         ];
     }
 }

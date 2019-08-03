@@ -42,8 +42,10 @@ import News from './../components/accueil/news'
 import ListeSerie from './../components/serie/listeComponent'
 import detailComponent from './../components/serie/detailComponent'
 import Streaming from './../components/serie/streamingComponent'
+import Lecture from './../components/serie/lecture'
 
 import user from './../components/compte/layout'
+import userInfo from './../components/compte/component/information'
 import userSuivis from './../components/compte/component/suivis'
 import userHistorique from './../components/compte/component/historique'
 import userParametre from './../components/compte/component/parametre'
@@ -131,6 +133,12 @@ const routes = [
                         component: Streaming,
                         beforeEnter: ifAuthOrNot
                     },
+                    {
+                        path:'tome-:saison/chapitre-:episode',
+                        name:'lecture',
+                        component: Lecture,
+                        beforeEnter: ifAuthOrNot
+                    },
                 ]
             },
 
@@ -143,13 +151,19 @@ const routes = [
         beforeEnter: ifAuthenticated,
         children: [
             {
-                path: '',
+                path: 'telechargements',
+                name: 'userInformation',
+                component: userInfo,
+                beforeEnter: ifAuthenticated
+            },
+            {
+                path: 'suivis',
                 name: 'dashboard',
                 component: userSuivis,
                 beforeEnter: ifAuthenticated
             },
             {
-                path: 'historique',
+                path: 'streaming',
                 name: 'historique',
                 component: userHistorique,
                 beforeEnter: ifAuthenticated

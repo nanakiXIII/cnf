@@ -22,7 +22,7 @@ class SaisonAdminResource extends JsonResource
             'serie_id' => $this->serie_id,
             'publication' => $this->publication,
             'nosaison' => $this->nosaison,
-            'episodes' => EpisodesAdminResource::collection($this->episodes),
+            'episodes' => EpisodesAdminResource::collection($this->episodes()->orderBy('numero', 'ASC')->get()),
             'episode' => count($this->episodes)
         ];
     }

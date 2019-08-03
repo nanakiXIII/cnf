@@ -2,6 +2,7 @@
 @import "light";
 @import "animate";
 @import "dark";
+@import "lecteur";
 section{
   font-family: 'Poppins', sans-serif;
   display: flex;
@@ -311,6 +312,18 @@ span.info-detail{
 }
 .list-group .router-link-exact-active {
   color: #eb3349 !important;
+}
+.nav-pills .router-link-active {
+  color: white !important;
+  background-color: #eb3349 !important;
+}
+.nav-pills a{
+  color: #eb3349 !important;
+  border-radius: 0px !important;
+}
+.nav-pills a:hover{
+  color: white !important;
+  background-color: #eb3349 !important;
 }
 @media (min-width: 992px){
   .owl-carousel{

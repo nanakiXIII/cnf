@@ -10,7 +10,7 @@
                 <div class="container">
                     <div class="row">
                         <transition name="custom-classes-transition"enter-active-class="animated fadeInLeft">
-                            <div class="col-md-3 position-relative" v-bind:class="{ 'cover-wrap': serie.banniere }" v-if="serie.image">
+                            <div class="col-md-3 position-relative no-mobile" v-bind:class="{ 'cover-wrap': serie.banniere }" v-if="serie.image">
                                 <img :src="serie.image" width="100%" class="img-detail mt-5">
                             </div>
                         </transition>
@@ -41,7 +41,8 @@
                                     <div class="row mt-4">
                                         <div class="col text-center border-right">
                                             <h1><i class="fas fa-bookmark colorise"></i></h1>
-                                            <small class="colorise">{{ serie.suivis }} suivis</small>
+                                            <small class="colorise" v-if="serie.abonnement != 0">{{ serie.abonnement }} suivis</small>
+                                            <small class="colorise" v-else="">Soyer le premier à suivre cette série</small>
                                         </div>
                                         <div class="col text-center">
                                             <form method="POST" v-on:submit.prevent="Abonnement">
@@ -82,27 +83,31 @@
                     </template>
                 </div>
             </div>
-            <div class="pt-2" v-if="serie.saisons != ''">
+            <div class="pt-2" v-if="serie.saisons != '' || serie.episode != 0">
                 <div class="container mt-3">
                     <div class="categorie"><i class="icon fas fa-file-download"></i> <b>Téléchargements</b></div>
-                    <div class="card" v-for="saison in serie.saisons">
+                    <div class="card bg-transparent" v-for="saison in serie.saisons">
                         <div class="card-header cursor" data-toggle="collapse" :data-target="'#saison'+saison.id" v-if="saison.nosaison == 0">
                             <h5 class="mb-0 col-title" >
                                 {{saison.type}} {{saison.numero}}: {{ saison.name }}
                             </h5>
                         </div>
-                        <div :id="'saison'+saison.id" class="collapse" v-bind:class="[ saison.nosaison ? 'show' : '']">
-                            <div class="card-body" v-if="saison.episodes != ''">
-                                <div class="media mb-2" v-for="episode in saison.episodes">
-                                    <img class="align-self-center mr-3" :src="episode.image" alt="" width="150px">
+                        <div :id="'saison'+saison.id" class="collapse " aria-expanded="true" v-bind:class="[ saison.nosaison ? 'show' : '']">
+                            <div class=" bg-transparent" v-if="saison.episodes != ''">
+                                <div class="media mt-3 border shadow-sm p-3 bg-white rounded" v-for="episode in saison.episodes">
+                                    <img class="align-self-center mr-3"  :src="episode.image" alt=""  style="max-height: 82px">
                                     <div class="media-body">
-                                        <h5 class="mt-0">{{ episode.type }} {{ episode.numero }}: {{ episode.name }}</h5>
+                                        <h5 class="mt-1">{{ episode.type }} {{ episode.numero }}: {{ episode.name }}</h5>
                                         <p>
-                                            <div class="btn-group ">
-                                                <a :href="episode.dvd" class="btn" v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']">DVD</a>
-                                                <a :href="episode.hd" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']">720P</a>
-                                                <a :href="episode.fhd" class="btn" v-bind:class="[ episode.downloadfhd ? 'btn-success' : 'btn-secondary']">1080P</a>
-                                                <router-link :to="{name:'streaming', params:{saison: saison.id, episode:episode.id}}" class="btn" v-bind:class="[ episode.vue ? 'btn-success' : 'btn-secondary']">Streaming</router-link>
+
+                                            <div class="pull-right">
+                                                <a v-show="episode.dvd != 'non' && serie.type == 'Animes'" :href="episode.dvd" @click="dl('dvd',episode)" class="btn" v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']" target="_blank">DVD</a>
+                                                <a v-show="episode.hd != 'non' && serie.type == 'Animes'"  :href="episode.hd" @click="dl('hd', episode)" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">720P</a>
+                                                <a v-show="episode.fhd != 'non' && serie.type == 'Animes'" :href="episode.fhd" @click="dl('fhd',episode)" class="btn" v-bind:class="[ episode.downloadfhd ? 'btn-success' : 'btn-secondary']" target="_blank">1080P</a>
+                                                <router-link v-show="serie.type == 'Animes'" :to="{name:'streaming', params:{saison: saison.numero, episode:episode.numero}}" class="btn" v-bind:class="[ episode.stream ? 'btn-success' : 'btn-secondary']">Streaming</router-link>
+
+                                                <a v-show="episode.hd != 'non' && serie.type == 'Scantrad'"  :href="episode.hd" @click="dl('hd', episode)" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">Télécharger </a>
+                                                <router-link v-show="serie.type == 'Scantrad' && episode.etat == 5" :to="{name:'lecture', params:{saison: saison.numero, episode:episode.numero}}" class="btn" v-bind:class="[ episode.stream ? 'btn-success' : 'btn-secondary']">Lecture en ligne</router-link>
                                             </div>
                                         </p>
                                     </div>
@@ -117,17 +122,17 @@
             </div>
         </div>
 
-        <transition name="custom-classes-transition"enter-active-class="animated fadeIn" leave-active-class="animated fadeOut" >
-            <div class="container" v-show="info == false">
-                <div class="row mt-2">
-                    <div class="col-md-12 text-center">
-                        <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
-                            <span class="sr-only">Chargement ...</span>
-                        </div>
+
+        <div class="container" v-show="info == false">
+            <div class="row mt-2">
+                <div class="col-md-12 text-center">
+                    <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Chargement ...</span>
                     </div>
                 </div>
             </div>
-        </transition>
+        </div>
+
     </div>
 
 
@@ -174,35 +179,32 @@
                         this.$parent.titre = response.data.data.titre
                     })
             },
-            toggle: function(){
-                this.isOpen = !this.isOpen
-                if (this.isOpen){
-                    this.style.height = '3000px'
-                    this.isText = this.isMoin
-                }else{
-                    this.style.height = '120px'
-                    this.isText = this.isPlus
-                }
+            dl:function(qualiter, episode){
+                var episode_id = episode.id;
+                var serie_id = this.serie.id;
+                axios.post('/api/telechargements', {serie_id, qualiter, episode_id})
+                    .then(response => {
+                        this.getInfo(this.$route.params.type, this.$route.params.slug)
+                    })
+
             },
             Abonnement: function () {
-                this.serie_id = this.serie.id;
-                this.abo = this.serie.abo;
-                const { abo, serie_id, action } = this;
-                this.$store.dispatch('compteRequest', { abo, serie_id, action })
-                    .then(() => {
-                        if (this.$store.getters.isAuthenticated) {
-                            if (this.serie.abo){
-                                this.serie.abo = false
-                                this.serie.suivis-- ;
-                            }else{
+                var serie_id = this.serie.id;
+                axios.post('/api/compte/abonnement', {serie_id})
+                    .then(response => {
+                        if(response.data.success == true){
+                            if(response.data.data == true){
                                 this.serie.abo = true
-                                this.serie.suivis++ ;
+                                this.serie.abonnement++
+                            }
+                            else{
+                                this.serie.abo = false
+                                this.serie.abonnement--
                             }
                         }
-                        else {
-                            this.$router.push('/login');
-                        }
-
+                    })
+                    .catch(error => {
+                        this.$router.push('/login');
                     })
             }
 

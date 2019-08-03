@@ -10,7 +10,13 @@ $footer: url("img/bg-light.png");
 $bg-img: url("img/bg-div.jpg");
 
 
-
+.card-link{
+  color: $color!important;
+}
+.card-link:hover{
+  color: $color!important;
+  font-weight: bold!important;
+}
 .light{
   background-color: $background;
 }
@@ -115,4 +121,8 @@ $bg-img: url("img/bg-div.jpg");
 }
 .light .triangle{
   border-color: $color transparent transparent transparent;
+}
+
+.light .card-body{
+  background-color: transparent !important;
 }

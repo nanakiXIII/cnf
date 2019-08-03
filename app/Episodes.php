@@ -18,4 +18,7 @@ class Episodes extends Model
     public function news(){
         return $this->belongsToMany('App\post');
     }
+    public function download(){
+        return $this->hasMany('App\Downloads', 'episode_id');
+    }
 }

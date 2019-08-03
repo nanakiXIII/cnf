@@ -37,8 +37,22 @@ class ExtractArchiveJob implements ShouldQueue
      */
     public function handle()
     {
-        sleep(5);
         $path = storage_path('app/public/'.$this->episodes->hd);
+        $dossier = 'serie/'.$this->episodes->serie_id.'/'.$this->episodes->saisons_id.'/'.$this->episodes->id.'/';
         \Zipper::make($path)->extractTo(storage_path('app/public/serie/'.$this->episodes->serie_id.'/'.$this->episodes->saisons_id.'/'.$this->episodes->id.'/'));
+        $directories = Storage::disk('public')->directories($dossier);
+        if (count($directories) == 1){
+            $files = Storage::disk('public')->files($directories[0]);
+            $dossier = $directories[0];
+        }
+        else{
+            $files = Storage::disk('public')->files($dossier);
+        }
+        $episode = Episodes::find($this->episodes->id);
+        $episode->hd = '/storage/'.$episode->hd;
+        $episode->image = '/storage/'.$files[0];
+        $episode->etat  = 5;
+        $episode->streaming = $dossier;
+        $episode->save();
     }
 }

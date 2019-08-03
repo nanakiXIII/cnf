@@ -14,4 +14,7 @@ class Downloads extends Model
     public function episode(){
         return $this->belongsTo('App\Episodes');
     }
+    public function serie(){
+        return $this->belongsTo('App\Serie');
+    }
 }

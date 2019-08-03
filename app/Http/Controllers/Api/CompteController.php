@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Downloads;
 use App\Episodes;
+use App\Events\userEvent;
 use App\Http\Controllers\Controller;
 use App\Repository\AccountRepository;
 use App\Serie;
@@ -95,6 +96,37 @@ class CompteController extends Controller {
 
         }
 
+    }
+
+    public function abonnement(Request $request){
+        $response = [
+            'statut' => '200',
+            'error' => false,
+            'success' => false,
+            'data' => null
+        ];
+        $user = $request->user('api');
+        if ($user){
+            $serie = Serie::find($request->serie_id);
+            if ($serie){
+                $response['success'] = true;
+                if (!$user->series()->find($request->serie_id)){
+                    $user->series()->attach($serie);
+                    $response['data'] = true;
+                }else{
+                    $user->series()->detach($serie);
+                    $response['data'] = false;
+                }
+            }else{
+                $response['error'] = true;
+                $response['data'] = 'not Serie';
+            }
+        }else{
+            $response['error'] = true;
+            $response['data'] = 'not Auth';
+        }
+        broadcast(new userEvent($request->user('api'), 'reload'));
+        return $response;
     }
 
 }
