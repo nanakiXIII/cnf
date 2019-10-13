@@ -86,6 +86,23 @@ input:checked + .slider:before {
   border-radius: 50%;
 }
 
+.bg-colorise {
+  background-color: #eb3349 !important;
+}
+
+.btn-outline-colorise {
+  color: #eb3349;
+  border-color: #eb3349;
+}
+
+.btn-outline-colorise:hover,
+.btn-outline-colorise:active,
+.btn-outline-colorise:focus {
+  color: white;
+  background-color: #eb3349;
+  border-color: #eb3349;
+}
+
 .card-link {
   color: #eb3349 !important;
 }
@@ -488,6 +505,20 @@ input:checked + .slider:before {
   color: white;
 }
 
+.dark textarea.form-control {
+  background-color: #888888 !important;
+  color: black;
+  border-color: black;
+}
+
+.dark .news a {
+  color: #eb3349;
+}
+
+.dark table {
+  color: white;
+}
+
 section {
   font-family: 'Poppins', sans-serif;
   display: -webkit-box;
@@ -504,6 +535,35 @@ main {
   -webkit-box-flex: 1;
       -ms-flex: 1 0 auto;
           flex: 1 0 auto;
+}
+
+a.colorise:hover {
+  text-decoration: none;
+  font-weight: bold;
+  color: orange;
+}
+
+.infoProjet {
+  width: 100%;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  height: 200px;
+  bottom: 0px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white !important;
+  border-top: 2px solid black;
+}
+
+.infoProjet .img {
+  width: 10em !important;
+  position: absolute;
+  top: -80px;
+  left: 20px;
+}
+
+.infoProjet .text {
+  margin-left: 12em !important;
 }
 
 .cursor {
@@ -1664,5 +1724,58 @@ label.radio-inline {
 
 .cover-wrap {
   margin-top: -158px;
+}
+
+.wrimagecard {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: left;
+  position: relative;
+  background: #fff;
+  -webkit-box-shadow: 12px 15px 20px 0px rgba(46, 61, 73, 0.15);
+          box-shadow: 12px 15px 20px 0px rgba(46, 61, 73, 0.15);
+  border-radius: 4px;
+  -webkit-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.wrimagecard .fas {
+  position: relative;
+  font-size: 70px;
+}
+
+.wrimagecard-topimage_header {
+  padding: 20px;
+}
+
+a.wrimagecard:hover,
+.wrimagecard-topimage:hover {
+  -webkit-box-shadow: 2px 4px 8px 0px rgba(46, 61, 73, 0.2);
+          box-shadow: 2px 4px 8px 0px rgba(46, 61, 73, 0.2);
+}
+
+.wrimagecard-topimage a {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.wrimagecard-topimage_title {
+  padding: 20px 24px;
+  height: 80px;
+  padding-bottom: 0.75rem;
+  position: relative;
+}
+
+.wrimagecard-topimage a {
+  border-bottom: none;
+  text-decoration: none;
+  color: #525c65;
+  -webkit-transition: color 0.3s ease;
+  transition: color 0.3s ease;
+}
+
+tr.hover:hover {
+  background-color: rgba(255, 189, 82, 0.31);
 }
 

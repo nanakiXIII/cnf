@@ -15,12 +15,23 @@ class downloadResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($this->episode){
+            return [
+                'id' => $this->id,
+                'time' => $this->time,
+                'episode' => EpisodeResource::make($this->episode),
+                'serie' => $this->serie,
+                'saison' => Saisons::find($this->episode->saisons_id) ,
+                'created_at' => $this->created_at
+            ];
+        }else{
+            return [
+                'episode' => ["Erreur" => true, "message" => "Fichier plus disponible"],
+                'serie' => $this->serie,
+                'saison' => ["Erreur" => true, "message" => "Fichier plus disponible"],
+                'created_at' => $this->created_at
+            ];
+        }
 
-        return [
-            'episode' => EpisodeResource::make($this->episode),
-            'serie' => $this->serie,
-            'saison' => Saisons::find($this->episode->saisons_id) ,
-            'created_at' => $this->created_at
-        ];
     }
 }

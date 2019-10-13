@@ -117,12 +117,12 @@
 
         },
         computed: {
-
         },
         watch:{
             informations(){
                 this.$parent.titre = "Gestion des projets"
-            }
+            },
+
         },
         methods: {
             getInfo(){

@@ -12,7 +12,7 @@
     export default {
         data(){
             return {
-                titre:'Accueil',
+                titre:"T'es con naturellement ou t'as pris des coups ?",
             }
         },
         props:{

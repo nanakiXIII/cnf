@@ -14,29 +14,31 @@
                             <router-link title="Home" :to="{ name:'accueil' }" class="nav-link">Accueil</router-link>
                         </li>
                         <li class="nav-item text-white">
-                            <a class="nav-link" title="Equipes" href="#">Equipes</a>
+                            <router-link class="nav-link" title="Equipes" :to="{ name:'equipes' }">Equipes</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link class="nav-link" title="Equipes" :to="{ name: 'projets'}" >Nos Projets</router-link>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" title="Contact" href="#">Nous Contacter</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" title="Partenaires" href="#">Partenaires</a>
+                            <router-link class="nav-link" title="Contact" :to="{ name: 'contact'}">Nous Contacter</router-link>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" title="Mon compte" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <template v-if="!user.data">Mon Compte</template>
-                                <template v-else="">{{user.data.name}}</template>
+                                <template v-if="!user && sync == false">Mon Compte</template>
+                                <template v-if="user && !user.data">
+                                    <div class="spinner-grow" role="status">
+                                        <span class="sr-only">Loading...</span>
+                                    </div>
+                                </template>
+                                <template v-if="user && user.data && sync == false">{{user.data.name}}</template>
 
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <router-link title="Login" v-if="!user" :to="{ name: 'login'}" class="dropdown-item" >Se Connecter</router-link>
                                 <router-link title="Register" v-if="!user" :to="{ name: 'register'}" class="dropdown-item" >S'enregistrer</router-link>
-                                <router-link title="Mon profile" v-if="user" :to="{ name: 'dashboard'}" class="dropdown-item" >Mon Profil</router-link>
-                                <router-link title="Register" v-if="user.data && this.found(user.data.permission,'Administration')" :to="{ name: 'administration'}" class="dropdown-item" >Administration</router-link>
-                                <a title="Logout" href="#" v-if="user"  class="dropdown-item" @click.prevent="logout" >Déconnexion</a>
+                                <router-link title="Mon profile" v-if="user && user.data" :to="{ name: 'dashboard'}" class="dropdown-item" >Mon Profil</router-link>
+                                <router-link title="Register" v-if="user && user.data && this.found(user.data.permission,'Administration')" :to="{ name: 'administration'}" class="dropdown-item" >Administration</router-link>
+                                <a title="Logout" href="#" v-if="user && user.data"  class="dropdown-item" @click.prevent="logout" >Déconnexion</a>
                             </div>
                         </li>
                     </ul>
@@ -110,6 +112,7 @@
         },
         props:{
             titre : String,
+            sync : Boolean,
         }
 
         ,
@@ -120,14 +123,16 @@
         },
         computed: {
             user(){
-                return this.$store.getters.getProfile;
+                if (this.$store.getters.isAuthenticated) {
+                    return this.$store.getters.getProfile
+                }
             }
         },
         methods: {
             logout: function () {
                 this.$store.dispatch('authLogout')
                     .then(() => {
-                        this.$router.go(0)
+                        this.$router.push('/')
                     })
             },
             setMessage(msg) {

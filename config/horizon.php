@@ -115,9 +115,9 @@ return [
             'supervisor-1' => [
                 'connection' => 'redis',
                 'queue' => ['default'],
-                'balance' => 'simple',
+                'balance' => 'auto',
                 'processes' => 10,
-                'tries' => 3,
+                'tries' => 1,
                 'timeout' => 999990,
             ],
         ],

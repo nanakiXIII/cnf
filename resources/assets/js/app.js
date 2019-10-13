@@ -8,7 +8,6 @@ require('./bootstrap');
 
 window.Vue = require('vue');
 
-
 import { router } from './router/routes';
 import { store } from './vuex/store';
 import vueMoment from 'vue-moment'
@@ -19,6 +18,8 @@ import NProgress from 'nprogress'
 import '../../../node_modules/nprogress/nprogress.css'
 import VuejsDialog from 'vuejs-dialog';
 import 'vuejs-dialog/dist/vuejs-dialog.min.css';
+import VueAnalylics from 'vue-analytics'
+
 
 Vue.use(vueMoment,{moment});
 Vue.use(Meta);
@@ -31,6 +32,11 @@ Vue.use(Meta, {
     ssrAttribute: 'data-vue-meta-server-rendered', // the attribute name that lets vue-meta know that meta info has already been server-rendered
     tagIDKeyName: 'vmid' // the property name that vue-meta uses to determine whether to overwrite or append a tag
 });
+Vue.use(VueAnalylics, {
+    id: 'UA-106567034-1',
+    router
+})
+//siteKey: process.env.CAPTCHA
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -43,6 +49,7 @@ Vue.component('layout-component', require('./components/layout/layout.vue'));
 Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
+Vue.component('projet', require('./components/component/ProjetEnCour.vue'));
 
 router.beforeResolve((to, from, next) => {
     if (to.name) {
@@ -57,7 +64,6 @@ router.afterEach((to, from) => {
 const app = new Vue({
     el: '#app',
     // voir pour chargement ...
-
     created(){
         if (this.$store.getters.isAuthenticated) {
             this.$store.dispatch('userRequest');

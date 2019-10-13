@@ -9,7 +9,7 @@ class Episodes extends Model
     protected $fillable = ['name', 'numero', 'type', 'dvd', 'hd','fhd','image', 'serie_id','saisons_id','publication', 'etat', 'streaming'];
 
     public function saison(){
-        return $this->belongsTo('App\Saisons');
+        return $this->belongsTo('App\Saisons', 'saisons_id');
     }
 
     public function serie(){

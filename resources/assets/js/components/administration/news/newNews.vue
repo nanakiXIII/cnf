@@ -75,8 +75,8 @@
                         </div>
                     </div>
                     <div class="form-group ">
-                        <div class="col-sm-10">
-                            <button type="submit" class="btn btn-primary">Sign in</button>
+                        <div class="col-sm-12">
+                            <button type="submit" class="btn btn-success btn-lg btn-block mt-3">Enregistrer</button>
                         </div>
                     </div>
                 </form>

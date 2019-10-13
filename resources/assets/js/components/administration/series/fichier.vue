@@ -316,21 +316,25 @@
                                         <option v-for="lf in listeFichier" :value="lf">{{ lf }}</option>
                                     </select>
                                 </div>
-                                <div class="form-group col-md-12" v-if="!fichiers.id">
-                                    <label for="streaming">Choix du fichier pour le streaming</label>
-                                    <select type="select" class="form-control" id="streaming" v-model="fichiers.streaming" required>
-                                        <option disabled selected>Selectionnez une option</option>
-                                        <option value="dvd">DVD</option>
-                                        <option value="hd">HD</option>
-                                        <option value="fhd">FHD</option>
-                                    </select>
-                                </div>
                             </div>
-                            <div class="row border mb-1 pt-1" v-if="series.type == 'Scantrad' || series.type == 'Light-Novel'">
+                            <div class="row border mb-1 pt-1" v-if="series.type == 'Scantrad'">
                                 <div class="form-group col-md-12">
                                     <label for="exampleFormControlFile1">Archive</label>
                                     <input type="file" class="form-control-file" ref="file" id="exampleFormControlFile1" accept="application/zip" v-on:change="onFileChange">
                                     <small>Format Zip</small>
+                                    <div class="progress mb-3" v-if="pourcentage != 0 && pourcentage != 'ok'">
+                                        <div class="progress-bar bg-warning" role="progressbar" :style="'width:'+pourcentage +'%'" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <div v-if="pourcentage == 'ok'">
+                                        Upload effectuée
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row border mb-1 pt-1" v-if="series.type == 'Light-Novel'">
+                                <div class="form-group col-md-12">
+                                    <label for="pdf">Archive</label>
+                                    <input type="file" class="form-control-file" ref="file" id="pdf" accept="application/pdf" v-on:change="onFileChange">
+                                    <small>Format PDF</small>
                                     <div class="progress mb-3" v-if="pourcentage != 0 && pourcentage != 'ok'">
                                         <div class="progress-bar bg-warning" role="progressbar" :style="'width:'+pourcentage +'%'" aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>

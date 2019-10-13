@@ -70,8 +70,6 @@ class FichierController extends Controller {
             $request->file->storeAs('public/', $request->file->getClientOriginalName());
         }
         return "ok";
-
-
     }
 
     public function create(request $request){
@@ -108,11 +106,16 @@ class FichierController extends Controller {
                 $reponse->data = true;
                 $reponse->episode = $episode;
                 if ($episode->type == 'Chapitre'){
-                    ExtractArchiveJob::dispatch($episode);
-                    //downloadFile::dispatch($episode, $request->streaming, $request->user());
+                    if ($serie->type == 'Scantrad'){
+                        ExtractArchiveJob::dispatch($episode);
+                    }
+                    else{
+                        $episode->etat = 5;
+                        $episode->save();
+                    }
                 }
                 else{
-                    downloadFile::dispatch($episode, $request->streaming, $request->user());
+                    //downloadFile::dispatch($episode, $request->streaming, $request->user());
                 }
             }
             //downloadFile::dispatch($episode, $request->streaming, $request->user());

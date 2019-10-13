@@ -20,7 +20,8 @@ const actions = {
         let remember = payload.remember ? payload.remember : false;
         let data = {
             'email':payload.email,
-            'password':payload.password
+            'password':payload.password,
+            'captcha' : payload.captcha
         }
 
         if(payload.action=='register'){
@@ -29,7 +30,8 @@ const actions = {
                 'name':payload.name,
                 'email':payload.email,
                 'password':payload.password,
-                'password_confirmation':payload.password_confirmation
+                'password_confirmation':payload.password_confirmation,
+                'captcha' : payload.captcha
             }
         }
         if(payload.action=='password-reset'){
@@ -91,6 +93,8 @@ const mutations = {
         let errors=err.errors?err.errors:{};
         if(err.error=="invalid_credentials"){
             errors.invalid_credentials=['Identifiant ou mot passe incorrect'];
+        }else{
+            errors.invalid_credentials=['Le reCaptcha est obligatoire']
         }
 
         state.status = 'error';

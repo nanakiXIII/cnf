@@ -1,206 +1,137 @@
 <template>
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-10">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-user-shield"></i> Permissions
-                                </h5>
-                            </div>
-                            <div class="col-md-2 text-right">
-                                <h5 class="mb-0" @click="nouveau">
-                                    <i class="fas fa-plus text-success"></i>
-                                </h5>
+    <div>
+        <div class="container mt-5" v-if="info == true">
+            <div class="row">
+                <div class="table-responsive">
+                    <form v-on:submit.prevent="getSubmitNew()">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Crée une permission" name="name" v-model="nouveau" aria-describedby="nouvellePermission">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-success" type="submit" id="nouvellePermission">Valider</button>
                             </div>
                         </div>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <ul class="list-group col-lg-12">
-                                <li class="list-group-item cursor" v-for="m in membres.perm" @click="informations(m)">
-                                    {{ m.name }}
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    </form>
+                    <table class="table">
+                        <tbody>
+                        <tr v-for="(info, key) in information" v-if="information != null">
+                            <td>
+                                <template v-if="info.created_at != true">
+                                    {{info.name}}
+                                </template>
+
+                                <form v-if="info.created_at == true" v-on:submit.prevent="getSubmitModifier(info, key)">
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" name="name" v-model="info.name" aria-describedby="genre">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-success" type="submit" id="genre">Valider</button>
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </td>
+                            <td class="text-right">
+                                <div class="btn-group" role="group" aria-label="Basic example">
+                                    <button type="button" class="btn btn-outline-info" @click="getModifier(info)" v-if="info.created_at != true">Modifier</button>
+                                    <button type="button" class="btn btn-outline-warning" @click="getModifier(info)" v-if="info.created_at == true">Annuler</button>
+                                    <button type="button" class="btn btn-outline-danger" @click="getDestroy(info)">Supprimer</button>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
-
-        <div class="modal fade" id="modal-vue" tabindex="-1" role="dialog">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title" v-if="modalAction == 'modifier' || modalAction == 'supprimer' && action != 'permissionDelete'">Modification: {{ information.name }}</h4>
-                        <h4 class="modal-title" v-if="modalAction == 'nouveau' && action != 'permissionDelete'">Nouvelle permission</h4>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body" v-if="modalAction == 'supprimer'">
-                        <div class="col-md-12 text-center">
-                            Etes vous sur de supprimer
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <button type="button" class="btn btn-outline-danger" @click="supprimer(true)">
-                                    <i class="fas fa-trash"></i> Oui
-                                </button>
-                            </div>
-                            <div class="col-md-6 text-right">
-                                <button type="button" class="btn btn-outline-success" @click="supprimer(false)">
-                                    Hum ... Non
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="modal-body" v-if="action != 'permissionDelete' && modalAction != 'supprimer'">
-                        <div class="alert alert-danger" role="alert" v-if="erreurs">
-                            Une erreur est survenue<br>
-                            "{{ erreur }}"
-                        </div>
-                        <form v-on:change="formulaire" v-on:submit.prevent="formulaire" class="col-md-12">
-                            <div class="form-group">
-                                <label for="name">Nom</label>
-                                <input type="text" class="form-control" id="name" v-model="information.name">
-                            </div>
-                        </form>
-                    </div>
-                    <!-- Modal Actions -->
-                    <div class="modal-footer" >
-                        <div class="col-md-6">
-                            <button type="button" class="btn btn-outline-danger" @click="condition" v-if="modalAction == 'modifier'">
-                                <i class="fas fa-trash"></i>
-                                Supprimer
-                            </button>
-                        </div>
-                        <div class="col-md-6 text-right">
-                            <span class="btn btn-outline-success" v-if="sauvegarde">
-                                Sauvegarde en cours
-                                <i class="fas fa-sync-alt rotation"></i>
-                            </span>
-                        </div>
+        <div class="container" v-show="info == false">
+            <div class="row mt-2">
+                <div class="col-md-12 text-center">
+                    <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Chargement ...</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </template>
 <script>
     export default {
         data(){
             return {
-                data:"liste",
-                information:false,
-                action:'permission',
-                user_id:'',
-                modalAction:'',
-                sauvegarde:false,
-                erreurs: false
-            }
-
-
-        },
-        computed: {
-            retour(){
-                return this.$store.getters.getReponse
-            },
-
-            membres(){
-                return this.$store.getters.getMembres;
-            },
-            user(){
-                return this.$store.getters.getProfile
-            },
-            erreur(){
-                return this.$store.getters.getErrorM
-            }
-        },
-        watch:{
-            retour(){
-                if (this.action == 'permission'){
-                    this.informations(this.retour)
-                    this.membres.perm.push(this.retour)
-                }
-            },
-            erreur(){
-                this.erreurs = this.erreur
-            },
-            information(){
-                this.erreurs = false
+                nouveau:"",
+                information:null,
+                info:false
             }
         },
         methods: {
-            found: function (tab, element) {
-                let response = tab.indexOf(element)
-                if (response >= 0){
-                    return true
-                }
-                else{
-                    return false
-                }
-            },
-            informations(info){
-                this.sauvegarde = false
-                this.information = info
-                this.modalAction = "modifier"
-                this.erreurs = ""
-                this.action = "permissionMod"
-                $('#modal-vue').modal('show');
-            },
-            paginate(){
-                const { data } = this
-                this.$store.dispatch('MembresRequest', {data});
-            },
-            nouveau(){
-                this.information = {}
-                this.information.name = null
-                this.information.id = null
-                this.modalAction = "nouveau"
-                this.action = "permission"
-                $('#modal-vue').modal('show');
-            },
-            condition(){
-                this.modalAction = 'supprimer'
-            },
-            supprimer(etat){
-                if(etat){
-                    this.action = "permissionDelete"
-                    this.formulaire()
-
-                }else{
-                    this.modalAction = 'modifier'
-                }
-
-            },
-            formulaire() {
-                const { action } = this;
-                const { id, site, name} = this.information
-                this.erreurs = ""
-                this.sauvegarde = true
-                this.$store.dispatch('FormulaireRequest', { action, id, site, name })
-                    .then(() => {
-                        if (!this.erreurs){
-                            if (action == 'permissionDelete'){
-                                this.information.name = null
-                                this.information.id = null
-                                $('#modal-vue').modal('hide');
-                            }
-                        }else{
-                            this.action = "modifier"
-                        }
-                        setTimeout(function () { this.sauvegarde = false }.bind(this), 1000)
+            doNothing(){},
+            getInfo(){
+                axios.get('/api/administration/permissions')
+                    .then(response => {
+                        this.information = response.data
+                        this.info = true
                     })
-                    .catch(()=>{
-                        console.log('erreur')
+            },
+            getModifier(info){
+                if(info.created_at == true){
+                    info.created_at = false
+                }else{
+                    info.created_at = true
+                }
+            },
+            getSubmitModifier(info, key){
+                axios.put('/api/administration/permissions', info)
+                    .then(response =>{
+                        if(response.data.success == true){
+                            this.getInfo()
+                        }else{
+
+                        }
+                    })
+            },
+            getSubmitNew(){
+                const name = this.nouveau
+                if (this.nouveau != ""){
+                    axios.post('/api/administration/permissions', {name})
+                        .then(response =>{
+                            if(response.data.success == true){
+                                this.nouveau = null
+                                this.getInfo()
+                            }else{
+
+                            }
+                        })
+                }
+            },
+            getDestroy(info){
+                let options = {
+                    okText: 'Confirmer',
+                    cancelText: 'Fermer',
+                    type:'hard',
+                    verification: 'Supprimer',
+                    verificationHelp: 'Tapez [+:verification] avant de confirmer',
+                    message: 'Etes-vous sur de vouloir supprimer '+info.name,
+                    clicksCount: 1,
+                    backdropClose: true,
+                };
+                this.$dialog.confirm(options.message,options)
+                    .then(() => {
+                        axios.delete('/api/administration/permissions/'+info.id)
+                            .then(response =>{
+                                if(response.data.success == true){
+                                    this.getInfo()
+                                }else{
+
+                                }
+                            })
                     })
             }
+
         },
+
         mounted(){
-            this.$parent.titre = "Gestion des permissions"
-            this.paginate()
+            this.$parent.titre = "Gestion des genres"
+            this.getInfo()
         }
     }
 </script>

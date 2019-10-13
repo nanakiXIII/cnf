@@ -3,8 +3,13 @@ namespace App\Http\Controllers\Api\Administration;
 
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\statistiqueResource;
 use App\post;
+use Carbon\Carbon;
+use Faker\Provider\DateTime;
 use Illuminate\Http\Request;
+use Analytics;
+use Spatie\Analytics\Period;
 
 
 class dashboardController extends Controller {
@@ -116,14 +121,34 @@ class dashboardController extends Controller {
             }
         }
         $memUsage = getServerMemoryUsage(false);
+        $pos[0] = strpos(exec('uptime'), 'load') + 14;
+        $uptime[0] = substr(exec('uptime'), $pos[0]);
+        $pos[0] = strpos($uptime[0], ',');
+        $uptime[1] = substr($uptime[0], 0, $pos[0]);
         $response['memoryUtil'] = getNiceFileSize($memUsage["total"] - $memUsage["free"]);
         $response['memoryTotal'] = getNiceFileSize($memUsage["total"]);
         $response['memoryPourcentage'] = getServerMemoryUsage(true);
+        $response['cpu'] = $uptime[1];
         return $response;
 
     }
 
     public function show(Request $request){
+        $response = [];
+        $premierJour = new Carbon('first day of this month');
+        $dernierJour = new Carbon('today');
+        $periode = Period::create($premierJour, $dernierJour);
+        $analyticsData = Analytics::fetchUserTypes($periode);
+        $analyticsDataUser = Analytics::fetchTotalVisitorsAndPageViews($periode);
+        $tableau = [];
+        foreach ($analyticsDataUser as $d){
+            $tableau['visitors'][] = $d['visitors'];
+            $tableau['pageViews'][] = $d['pageViews'];
+            $tableau['date'][] = $d['date']->format('d M');
+        }
+        $response['analytics'] = $analyticsData;
+        $response['analyticsUser'] = $tableau;
+        return $response;
 
     }
 

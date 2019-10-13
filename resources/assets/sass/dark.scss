@@ -169,3 +169,14 @@
 .dark input:focus, .dark select:focus {
   color: white;
 }
+.dark textarea.form-control {
+  background-color: #888888!important;
+  color: black;
+  border-color: black;
+}
+.dark .news a {
+  color: #eb3349;
+}
+.dark table{
+  color: white;
+}

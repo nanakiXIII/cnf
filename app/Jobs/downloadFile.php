@@ -53,8 +53,6 @@ class downloadFile implements ShouldQueue
     {
         $url =env('URL_DL');
         $episode = Episodes::find($this->episodes->id);
-
-
         if ($episode){
             if ($episode->etat == 0){
                 if ($episode->dvd != 'non'){
@@ -78,10 +76,14 @@ class downloadFile implements ShouldQueue
                 $episode->save();
                 if ($save){
                     $save = Storage::disk('public')->move($filename, "serie/$episode->serie_id/$episode->saisons_id/$episode->id/$filename");
+                    Storage::disk('public')->delete($filename);
                     $episode->etat = 2;
                     $episode->save();
-                    imageVideo::dispatch($episode);
-                    encodageVideo::dispatch($episode, $this->user, $filename);
+                    if ($episode->etat == 2){
+                        //imageVideo::dispatch($episode);
+                        //encodageVideo::dispatch($episode, $this->user, $filename);
+                    }
+
                 }
             }
 

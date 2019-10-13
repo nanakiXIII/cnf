@@ -3,8 +3,10 @@
 namespace App\Jobs;
 
 use App\Episodes;
+use App\Events\userEvent;
 use App\Saisons;
 use App\Serie;
+use App\User;
 use FFMpeg;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\SerializesModels;
@@ -19,16 +21,21 @@ class imageVideo implements ShouldQueue
      * @var Episodes
      */
     private $episodes;
+    /**
+     * @var
+     */
+    private $user;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct(Episodes $episodes)
+    public function __construct(Episodes $episodes, User $user)
     {
         //
         $this->episodes = $episodes;
+        $this->user = $user;
     }
 
     /**
@@ -40,6 +47,7 @@ class imageVideo implements ShouldQueue
     {
         $episode = Episodes::find($this->episodes->id);
         if ($episode) {
+            broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Images"]));
             $video = FFMpeg::fromDisk('public')->open("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
             $time = $video->getDurationInSeconds();
             $temp = round($time / 15);
@@ -51,6 +59,7 @@ class imageVideo implements ShouldQueue
             $temps = $temp + 5;
             $episode->image = "/storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/$temps.jpg";
             $episode->save();
+            broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Image terminé"]));
         }
     }
 }

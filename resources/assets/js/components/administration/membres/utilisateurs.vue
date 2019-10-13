@@ -1,250 +1,204 @@
 <template>
-    <div class="col-md-12 mt-5">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0">
-                            <i class="fas fa-users"></i> Membres
-                        </h5>
+    <div>
+        <div class="container mt-5" v-if="membres != null && info == true">
+            <div class="col-md-12">
+                <table class="table text-center" v-show="information == null">
+                    <thead>
+                    <tr>
+                        <th scope="col text-center">Avatar</th>
+                        <th scope="col text-center">Pseudo</th>
+                        <th scope="col text-center">E-mail</th>
+                        <th scope="col text-center">Team</th>
+                        <th scope="col text-center">Inscription</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="membre in membres.data" class="hover cursor" @click="information = membre">
+                        <td><img :src="membre.avatar" alt="no-avatar" height="20px"></td>
+                        <td>{{membre.name}}</td>
+                        <td>{{membre.email}}</td>
+                        <td v-if="membre.equipe == 1" class="text-success">Oui</td>
+                        <td v-if="membre.equipe == 0" class="text-danger">Non</td>
+                        <td>{{ membre.created_at.date | moment( 'Do MMMM YYYY') }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="card p-2 bg-white col-md-12" v-if="information != null">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img :src="information.avatar" alt="" width="100%">
+                        </div>
+                        <div class="col-md-10">
+                            Pseudo : {{ information.name }} <br>
+                            Email : {{ information.email }} <br>
+                            Inscription : {{ information.created_at.date | moment( 'Do MMMM YYYY') }}
+                        </div>
                     </div>
-                    <div class="card-body">
-                        <ul class="list-group">
-                            <li class="list-group-item" v-for="(m, key) in membres.data" @click="informations(m, key)">
-                                <i class="fas fa-grin-tears icon" v-if="m.equipe"></i>
-                                <i class="fas fa-user icon" v-if="!m.equipe"></i>
-                                {{ m.name }}
-
+                    <form v-on:submit.prevent="formulaire">
+                        <div class="col-md-12">
+                            <h4 class="mt-3 mb-3 border-bottom">
+                                Gestion des rôles
+                            </h4>
+                        </div>
+                        <div class="col-md-12">
+                            <li class="list-group-item col-md-6" v-for="r in membres.roles">
+                                {{r.name}}
+                                <label class="switch ">
+                                    <input type="checkbox" class="success" :value="r.id" name="role[]" v-model="information.roleID">
+                                    <span class="slider round"></span>
+                                </label>
                             </li>
-                        </ul>
-                    </div>
+                        </div>
+                        <div class="col-md-12">
+                            <h4 class="mt-3 mb-3 border-bottom">
+                                Gestion de la team
+                            </h4>
+                        </div>
+                        <div class="col-md-12">
+                            <li class="list-group-item col-md-6">
+                                Membre du staff ?
+                                <label class="switch ">
+                                    <input type="checkbox" class="success" :value="true" id="team" v-model="information.equipe">
+                                    <span class="slider round"></span>
+                                </label>
+                            </li>
+                        </div>
+                        <div class="col-md-12">
+                            <h4 class="mt-3 mb-3 border-bottom">
+                                Gestion des postes
+                            </h4>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 border-right">
+                                <h4 class="mt-3 mb-3 border-bottom text-center">
+                                    Animes
+                                </h4>
+                                <li class="list-group-item col-md-12" v-for="p in membres.postes" v-if="p.site == 'Animes'">
+                                    {{p.name}}
+                                    <label class="switch ">
+                                        <input type="checkbox" class="success" :value="p.id" name="poste[]" v-model="information.posteID">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </li>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mt-3 mb-3 border-bottom text-center">
+                                    Scantrad
+                                </h4>
+                                <li class="list-group-item col-md-12" v-for="p in membres.postes" v-if="p.site == 'Scantrad'">
+                                    {{p.name}}
+                                    <label class="switch ">
+                                        <input type="checkbox" class="success" :value="p.id" name="poste[]" v-model="information.posteID">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </li>
+                            </div>
+                            <div class="col-md-6 border-right">
+                                <h4 class="mt-3 mb-3 border-bottom text-center">
+                                    Light Novel
+                                </h4>
+                                <li class="list-group-item col-md-12" v-for="p in membres.postes" v-if="p.site == 'Light-novel'">
+                                    {{p.name}}
+                                    <label class="switch ">
+                                        <input type="checkbox" class="success" :value="p.id" name="poste[]" v-model="information.posteID">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </li>
+                            </div>
+                            <div class="col-md-6">
+                                <h4 class="mt-3 mb-3 border-bottom text-center">
+                                    Visual Novel
+                                </h4>
+                                <li class="list-group-item col-md-12" v-for="p in membres.postes" v-if="p.site == 'Visual-novel'">
+                                    {{p.name}}
+                                    <label class="switch ">
+                                        <input type="checkbox" class="success" :value="p.id" name="poste[]" v-model="information.posteID">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </li>
+                            </div>
+                            <div class="col-md-12">
+                                <h4 class="mt-3 mb-3 border-bottom text-center">
+                                    Autres
+                                </h4>
+                                <li class="list-group-item col-md-6" v-for="p in membres.postes" v-if="p.site == 'Autre'">
+                                    {{p.name}}
+                                    <label class="switch ">
+                                        <input type="checkbox" class="success" :value="p.id" name="poste[]" v-model="information.posteID">
+                                        <span class="slider round"></span>
+                                    </label>
+                                </li>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <button type="button" class="btn btn-danger btn-lg btn-block mt-3" @click="information = null">Annuler</button>
+                            </div>
+                            <div class="col-md-6">
+                                <button type="submit" class="btn btn-success btn-lg btn-block mt-3">Valider</button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="card" v-if="information">
-                    <div class="card-header">
-                        <div class="row">
-                            <div class="col-md-8">
-                                <h5 class="mb-0">
-                                    <i class="fas fa-user"></i> {{ information.name }}
-                                </h5>
-                            </div>
-                            <div class="col-md-4 text-right">
-                                <h5 class="mb-0 inline"><i class="fas fa-cogs" @click="modif()"></i></h5>
-                                <h5 class="mb-0 inline"><i class="fas fa-times colorise " @click="information = false"></i></h5>
-                            </div>
-                        </div>
-
-                    </div>
-                    <div class="card-body">
-                        <div class="row" v-if="!modification">
-                            <div class="col-md-2">
-                                <img class="align-middle" :src="information.avatar" alt="" v-if="information.avatar != 'noAvatar'" width="100%">
-                            </div>
-                            <div class="col-md-10">
-                                <ul class="list-group">
-                                    <li class="list-group-item"><i class="fas fa-envelope icon"></i> {{ information.email }}</li>
-                                    <li class="list-group-item" v-if="information.equipe">
-                                        <i class="fas fa-coffee icon"></i>
-                                        <span class="badge badge-secondary mr-2" v-for="p in information.poste">
-                                            <i class="fas fa-video" v-if="p.site == 'Animes'"></i>
-                                            <i class="fas fa-book-open" v-if="p.site == 'Light-novel'"></i>
-                                            <i class="fas fa-paint-brush" v-if="p.site == 'Scantrad'"></i>
-                                            <i class="fas fa-gamepad" v-if="p.site == 'Visual-novel'"></i>
-                                            <i class="fas fa-globe" v-if="p.site == 'autre'"></i>
-                                            {{ p.name }}
-                                        </span>
-                                    </li>
-                                    <li class="list-group-item"><i class="fas fa-grin-tears icon"></i>
-                                        {{ information.team }}
-                                    </li>
-                                    <li class="list-group-item"><i class="fas fa-calendar icon"></i> {{ information.created_at | moment( 'Do MMMM YYYY') }}</li>
-                                    <li class="list-group-item"><i class="fas fa-user-shield icon"></i>
-                                        <span class="badge badge-secondary mr-2" v-for="role in information.role" v-if="information.role">
-                                            {{ role }}
-                                        </span>
-                                    </li>
-                                    <li class="list-group-item"><i class="fas fa-user-secret icon"></i>
-                                        <span class="badge badge-secondary mr-2" v-for="perm in information.permission">
-                                            {{ perm }}
-                                        </span>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="row" v-else>
-                            <div class="col-md-12">
-
-                                <form v-on:submit.prevent="formulaire" class="row">
-                                    <div class="col-md-12">
-                                        <h3 class="titre mb-3 border-bottom">
-                                            Gestion des rôles
-                                        </h3>
-                                    </div>
-                                    <template v-for="r in membres.roles">
-                                        <div class="col-lg-3 col-md-6 col-xs-6">
-                                            <label :for="r.id" v-bind:class="[found(information.roleID, r.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2">{{ r.name }}
-                                                <input type="checkbox" :value="r.id" :id="r.id" class="badgebox" v-model="information.roleID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </div>
-                                    </template>
-                                    <div class="col-md-12">
-                                        <h3 class="titre mb-3 border-bottom">
-                                            Gestion de la team
-                                        </h3>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="team" v-bind:class="[information.equipe ? 'btn-success' : 'btn-danger']" class="btn  mr-2"> Fait parti de la team ?
-                                            <input type="checkbox" value="true" id="team" class="badgebox" v-model="information.equipe">
-                                            <span class="badge">&check;</span>
-                                        </label>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <h3 class="titre mb-3 border-bottom">
-                                            Gestion des postes
-                                        </h3>
-                                    </div>
-                                    <div class="col-md-4 border-right">
-                                        <h3 class="titre mb-3 border-bottom text-center">
-                                            Animes
-                                        </h3>
-                                        <template v-for="p in membres.postes">
-                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn  mr-2" v-if="p.site == 'Animes'"> {{ p.name }}
-                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </template>
-                                    </div>
-                                    <div class="col-md-4 border-right">
-                                        <h3 class="titre mb-3 border-bottom text-center">
-                                            Scans
-                                        </h3>
-                                        <template v-for="p in membres.postes">
-                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Scantrad'"> {{ p.name }}
-                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </template>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <h3 class="titre mb-3 border-bottom text-center">
-                                            LN
-                                        </h3>
-                                        <template v-for="p in membres.postes">
-                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Light-novel'"> {{ p.name }}
-                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </template>
-                                    </div>
-                                    <div class="col-md-4 border-right">
-                                        <h3 class="titre mb-3 border-bottom text-center">
-                                           VN
-                                        </h3>
-                                        <template v-for="p in membres.postes">
-                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Visual-novel'"> {{ p.name }}
-                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </template>
-                                    </div>
-                                    <div class="col-md-4 border-right">
-                                        <h3 class="titre mb-3 border-bottom text-center">
-                                            Autres
-                                        </h3>
-                                        <template v-for="p in membres.postes">
-                                            <label :for="p.id+'poste'" v-bind:class="[found(information.posteID, p.id) ? 'btn-success' : 'btn-warning']" class="btn mr-2" v-if="p.site == 'Autre'"> {{ p.name }}
-                                                <input type="checkbox" :value="p.id" :id="p.id+'poste'" class="badgebox" v-model="information.posteID">
-                                                <span class="badge">&check;</span>
-                                            </label>
-                                        </template>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-success btn-lg btn-block mt-3">Valider</button>
-                                </form>
-                            </div>
-                        </div>
+        </div>
+        <div class="container" v-show="info == false">
+            <div class="row mt-2">
+                <div class="col-md-12 text-center">
+                    <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
+                        <span class="sr-only">Chargement ...</span>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
+
 </template>
 <script>
     var pluck = require('object.pluck');
     export default {
         data(){
             return {
-               data:"liste",
-                information:false,
-                modification:false,
-                action:'roles',
-                cle:false,
-
+                membres:null,
+                info:false,
+                information:null,
             }
 
 
         },
         computed: {
-            membres(){
-                return this.$store.getters.getMembres;
-            },
             user(){
                 return this.$store.getters.getProfile
             }
         },
-        watch:{
-            membres(){
-                if(this.cle){
-                    this.informations(this.membres.data[this.cle], this.cle)
-                    this.information = this.membres.data[this.cle]
-                }
-            }
-        },
         methods: {
-            found: function (tab, element) {
-                let response = tab.indexOf(element)
-                if (response >= 0){
-                    return true
-                }
-                else{
-                    return false
-                }
+            formulaire() {
+                this.info = false
+                const data = this.information
+                    axios.put('/api/administration/membres', data)
+                        .then(response =>{
+                            if(response.data.success == true){
+                                this.information = null;
+                                this.info = true
+                            }else{
+                                this.info = true
+                            }
+                        })
             },
-            informations(info, key){
-                this.cle = key
-                this.modification = false;
-                this.information = info
-
-
-            },
-            paginate(){
-                const { data } = this
-                this.$store.dispatch('MembresRequest', {data});
-            },
-            modif(){
-                if(this.modification){
-                    this.modification = false
-                }else{
-                    this.modification = true
-                }
-            },
-            formulaire: function () {
-                const { action } = this;
-                const { posteID, id, equipe , roleID } = this.information;
-                this.$store.dispatch('FormulaireRequest', { action, posteID, id, equipe, roleID })
-                    .then(() => {
-                        setTimeout(function () { this.paginate() }.bind(this), 1000)
-                        this.modification = false;
-
+            getInfo(){
+                axios.get('/api/administration/membres')
+                    .then(response => {
+                        this.membres = response.data
+                        this.info = true
+                        this.$parent.titre = "Gestion des utilisateurs"
                     })
-            }
+
+            },
+
         },
         mounted(){
-            this.$parent.titre = "Gestion des utilisateurs"
-            this.paginate()
+            this.$parent.titre = "Chargements ..."
+            this.getInfo()
         }
     }
 </script>

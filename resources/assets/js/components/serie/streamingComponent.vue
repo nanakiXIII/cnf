@@ -132,15 +132,18 @@
                         this.currentItem = video
 
                     }
-                    this.playlist.push({
-                        sources: [{
-                            src: "/storage/serie/"+this.projet.id+"/"+this.saisons.id+'/'+episode.id+"/"+episode.id+".mp4",
-                            type: 'video/mp4'
-                        }],
-                        poster: episode.image,
-                        id:episode.id,
-                        episode: episode
-                    })
+                    if(episode.etat >= 4){
+                        this.playlist.push({
+                            sources: [{
+                                src: "/storage/serie/"+this.projet.id+"/"+this.saisons.id+'/'+episode.id+"/"+episode.id+".mp4",
+                                type: 'video/mp4'
+                            }],
+                            poster: episode.image,
+                            id:episode.id,
+                            episode: episode
+                        })
+                    }
+
                     video++
                 });
                 this.init()

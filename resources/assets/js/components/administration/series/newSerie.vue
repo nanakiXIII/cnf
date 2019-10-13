@@ -67,7 +67,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div> <!-- Recherche de la série -->
                         <form class="mt-3" v-on:submit.prevent="getSubmit">
@@ -198,14 +197,13 @@
                                             </div>
                                         </div>
                                         <div class="form-group row">
-                                            <template v-for="g in serie.allGenres">
-                                                <div class="col-lg-3 col-md-4 col-xs-6" v-if="serie.allGenres">
-                                                    <label :for="'genre'+g.id" v-bind:class="[found(genre, g.id) ? 'btn btn-outline-success' : 'btn btn-outline-info']" class="btn text-center">{{ g.name }}
-                                                        <input type="checkbox" :value="g.id" :id="'genre'+g.id" class="badgebox" v-model="genre">
-
-                                                    </label>
-                                                </div>
-                                            </template>
+                                            <li class="list-group-item col-md-3" v-for="g in serie.allGenres">
+                                                {{g.name}}
+                                                <label class="switch ">
+                                                    <input type="checkbox" class="success" :value="g.id" name="genres[]" v-model="genre">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </li>
                                         </div>
 
                                     </div>

@@ -12,6 +12,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use App\Transformers\ActivityTransformer;
 use Illuminate\Support\Facades\Log;
+use PhpParser\Node\Expr\Array_;
 
 class userEvent implements ShouldBroadcast
 {
@@ -24,13 +25,21 @@ class userEvent implements ShouldBroadcast
      * @var String
      */
     public $param;
+    /**
+     * @var
+     */
+    private $test;
+    /**
+     * @var array
+     */
+    private $info;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, String $param)
+    public function __construct(User $user, $param)
     {
         $this->user = $user;
         $this->param = $param;

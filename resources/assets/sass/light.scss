@@ -9,7 +9,18 @@ $txt-blanc: white;
 $footer: url("img/bg-light.png");
 $bg-img: url("img/bg-div.jpg");
 
-
+.bg-colorise{
+  background-color: $color!important;
+}
+.btn-outline-colorise {
+  color: $color;
+  border-color: $color;
+}
+.btn-outline-colorise:hover,.btn-outline-colorise:active, .btn-outline-colorise:focus {
+  color: $txt-blanc;
+  background-color: $color;
+  border-color: $color;
+}
 .card-link{
   color: $color!important;
 }

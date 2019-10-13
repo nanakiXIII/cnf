@@ -30,6 +30,14 @@
                                     <label for="password_confirmation" class="sr-only">Confirmation du mot de passe</label>
                                     <input type="password" id="password_confirmation" class="form-control" placeholder="Confirmation du mot de passe" required v-model="password_confirmation">
                                 </div>
+                                <vue-recaptcha
+                                        :sitekey="key"
+                                        :loadRecaptchaScript="true"
+                                        ref="recaptcha"
+                                        @verify="onVerify"
+                                        @expired="onExpired"
+                                >
+                                </vue-recaptcha>
 
                                 <button class="btn btn-outline-success btn-block mt-2 mb-2" type="submit">Créer un Compte</button>
 
@@ -47,9 +55,13 @@
 
 
 <script>
+    import VueRecaptcha from 'vue-recaptcha';
     export default {
+        components: { VueRecaptcha },
         data(){
             return {
+                key:'6LdQM1YUAAAAABFGEJQYd9wju4lylDFW30GWKGWK',
+                captcha : '',
                 'action':'register',
                 'name':'',
                 'email':'',
@@ -63,11 +75,17 @@
             }
         },
         methods: {
+            onVerify: function (response) {
+                this.captcha = true
+            },
+            onExpired: function () {
+                this.captcha = ''
+            },
             register: function () {
-                const { action, name, email, password, password_confirmation } = this;
-                this.$store.dispatch('authRequest', { action, name, email, password, password_confirmation })
+                const { action, name, email, password, password_confirmation, captcha } = this;
+                this.$store.dispatch('authRequest', { action, name, email, password, password_confirmation, captcha })
                     .then(() => {
-                        this.$router.push('/user')
+                        this.$router.push('/user/suivis')
                     })
             }
         },

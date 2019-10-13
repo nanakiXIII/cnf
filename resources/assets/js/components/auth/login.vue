@@ -4,12 +4,12 @@
             <div v-text="authErrors.get('invalid_credentials')"></div>
             <div v-text="authErrors.get('email')"></div>
         </div>
+
         <div class="row mt-5">
             <div class="col-md-6 offset-md-3">
                 <div class="card">
                     <div class="card-body">
                         <div class="auth-form text-center">
-
                             <form method="POST" v-on:submit.prevent="login">
                                 <div class="form-group row">
                                     <label for="email" class="sr-only">Identifiant</label>
@@ -24,6 +24,14 @@
                                         <input type="checkbox" value="remember" v-model="remember"> Se souvenir de moi ?
                                     </label>
                                 </div>
+                                <vue-recaptcha
+                                        :sitekey="key"
+                                        :loadRecaptchaScript="true"
+                                        ref="recaptcha"
+                                        @verify="onVerify"
+                                        @expired="onExpired"
+                                >
+                                </vue-recaptcha>
 
                                 <button class="btn btn-outline-info btn-block mt-2 mb-2" type="submit">Connexion</button>
 
@@ -41,12 +49,16 @@
 </template>
 
 <script>
+    import VueRecaptcha from 'vue-recaptcha';
     export default {
+        components: { VueRecaptcha },
         data(){
             return {
+                key:'6LdQM1YUAAAAABFGEJQYd9wju4lylDFW30GWKGWK',
                 'email':'',
                 'password':'',
                 'remember':false,
+                captcha : '',
             }
         },
         computed: {
@@ -55,11 +67,17 @@
             }
         },
         methods: {
+            onVerify: function (response) {
+                this.captcha = true
+            },
+            onExpired: function () {
+                this.captcha = ''
+            },
             login: function () {
-                const { email, password, remember } = this;
-                this.$store.dispatch('authRequest', { email, password, remember })
+                const { email, password, remember, captcha } = this;
+                this.$store.dispatch('authRequest', { email, password, remember, captcha })
                     .then(() => {
-                        this.$router.go(-1)
+                        this.$router.push('/user/suivis')
                     })
             }
         },

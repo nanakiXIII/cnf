@@ -1,7 +1,7 @@
 <template>
     <section :class="theme">
         <main>
-            <navbar-component :titre="titre" ></navbar-component>
+            <navbar-component :titre="titre" :sync="etat"></navbar-component>
             <router-view :user="user" :type="type"></router-view>
             <notifications group="foo" position="top right">
                 <template slot="body" slot-scope="props">
@@ -23,16 +23,22 @@
             <div class="bg-grey p-5 mt-5 footer">
                 <div class="container footer-icon">
                     <div class="col-auto text-center">
-                        <i class="fab fa-discord p-1"></i>
-                        <i class="fab fa-twitter p-1"></i>
+                        <a href="https://discord.gg/fVQhnbG" class="text-body" target="_blank">
+                            <i class="fab fa-discord p-1"></i>
+                        </a>
+                        <a href="https://twitter.com/chuushin_kira" target="_blank" class="text-body">
+                            <i class="fab fa-twitter p-1"></i>
+                        </a>
                         <i class="fas fa-rss p-1"></i>
                         <i class="fas fa-envelope p-1"></i>
                     </div>
                 </div>
                 <div class="col-auto text-center p-1 footer-text">
-                    Accueil | Equipes | Nous contacter | Partenaires
+                    <router-link class="colorise" :to="{name:'accueil'}">Accueil</router-link> |
+                    <router-link class="colorise" :to="{name:'equipes'}">Equipes</router-link> |
+                    <router-link class="colorise" :to="{name:'contact'}"> Nous contacter</router-link>
                     <br>
-                    <small>© 2018 Chuushin no Fansub</small>
+                    <small>© 2018 - {{annee}}  Chuushin no Fansub</small>
                 </div>
             </div>
         </footer>
@@ -46,11 +52,12 @@
         data(){
             return {
                 etat : false,
-                titre:'Accueil',
+                titre:'Sa spécialité est de n\'avoir aucune spécialité',
                 theme:'light',
                 description:'Site de la Chuushin no Fansub',
                 image:'/img/logo.png',
                 type:'all',
+                annee:'',
             }
         },
         metaInfo () {
@@ -117,12 +124,16 @@
             theme(){
             },
             user(){
-                if(this.etat == false){
-                    this.etat = true;
-                    this.listenForActivity();
-                    this.listenUser();
-                    this.theme = this.user.data.theme
+                if(this.user != undefined){
+                    this.etat = true
+                    if(this.user.data != undefined){
+                        this.etat = false;
+                        this.listenForActivity();
+                        this.listenUser();
+                        this.theme = this.user.data.theme
+                    }
                 }
+
             },
 
         },
@@ -131,16 +142,16 @@
 
             },
             listenForActivity() {
-                //Echo.private('activity.' + this.user.data.equipe)
-                //   .listen('ActivityLogged', (e) => {
-                //       this.$notify({
-                //           group: 'foo',
-                //           title: "Nouvelle activité",
-                //           text: e.data.description,
-                //       });
-                //       console.log(e.data.description);
-                //       //this.feed.unshift(e.data);
-                //   });
+                Echo.private('activity.' + this.user.data.equipe)
+                   .listen('ActivityLogged', (e) => {
+                      this.$notify({
+                          group: 'foo',
+                          title: "Nouvelle activité",
+                          text: e.data.description,
+                      });
+                      console.log(e.data.description);
+                      //this.feed.unshift(e.data);
+                  });
             },
             listenUser(){
                 Echo.private('App.User.' + this.user.data.id)
@@ -148,6 +159,14 @@
                        if(e.param == 'reload'){
                            this.$store.dispatch('userRequest');
                        }
+                       else{
+                           this.$notify({
+                               group: 'foo',
+                               title: e.param.data,
+                               text: e.param.episode.name +' '+e.param.episode.type+' '+ e.param.episode.numero,
+                           });
+                       }
+                        console.log(e.param)
                     })
             },
 
@@ -160,7 +179,8 @@
             }
         },
         mounted(){
-
+            var ladate=new Date()
+            this.annee =ladate.getFullYear();
         }
 
     }

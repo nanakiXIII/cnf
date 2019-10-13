@@ -2,7 +2,7 @@
     <div class="row" v-if="user.data != undefined">
         <div class="col-md-12" v-show="user.data.telechargement.length > 0">
             <ul class="list-unstyled" style="width:100%">
-                <li class="media mb-2 bg-white p-2" style="width:100%;box-shadow: 1px 1px 5px #555;"  v-for="episode in user.data.telechargement">
+                <li class="media mb-2 bg-white p-2" style="width:100%;"  v-for="episode in user.data.telechargement">
                     <div class="col-md-2 no-mobile text-center">
                         <img class="align-self-center mr-3" :src="episode.episode.image" style="max-height: 88px">
                     </div>

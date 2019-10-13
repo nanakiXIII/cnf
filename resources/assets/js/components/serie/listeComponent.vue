@@ -66,8 +66,22 @@
                 info:false
             };
         },
+        watch:{
+            user() {
+                if (this.user == undefined) {
+                    this.getInfo()
+                }
+            }
+        },
         props: {
             type : String,
+        },
+        computed:{
+            user(){
+                if (this.$store.getters.isAuthenticated) {
+                    return this.$store.getters.getProfile
+                }
+            }
         },
         methods:{
             getInfo(){

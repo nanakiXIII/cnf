@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Events\userEvent;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -31,7 +32,6 @@ class LoginController extends Controller
 
         DB::table('oauth_access_tokens')->where('id', $accessToken->id)->delete();
         DB::table('oauth_refresh_tokens')->where('access_token_id', $accessToken->id)->delete();
-
         return response()->json(['status' => 200]);
     }
 
@@ -45,6 +45,7 @@ class LoginController extends Controller
         return [
             'email' => 'required|email',
             'password' => 'required|min:6',
+            'captcha' => 'required'
         ];
     }
 

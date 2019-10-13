@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div v-if="user.data">
         <div class="bg-img p-3">
             <div class="container p-4">
                 <div class="row">
@@ -57,10 +57,10 @@
                         <router-link :to="{name:'historique'}" class="nav-item nav-link text-truncate">
                             <i class="fas fa-play-circle"></i><b> Streaming</b>
                         </router-link>
-                        <router-link :to="{name:'parametre'}" class="nav-item nav-link text-truncate">
+                        <router-link :to="{name:'userLecture'}" class="nav-item nav-link text-truncate">
                             <i class="fas fa-book-reader"></i><b> Lecture en ligne</b>
                         </router-link>
-                        <router-link :to="{name:'parametre'}" class="nav-item nav-link text-truncate disabled">
+                        <router-link :to="{name:'userSuccess'}" class="nav-item nav-link text-truncate disabled">
                             <i class="fas fa-trophy"></i><b> Trophées</b>
                         </router-link>
                         <router-link :to="{name:'parametre'}" class="nav-item nav-link text-truncate">
@@ -75,7 +75,15 @@
             </div>
         </div>
     </div>
-
+    <div class="container" v-else="">
+        <div class="row mt-2">
+            <div class="col-md-12 text-center">
+                <div class="spinner-border mt-5" style="width: 6rem; height: 6rem;" role="status">
+                    <span class="sr-only">Chargement ...</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 </template>
@@ -92,6 +100,11 @@
 
         },
         watch:{
+            user(){
+                if(this.user == undefined){
+                    this.$router.push('/login')
+                }
+            },
           theme(){
               this.$parent.theme = this.theme;
           },

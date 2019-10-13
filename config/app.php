@@ -163,6 +163,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         'Chumper\Zipper\ZipperServiceProvider',
+        Spatie\Analytics\AnalyticsServiceProvider::class,
 
     ],
 
@@ -214,6 +215,7 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'FFMpeg' => Pbmedia\LaravelFFMpeg\FFMpegFacade::class,
         'Zipper' => 'Chumper\Zipper\Zipper',
+        'Analytics' => Spatie\Analytics\AnalyticsFacade::class,
 
     ],
 
