@@ -20,7 +20,7 @@ class UsersTableSeeder extends Seeder
             ]);
         }
         $grade = \Spatie\Permission\Models\Role::create([
-            'Name' => 'Webmaster',
+            'name' => 'Webmaster',
             'guard_name' => 'web'
         ]);
         $permission = \Spatie\Permission\Models\Permission::all()->pluck('id')->toArray();
