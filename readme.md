@@ -8,6 +8,9 @@
     
   </li>
   <li>
+  Remplir le .ENV
+  </li>
+  <li>
     Install passport clients: <strong>php artisan passport:install</strong>
     <ul>
         <li>
@@ -15,6 +18,12 @@
         <img src="http://andranikbadalyan.com/laravelpassportvueauth/img/screenshot3.jpg">
         </li>
     </ul>
+  </li>
+  <li>
+  Discord Setup
+  </li>
+  <li>
+  npm run production
   </li>
   <li>run <strong>php artisan config:clear</strong></li>
   <li>
@@ -24,8 +33,3 @@
     </ul>
   </li>
 </ol>
-
-<h2>Screenshots:</h2>
-<p align="center"><img src="http://andranikbadalyan.com/laravelpassportvueauth/img/screenshot1.jpg"></p>
-<p align="center"><img src="http://andranikbadalyan.com/laravelpassportvueauth/img/screenshot2.jpg"></p>
-<p align="center"><img src="http://andranikbadalyan.com/laravelpassportvueauth/img/screenshot4.jpg"></p>
