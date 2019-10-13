@@ -12,13 +12,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $table = ['Administration', 'Supprimer', 'GestionDesSeries', 'GestionDesFichiers', 'GestionDesUsers', 'GestionDesNews', 'GestionDesGenres', 'GestionDesCommentaires', 'GestionDesAvancements', 'Gestion'];
-        foreach ($table as $name){
-            $permission = \Spatie\Permission\Models\Permission::create([
-                'name' => $name,
-                'guard_name' => 'web'
-            ]);
-        }
+        
         $grade = \Spatie\Permission\Models\Role::create([
             'name' => 'Webmaster',
             'guard_name' => 'web'
