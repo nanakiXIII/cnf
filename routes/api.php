@@ -15,6 +15,8 @@ use Spatie\Permission\Models\Permission;
 */
 
 Route::get('/user', 'Api\userController@show')->middleware('auth:api');
+Route::post('/user/avatar', 'Api\CompteController@avatar')->middleware('auth:api');
+Route::put('/user', 'Api\CompteController@update')->middleware('auth:api');
 
 Route::group(['middleware' => ['auth:api'], 'prefix' => 'compte'], function (){
     Route::get('/', 'Api\CompteController@index');

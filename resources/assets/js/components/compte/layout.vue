@@ -5,7 +5,7 @@
                 <div class="row">
                     <transition name="custom-classes-transition" enter-active-class="animated fadeInLeft">
                         <div class="col-md-3" v-show="show && user.data.avatar != 'noAvatar'" v-if="user.data">
-                            <img class="rounded-circle" :src="user.data.avatar" style="max-height: 200px">
+                            <img class="rounded-circle" :src="user.data.avatar" style="max-height: 200px; max-width: 100%">
                         </div>
                     </transition>
                     <transition name="custom-classes-transition" enter-active-class="animated slideInUp">

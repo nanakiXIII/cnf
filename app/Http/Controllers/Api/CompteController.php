@@ -7,6 +7,7 @@ use App\Events\userEvent;
 use App\Http\Controllers\Controller;
 use App\Repository\AccountRepository;
 use App\Serie;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
@@ -45,6 +46,42 @@ class CompteController extends Controller {
         return $tab;
     }
     public function update(Request $request){
+        $user = User::findOrFail($request->user()->id);
+        if ($request->password){
+            if ($request->email != $user->email){
+                $request->validate(
+                    [
+                        'email' => 'required|email|unique:users',
+                        'password' => 'required|confirmed|min:6',
+                    ]
+                );
+            }else{
+                $request->validate(
+                    [
+                        'password' => 'required|confirmed|min:6',
+                    ]
+                );
+            }
+            $user->password = bcrypt( $request->password);
+
+        }else{
+            if ($request->email != $user->email){
+                $request->validate(
+                    [
+                        'email' => 'required|email|unique:users',
+                    ]
+                );
+            }
+        }
+        $user->email = $request->email;
+        $user->notification = $request->notification;
+        $user->theme = $request->theme;
+        $user->save();
+        broadcast(new userEvent($request->user('api'), 'reload'));
+        return $user;
+    }
+
+    public function updatetest(Request $request){
         $user = $request->user();
 
         if($request->action == "Abonnement"){
@@ -127,6 +164,22 @@ class CompteController extends Controller {
         }
         broadcast(new userEvent($request->user('api'), 'reload'));
         return $response;
+    }
+
+    public function avatar(Request $request){
+        $tab =[];
+        $tab['ok'] = 'ok';
+        $tab['avatar'] = '';
+        if ($request->hasFile('file')){
+            $name = time().$request->file->getClientOriginalName();
+            $request->file->storeAs('public/images/avatar/', $name);
+            $tab['avatar'] = $name;
+            $user = User::find($request->user()->id);
+            $user->avatar = '/storage/images/avatar/'.$name;
+            $user->save();
+        }
+        broadcast(new userEvent($request->user('api'), 'reload'));
+        return $tab;
     }
 
 }

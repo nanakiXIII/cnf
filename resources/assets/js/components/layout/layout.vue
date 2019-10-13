@@ -156,7 +156,7 @@
             listenUser(){
                 Echo.private('App.User.' + this.user.data.id)
                     .listen('userEvent', (e) => {
-                       if(e.param == 'reload'){
+                       if(e.param == 'reload') {
                            this.$store.dispatch('userRequest');
                        }
                        else{
@@ -166,7 +166,6 @@
                                text: e.param.episode.name +' '+e.param.episode.type+' '+ e.param.episode.numero,
                            });
                        }
-                        console.log(e.param)
                     })
             },
 
