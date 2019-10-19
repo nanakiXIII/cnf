@@ -79,9 +79,7 @@
 
         watch:{
             theme(){
-                if(this.theme != ''){
-                    this.information('theme')
-                }
+                this.$parent.theme = this.theme
             },
         },
         computed: {
@@ -90,12 +88,6 @@
             }
         },
         methods: {
-            information: function (action) {
-                this.$parent.theme = this.theme
-                const { theme } = this;
-                this.$store.dispatch('compteRequest', { theme, action })
-
-            },
             getSubmit(){
                 this.theme = this.user.data.theme;
                 const data = this.user.data
