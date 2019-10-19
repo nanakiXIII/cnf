@@ -97,6 +97,7 @@
 
             },
             getSubmit(){
+                this.theme = this.user.data.theme;
                 const data = this.user.data
                     axios.put('/api/user', data)
                         .then(response =>{
