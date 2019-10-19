@@ -19,6 +19,7 @@ class downloadResource extends JsonResource
             return [
                 'id' => $this->id,
                 'time' => $this->time,
+                'user_id' => $this->user_id,
                 'episode' => EpisodeResource::make($this->episode),
                 'serie' => $this->serie,
                 'saison' => Saisons::find($this->episode->saisons_id) ,

@@ -36,7 +36,7 @@ class userResource extends JsonResource
             'equipe' => $this->equipe,
             'role' => $this->roles()->pluck('name'),
             'permission' => $tab,
-            'telechargement' => downloadResource::collection($this->download()->where('user_id', $this->id)->where('qualite', 'hd')->orWhere('qualite', 'dvd')->orWhere("qualite", 'fhd')->orderBy('id', 'DESC')->get()),
+            'telechargement' => downloadResource::collection($this->download()->where('user_id', $this->id)->where('qualite', '!=', 'vue')->where('qualite', '!=', 'lu')->orderBy('id', 'DESC')->groupBy('episode_id')->get()),
             'visionnage' => downloadResource::collection($this->download()->where('qualite', 'vue')->orderBy('id', 'DESC')->get()) ,
             'lecture' => downloadResource::collection($this->download()->where('qualite', 'lu')->orderBy('id', 'DESC')->get())  ,
             'suivis' => serieOnlyResource::collection($this->series) ,
