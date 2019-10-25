@@ -68,14 +68,14 @@
             </div> <!-- Choix du type -->
             <div class="card mb-3" style="max-width: 100%;" v-for="d in data" v-if="d.etat == type || type == 'all'">
                 <div class="row no-gutters">
-                    <div class="col-md-2">
+                    <div class="col-md-1">
                         <img :src="d.serie.image" class="card-img" width="100%" v-if="d.serie != null">
                     </div>
-                    <div class="col-md-8">
+                    <div class="col-md-9">
                         <div class="card-body">
                             <h5 class="card-title" v-if="d.serie != null">{{ d.serie.titre}} {{d.saison.type}} {{d.saison.numero}} {{d.type}} {{d.numero}}</h5>
                             <div class="card-text">
-                                <div class="row" v-if="d.type == 'Episode'">
+                                <div class="row" v-if="d.type != 'Chapitre'">
                                     <div class="col-md-6">
                                         <ul class="list-group">
                                             <li class="list-group-item" v-bind:class="{ 'list-group-item-success': d.etat >= '2', 'list-group-item-warning': d.etat == '1' }">
@@ -103,8 +103,8 @@
                                             <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                                 <a class="dropdown-item" href="#" @click="formulaire(d,'0')">Téléchargement</a>
                                                 <a class="dropdown-item" href="#" @click="formulaire(d,'2')">Encodage</a>
-                                                <a class="dropdown-item" href="#" @click="formulaire(d,'image')">Image</a>
-                                                <a class="dropdown-item" href="#" @click="formulaire(d,'delete')">Supprimer video original</a>
+                                                <a class="dropdown-item" href="#" @click="formulaire(d,'4')">Image</a>
+                                                <a class="dropdown-item" href="#" @click="formulaire(d,'5')">Supprimer video original</a>
                                             </div>
                                         </div>
                                         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" @click="serie = d">

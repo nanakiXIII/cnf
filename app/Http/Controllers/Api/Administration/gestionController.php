@@ -33,7 +33,7 @@ class gestionController extends Controller {
 
     public function update(request $request){
         $episode = Episodes::findOrFail($request->id);
-        if ($episode->type == 'Episode'){
+        if ($episode->type != 'Chapitre'){
             if ($request->etat == 0){
                 $episode->etat = $request->etat;
                 $episode->save();
@@ -44,13 +44,13 @@ class gestionController extends Controller {
                 $episode->save();
                 encodageVideo::dispatch($episode, $request->user(), "$episode->id.mkv");
             }
-            if ($request->etat == 'image'){
+            if ($request->etat == '4'){
                 imageVideo::dispatch($episode, $request->user());
             }
-            if ($request->etat == 'delete'){
+            if ($request->etat == '5'){
                 $episode->etat = 5;
                 $episode->save();
-                //Storage::disk('public')->delete("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
+                Storage::disk('public')->delete("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
             }
         }
         if ($episode->type == 'Chapitre'){
