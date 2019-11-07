@@ -19,8 +19,9 @@ import '../../../node_modules/nprogress/nprogress.css'
 import VuejsDialog from 'vuejs-dialog';
 import 'vuejs-dialog/dist/vuejs-dialog.min.css';
 import VueAnalylics from 'vue-analytics'
+import VTooltip from 'v-tooltip'
 
-
+Vue.use(VTooltip);
 Vue.use(vueMoment,{moment});
 Vue.use(Meta);
 Vue.use(Notifications);

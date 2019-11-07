@@ -9,7 +9,18 @@
             <div class="row" >
                 <div class="col-md-2 mb-4" v-for="serie in series" v-show="type == 'all' || type == serie.type" v-bind:key="serie.id">
                     <router-link :to="{ name: 'serieDetail', params: { type: encodeURI(serie.type) , slug: serie.slug} }" class="card-link">
-                        <div class="card bg-white">
+                        <div class="card bg-white"
+                             v-tooltip="{
+                              content: msg(serie),
+                              placement: 'right-center',
+                              classes: ['info'],
+                              targetClasses: ['it-has-a-tooltip'],
+                              offset: 0,
+                              delay: {
+                                show: 500,
+                                hide: 300,
+                              },
+                            }">
                             <div class="relative">
                                 <img class="card-img-top" :src="serie.image" :alt="serie.titre" style="max-height: 220px">
                                 <div class="triangle" v-if="serie.abo">
@@ -87,6 +98,10 @@
                         this.series = response.data.data
                     })
             },
+            msg(serie){
+                return  '<div class="font-weight-bolder border-bottom colorise">'+serie.titre+'</div>' +
+                        '<p class="text-left">'+serie.synopsis+'</p>'
+            }
         },
         beforeCreate(){
             this.$parent.titre = "Chargement ..."
