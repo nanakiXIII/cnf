@@ -1044,7 +1044,38 @@ a.wrimagecard:hover, .wrimagecard-topimage:hover {
 tr.hover:hover{
   background-color: rgba(255, 189, 82, 0.31);
 }
+div.etat-serie{
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+  color: white;
+}
+div.type-serie{
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  color: white;
+}
+.draggable
+{
+  display: inline-block;
+  background-image:-webkit-linear-gradient(top, #b9000e 0%, #f45c43 100%);
+  background-image: linear-gradient(to bottom, #b90016 0%, #f45c43 100%);
 
+
+  color: white;
+  background-color: #69A3B9;
+
+  width: 35px;
+  height: 35px;
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+
+  text-align: center;
+  line-height: 2.3em;
+  font-size: 1em;
+}
 
 
 

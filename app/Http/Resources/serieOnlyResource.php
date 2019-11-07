@@ -14,6 +14,19 @@ class serieOnlyResource extends JsonResource
      */
     public function toArray($request)
     {
+        if ($request->user('api')){
+            $user = $request->user('api');
+            $serie = $user->series()->select('serie_id AS id', 'titre')
+                ->where('publication', true)
+                ->orderBy('titre', 'ASC')->pluck('id')->toArray();
+            if (in_array($this->id, $serie )) {
+                $abo = true;
+            }else{
+                $abo = false;
+            }
+        }else{
+            $abo = false;
+        }
         if ($this->titre_original == ""){
             $this->titre_original = "Null";
         }
@@ -44,7 +57,8 @@ class serieOnlyResource extends JsonResource
             'publication' => $this->publication,
             'image' => "/storage/images/images/".$this->image,
             'banniere' => $banniere,
-            'abonnement' => count($this->users)
+            'abonnement' => count($this->users),
+            'abo' => $abo
         ];
     }
 }

@@ -7,6 +7,7 @@ use App\Events\userEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProjetsCollection;
 use App\Http\Resources\ProjetsResource;
+use App\Http\Resources\serieOnlyResource;
 use App\Repository\AccountRepository;
 use App\Saisons;
 use App\Serie;
@@ -34,7 +35,8 @@ class SerieController extends Controller {
     public function index(Request $request)
     {
         $projet= Serie::where('publication', 1)->orderBy('etat')->orderBy('titre')->get();
-        return new ProjetsCollection($projet);
+        return serieOnlyResource::collection($projet);
+        //return new ProjetsCollection($projet);
     }
     public function show(Request $request)
     {

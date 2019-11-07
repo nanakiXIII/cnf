@@ -26,8 +26,7 @@
                                     <i class="icon fas fa-globe" v-if="n.type == 'all'"></i>
                                     <b>{{ n.titre }}</b>
                                 </h4>
-                                <p class="card-text p-2">
-                                    {{ n.contenu.replace(/<[^>]*>/g, '').slice(0, 300) }} ...
+                                <p class="card-text p-2" v-html="n.contenu.replace(/<[^>]*>/g, '').slice(0, 300)+' ...'">
                                 </p>
                             </div>
                             <div class="footer">

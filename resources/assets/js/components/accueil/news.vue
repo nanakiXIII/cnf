@@ -115,6 +115,7 @@
 
 
 </template>
+<style> p{ margin-bottom: 5px!important; }</style>
 <script>
     import VueRecaptcha from 'vue-recaptcha';
     export default {

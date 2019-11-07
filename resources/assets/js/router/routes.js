@@ -203,7 +203,7 @@ import News from './../components/accueil/news'
 import equipe from './../components/equipe/equipes'
 import contact from './../components/contact/contact'
 
-import ListeSerie from './../components/serie/listeComponent'
+import ListeSerie from './../components/serie/liste'
 import detailComponent from './../components/serie/detailComponent'
 import Streaming from './../components/serie/streamingComponent'
 import Lecture from './../components/serie/lecture'

@@ -10,7 +10,7 @@
                     <div class="row media-body">
                         <div class="col-md-10">
                             <h5 class="mt-0 mb-1 colorise">
-                                {{ episode.serie.titre }} {{episode.id}}
+                                {{ episode.serie.titre }}
                             </h5>
                             <template v-if="!episode.episode.Erreur">
                                 {{ episode.saison.type }} {{ episode.saison.numero }}: {{ episode.episode.type }} {{ episode.episode.numero }}: {{ episode.episode.name }}
