@@ -21,7 +21,8 @@
                                 <img :src="d.serie.image" :alt="d.serie.titre"  class="img">
                                 <div class="text">
                                     <h5 class="text-center">
-                                        {{ d.serie.titre }} {{ d.saison.type }} {{ d.saison.numero}} :
+                                        {{ d.serie.titre }}
+                                        <template v-if="d.saison.numero != 0">{{ d.saison.type }} {{ d.saison.numero}}</template> :
                                         <template v-if="d.type == 'Animes'"> Episode </template>
                                         <template v-if="d.type == 'Scantrad'"> Chapitre </template>
                                         <template v-if="d.type == 'Light-Novel'"> Chapitre </template>
