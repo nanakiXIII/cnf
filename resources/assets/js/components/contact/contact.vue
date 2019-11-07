@@ -10,7 +10,7 @@
                     </a>
                 </div>
                 <div class="col-md-4">
-                    <a href="https://discord.gg/fVQhnbG" class="colorise" target="_blank">
+                    <a href="https://discord.gg/hgXXvxf" class="colorise" target="_blank">
                         <h3>
                             <i class="fab fa-discord p-1"></i> Discord
                         </h3>
