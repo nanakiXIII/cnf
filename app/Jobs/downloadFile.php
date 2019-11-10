@@ -59,7 +59,7 @@ class downloadFile implements ShouldQueue
                     $fichier = $episode->dvd;
                     $qualiter = 'dvd';
                 }
-                elseif($episode->dvd != 'non'){
+                elseif($episode->hd != 'non'){
                     $fichier = $episode->hd;
                     $qualiter = 'hd';
                 }
