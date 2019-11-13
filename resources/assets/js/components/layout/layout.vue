@@ -23,10 +23,10 @@
             <div class="bg-grey p-5 mt-5 footer">
                 <div class="container footer-icon">
                     <div class="col-auto text-center">
-                        <a href="https://discord.gg/hgXXvxf" class="text-body" target="_blank">
+                        <a href="https://discord.gg/hgXXvxf" rel="noreferrer" class="text-body" target="_blank">
                             <i class="fab fa-discord p-1"></i>
                         </a>
-                        <a href="https://twitter.com/chuushin_kira" target="_blank" class="text-body">
+                        <a href="https://twitter.com/chuushin_kira" rel="noreferrer" target="_blank" class="text-body">
                             <i class="fab fa-twitter p-1"></i>
                         </a>
                         <i class="fas fa-rss p-1"></i>
