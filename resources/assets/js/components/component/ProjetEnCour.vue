@@ -18,7 +18,7 @@
                           :autoplayHoverPause="true">
                         <div class="item relative" v-for="d in data" :style="'background-image: url('+d.serie.banniere+'); background-size: cover; height:300px;'">
                             <div class="infoProjet fond">
-                                <img :src="d.serie.image" :alt="d.serie.titre"  class="img">
+                                <img :data-src="d.serie.image" :alt="d.serie.titre"  class="img lazyload" alt="Chargement...">
                                 <div class="text">
                                     <h5 class="text-center">
                                         {{ d.serie.titre }}
