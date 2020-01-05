@@ -47,6 +47,7 @@
         </nav>
         <nav class="navbar navbar-light bg-white border-bottom-1">
             <div class="container">
+                <button type="button" @click="precedent()" class="btn btn-outline-colorise">Précédent</button>
                 <span class="navbar-brand mb-0 h1 barre no-mobile" >{{ titre}}</span>
                 <div class="pull-right">
                     <div class="btn-group btn-group-justified" v-if="$route.name == 'projets'" role="group" aria-label="Recherche des types">
@@ -129,6 +130,9 @@
             }
         },
         methods: {
+            precedent(){
+                this.$router.go(-1)
+            },
             logout: function () {
                 this.$store.dispatch('authLogout')
                     .then(() => {

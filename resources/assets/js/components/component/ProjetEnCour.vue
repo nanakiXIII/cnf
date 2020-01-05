@@ -9,13 +9,14 @@
                         </div>
                     </div>
                 </div>
-                <carousel :nav="false"
-                          :dots="true"
-                          :loop="false"
-                          :autoplay="true"
-                          :items="1"
-                          :autoplayTimeout="5000"
-                          :autoplayHoverPause="true">
+                <div class="col-md-12">
+                    <carousel :nav="false"
+                              :dots="true"
+                              :loop="false"
+                              :autoplay="true"
+                              :items="1"
+                              :autoplayTimeout="5000"
+                              :autoplayHoverPause="true">
                         <div class="item relative" v-for="d in data" :style="'background-image: url('+d.serie.banniere+'); background-size: cover; height:300px;'">
                             <div class="infoProjet fond">
                                 <img :data-src="d.serie.image" :alt="d.serie.titre"  class="img lazyload" alt="Chargement...">
@@ -118,7 +119,9 @@
 
                             </div>
                         </div>
-                </carousel>
+                    </carousel>
+                </div>
+
 
             </div>
         </div>

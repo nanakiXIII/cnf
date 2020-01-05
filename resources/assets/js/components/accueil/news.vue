@@ -2,7 +2,7 @@
     <div>
         <div class="container news">
             <div class="row"v-if="news">
-                <div class="card card-news p-3" style="width: 100%">
+                <div class="card card-news p-3 shadow" style="width: 100%">
                     <div class="card-block px-1">
                         <p class="card-text" v-html="news.contenu"></p>
                         <div class="row">
@@ -83,7 +83,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card col-md-12 mt-3" v-for="c in news.comments">
+                <div class="card col-md-12 mt-3 shadow" v-for="c in news.comments">
                     <div class="card-body row">
                         <div class="col-md-2">
                             <img :src="c.user.avatar" :alt="c.user.name" style="max-width: 100%">

@@ -1,7 +1,7 @@
 <template>
 
     <div class="container mt-5">
-        <div class="bg-white p-4 mb-3">
+        <div class="bg-white p-4 mb-3 shadow">
             <h2>Statistiques pour le mois de {{ Date.now() | moment('MMMM YYYY') }}</h2>
             <div class="row">
                 <div class="col-md-6">
@@ -22,7 +22,7 @@
             </div>
 
         </div>
-        <div class="bg-white p-4 mb-3">
+        <div class="bg-white p-4 mb-3 shadow">
             <h2>Informations du serveur</h2>
             <div class="row">
                 <div class="col-4">
@@ -65,7 +65,7 @@
                             <i class="fas fa-seedling" style="color:#fabc09"></i>
                         </div>
                         <div class="wrimagecard-topimage_title text-center text-truncate">
-                            <h4>Projets en Cours</h4>
+                            <h4>Avancements</h4>
                         </div>
                     </router-link>
                 </div>
