@@ -83,7 +83,8 @@ class EpisodeResource extends JsonResource
             'downloadfhd' => $downloadFhd,
             'stream' => $stream,
             'time' => $time,
-            'lecture' => $lecture
+            'lecture' => $lecture,
+            'add_to' => $this->updated_at
         ];
     }
 }

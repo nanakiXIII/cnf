@@ -20,7 +20,9 @@ import VuejsDialog from 'vuejs-dialog';
 import 'vuejs-dialog/dist/vuejs-dialog.min.css';
 import VueAnalylics from 'vue-analytics'
 import VTooltip from 'v-tooltip'
+import VModal from 'vue-js-modal'
 
+Vue.use(VModal, { dialog: true });
 Vue.use(VTooltip);
 Vue.use(vueMoment,{moment});
 Vue.use(Meta);
@@ -51,6 +53,7 @@ Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
 Vue.component('projet', require('./components/component/ProjetEnCour.vue'));
+Vue.component('fichier', require('./components/serie/fichiers.vue'));
 
 router.beforeResolve((to, from, next) => {
     if (to.name) {
