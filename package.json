@@ -30,6 +30,7 @@
         "nprogress": "^0.2.0",
         "object.pluck": "^0.1.2",
         "pusher-js": "^4.4.0",
+        "v-calendar": "^1.0.0-beta.23",
         "v-tooltip": "^2.0.2",
         "videojs-playlist": "^4.3.1",
         "vue-analytics": "^5.17.2",

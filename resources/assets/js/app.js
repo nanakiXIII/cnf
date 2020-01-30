@@ -21,6 +21,7 @@ import 'vuejs-dialog/dist/vuejs-dialog.min.css';
 import VueAnalylics from 'vue-analytics'
 import VTooltip from 'v-tooltip'
 import VModal from 'vue-js-modal'
+import VCalendar from 'v-calendar'
 
 Vue.use(VModal, { dialog: true });
 Vue.use(VTooltip);
@@ -39,6 +40,9 @@ Vue.use(VueAnalylics, {
     id: 'UA-106567034-1',
     router
 })
+Vue.use(VCalendar, {
+    componentPrefix: 'vc' // Use <vc-calendar /> instead of <v-calendar />
+});
 //siteKey: process.env.CAPTCHA
 /**
  * Next, we will create a fresh Vue application instance and attach it to

@@ -110,6 +110,7 @@ Route::group(['middleware' => ['auth:api', 'permission:Administration'], 'prefix
 
     //statistiques
     Route::get('/statistique/serie/{id}', 'Api\Administration\serieController@statistique');
+    Route::post('/statistique/visites', 'Api\Administration\statistiqueController@index');
 
     //dashboard
     Route::get('/dashboard', 'Api\Administration\dashboardController@index')->middleware('permission:Administration');

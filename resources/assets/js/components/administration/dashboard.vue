@@ -72,9 +72,9 @@
             </div>
             <div class="offset-md-3 col-md-3 col-sm-4">
                 <div class="wrimagecard wrimagecard-topimage">
-                    <router-link :to="{name:'AdminNews'}">
+                    <router-link :to="{name:'statistiqueVisite'}">
                         <div class="wrimagecard-topimage_header text-center" style="background-color:rgba(250, 188, 9, 0.1) ">
-                            <i class="fas fa-times" style="color:#fabc09"></i>
+                            <i class="fas fa-chart-line" style="color:#fabc09"></i>
                         </div>
                         <div class="wrimagecard-topimage_title text-center text-truncate">
                             <h4>Statistiques</h4>

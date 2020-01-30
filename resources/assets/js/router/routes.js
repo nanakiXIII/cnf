@@ -237,6 +237,7 @@ import Avancements from './../components/administration/avancements/avancements'
 import gestionVideo from './../components/administration/gestion/streaming'
 
 import Commentaire from './../components/administration/comments/comments'
+import statistiqueVisite from './../components/administration/statistique/visite'
 
 
 const routes = [
@@ -470,6 +471,11 @@ const routes = [
         name: 'gestionVideo',
         component: gestionVideo,
         beforeEnter: gestion,
+    },
+    {
+        path: '/administration/statistiques/visites',
+        name: 'statistiqueVisite',
+        component: statistiqueVisite,
     },
 ];
 
