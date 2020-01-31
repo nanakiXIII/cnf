@@ -32,10 +32,16 @@ class statistiqueController extends Controller {
 		    $tableau['visitors'][] = $d['visitors'];
 		    $tableau['date'][] = $d['date']->format('d M');
 	    }
+	    $pays = Analytics::performQuery($periode, 'ga:sessions',['dimensions'=>'ga:countryIsoCode','sort'=>'-ga:sessions']);
+	    $pa = [];
+	    foreach ($pays['rows'] as $key => $p){
+		    $pa[$p[0]] =  $p[1];
+	    }
 	    $reponse->premier = $premierJour;
 	    $reponse->dernier = $dernierJour;
+	    $reponse->pays = $pa;
 	    $reponse->navigateur = Analytics::fetchTopBrowsers($periode, 4);
-		$reponse->referents = Analytics::fetchTopReferrers($periode, 5);
+		//$reponse->referents = Analytics::fetchTopReferrers($periode);
 	    $reponse->userPeriode = $tableau;
 	    $reponse->userType = Analytics::fetchUserTypes($periode);
 

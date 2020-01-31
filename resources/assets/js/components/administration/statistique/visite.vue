@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div class="row" v-if="stat.userType">
-                    <div class="col-md-4 col-sm-4">
+                    <div class="col-md-4 col-sm-4" v-if="stat.userType.length === 2">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
@@ -45,7 +45,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-4">
+                    <div class="col-md-4 col-sm-4" v-if="stat.userType.length === 2">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row">
@@ -70,7 +70,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-4">
+                    <div class="col-md-4 col-sm-4" v-if="stat.userType.length === 2">
                         <div class="card card-stats mb-4 mb-xl-0">
                             <div class="card-body">
                                 <div class="row ">
@@ -100,7 +100,7 @@
         </div>
         <div class="container mb-3">
             <div class="row">
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
                             Visiteurs
@@ -108,20 +108,6 @@
                         <div class="card-body">
                             <div id="courbe"></div>
                         </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header">
-                            Principaux sites référents
-                        </div>
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center" v-for="ref in stat.referents">
-                                {{ref.url}}
-                                <span class="badge badge-primary badge-pill">{{ref.pageViews}}</span>
-                            </li>
-
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -158,11 +144,23 @@
                 </div>
             </div>
         </div>
+        <div class="container" v-if="stat.pays">
+            <div class="row">
+                <MapChart
+                        :countryData="stat.pays"
+                        highColor="#ff0000"
+                        lowColor="#aaaaaa"
+                        countryStrokeColor="#909090"
+                        defaultCountryFillColor="#dadada"
+                ></MapChart>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import ApexCharts from 'apexcharts'
+    import MapChart from 'vue-map-chart'
     export default {
         data(){
             return {
@@ -177,6 +175,9 @@
                 userType:null
             }
         },
+        components:{
+          MapChart
+        },
         watch:{
             range(){
                 this.sync = true;
@@ -190,7 +191,7 @@
 
         methods:{
             getStat(){
-                if(this.sync === true){
+                if(this.sync === true && this.stat.userType.length === 2){
                     this.userType = this.stat.userType;
                     this.sync = false
                 }
