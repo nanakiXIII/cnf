@@ -17,9 +17,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 use NotificationChannels\Discord\Discord;
-use NotificationChannels\Discord\DiscordChannel;
-use NotificationChannels\Discord\DiscordMessage;
-
 
 class gestionController extends Controller {
     public function index(){
