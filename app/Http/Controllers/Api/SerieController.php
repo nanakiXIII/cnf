@@ -98,7 +98,7 @@ class SerieController extends Controller {
                     ]);
                 }
             }
-            if($request->user('api')->id){
+            if(!empty($request->user('api')->id)){
                 $username = $request->user('api')->name;
                 $avatar = env('APP_URL').$request->user('api')->avatar;
             }else{
@@ -113,7 +113,7 @@ class SerieController extends Controller {
                 $filename= $episode->fhd;
             }
            $array = ["embed" =>[
-                        'title' => 'Téléchargement '.$request->qualiter, 
+                        'title' => 'Téléchargement '.$request->qualiter,
                         'description'=>$serie->titre." $episode->type $episode->numero",
                         'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$serie->image],
                         'footer' => ['text' => $username, 'icon_url' => $avatar],
