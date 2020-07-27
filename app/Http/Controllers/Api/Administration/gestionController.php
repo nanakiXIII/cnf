@@ -46,12 +46,16 @@ class gestionController extends Controller {
             }
             if ($request->etat == '5'){
                 $delete = Storage::disk('public')->delete("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
-                 $episode->etat = 5;
-                $episode->save();
+
+                if($delete){
                  $array = ["embed" =>['title'=>"[Suppression de la vidéo MKV] ".$episode->serie->titre." $episode->type $episode->numero",
                              'author' =>['name' => $request->user()->name,'icon_url' => env('APP_URL').$request->user()->avatar],
                              'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
                 $channel = app(Discord::class)->send(253979896303321089, $array );
+                 $episode->etat = 5;
+                $episode->save();
+                }
+
 
             }
         }

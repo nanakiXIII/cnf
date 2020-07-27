@@ -56,7 +56,7 @@ class downloadFile implements ShouldQueue
         $array = ["embed" =>['title'=>"[Téléchargement] ".$episode->serie->titre." $episode->type $episode->numero",
                                          'author' =>['name' => $this->user->name,
                                          'icon_url' => env('APP_URL').$this->user->avatar],
-                                         'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+                                         'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$episode->serie->image]]];
         $channel = app(Discord::class)->send(env('Log'), $array );
         if ($episode){
             if ($episode->etat == 0){
@@ -88,7 +88,7 @@ class downloadFile implements ShouldQueue
                         $array = ["embed" =>['title'=>"[Téléchargement terminé] ".$episode->serie->titre." $episode->type $episode->numero",
                                                          'author' =>['name' => $this->user->name,
                                                          'icon_url' => env('APP_URL').$this->user->avatar],
-                                                         'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+                                                         'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$episode->serie->image]]];
                         $channel = app(Discord::class)->send(env('Log'), $array );
                         imageVideo::dispatch($episode);
                         encodageVideo::dispatch($episode, $this->user, $filename);

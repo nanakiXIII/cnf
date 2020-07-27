@@ -63,7 +63,7 @@ class encodageVideo implements ShouldQueue
         $array = ["embed" =>['title'=>"[Encodage] ".$episode->serie->titre." $episode->type $episode->numero",
                                  'author' =>['name' => $this->user->name,
                                  'icon_url' => env('APP_URL').$this->user->avatar],
-                                 'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+                                 'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$episode->serie->image]]];
         $channel = app(Discord::class)->send(env('Log'), $array );
 
         chdir($dossier);
@@ -76,7 +76,7 @@ class encodageVideo implements ShouldQueue
                      'description' => 'Streaming Disponible'
                      'author' =>['name' => $this->user->name,
                      'icon_url' => env('APP_URL').$this->user->avatar],
-                     'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+                     'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$episode->serie->image]]];
             $channel = app(Discord::class)->send(env('Log'), $array );
             $episode->etat = 4;
             $episode->save();
