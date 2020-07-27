@@ -21,12 +21,12 @@
                                             <h5 class="mt-1">{{ episode.type }} {{ episode.numero }}: {{ episode.name }}</h5>
                                             <p>
                                             <div class="pull-right">
-                                                <a v-show="episode.dvd != 'non' && episode.serie.type == 'Animes'" :href="episode.dvd" @click="dl('dvd',episode)" class="btn" v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']" target="_blank">DVD</a>
+                                                <a v-show="episode.dvd != 'non' && episode.serie.type == 'Animes'" :href="episode.dvd" @click="dl('dvd',episode)" class="btn"  v-bind:class="[ episode.downloaddvd ? 'btn-success' : 'btn-secondary']" target="_blank">DVD</a>
                                                 <a v-show="episode.hd != 'non' && episode.serie.type == 'Animes'"  :href="episode.hd" @click="dl('hd', episode)" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">720P</a>
                                                 <a v-show="episode.fhd != 'non' && episode.serie.type == 'Animes'" :href="episode.fhd" @click="dl('fhd',episode)" class="btn" v-bind:class="[ episode.downloadfhd ? 'btn-success' : 'btn-secondary']" target="_blank">1080P</a>
                                                 <router-link v-show="episode.serie.type == 'Animes'" :to="{name:'streaming', params:{type: episode.serie.type, slug: episode.serie.slug, saison: episode.saison.numero, episode:episode.numero}}" class="btn" v-bind:class="[ episode.stream ? 'btn-success' : 'btn-secondary']">Streaming</router-link>
 
-                                                <a v-show="episode.hd != 'non' && episode.serie.type == 'Scantrad'"  :href="episode.hd" @click="dl('hd', episode)" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">Télécharger </a>
+                                                <a v-show="episode.hd != 'non' && episode.serie.type == 'Scantrad'"  :href="episode.hd" @click="dl('hd', episode, episode.serie_id)" class="btn" v-bind:class="[ episode.downloadhd ? 'btn-success' : 'btn-secondary']" target="_blank">Télécharger </a>
                                                 <router-link v-show="episode.serie.type == 'Scantrad' && episode.etat == 5" :to="{name:'lecture', params:{type: episode.serie.type, slug: episode.serie.slug, saison: episode.saison.numero, episode:episode.numero}}" class="btn" v-bind:class="[ episode.stream ? 'btn-success' : 'btn-secondary']">Lecture en ligne</router-link>
                                             </div>
                                             </p>
@@ -159,6 +159,16 @@
                         this.news = response.data.data
                         this.$parent.titre = response.data.data.titre
                     })
+            },
+            dl:function(qualiter, episode){
+                var episode_id = episode.id;
+                var serie_id = episode.serie.id;
+                console.log(episode.serie_id)
+                axios.post('/api/telechargements', {serie_id, qualiter, episode_id})
+                    .then(response => {
+
+                    })
+
             },
             postComments(){
                 this.save = true

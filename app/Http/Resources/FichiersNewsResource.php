@@ -73,7 +73,7 @@ class FichiersNewsResource extends JsonResource
             'hd' => $hd,
             'fhd' => $fhd,
             'image' => $this->image,
-            'serie' => ['slug' => $this->serie->slug, 'type' => $this->serie->type],
+            'serie' => ['slug' => $this->serie->slug, 'type' => $this->serie->type, 'id' => $this->serie_id],
             'saison' => ['numero' => $this->saison->numero, 'type' => $this->saison->type],
             'etat' => $this->etat,
             'streaming' => $this->streaming,
