@@ -47,7 +47,10 @@ class imageVideo implements ShouldQueue
     {
         $episode = Episodes::find($this->episodes->id);
         if ($episode) {
-            broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Images"]));
+           $array = ["embed" =>['title'=>"[Extraction des images] $episode->serie->titre $episode->type $episode->numero",
+                    'author' =>['name' => 'Martel',
+                    'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+           $channel = app(Discord::class)->send(env('Log'), $array );
             $video = FFMpeg::fromDisk('public')->open("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
             $time = $video->getDurationInSeconds();
             $temp = round($time / 15);
@@ -59,7 +62,10 @@ class imageVideo implements ShouldQueue
             $temps = $temp + 5;
             $episode->image = "/storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/$temps.jpg";
             $episode->save();
-            broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Image terminé"]));
+            $array = ["embed" =>['title'=>"[Extraction terminé] $episode->serie->titre $episode->type $episode->numero",
+                                'author' =>['name' => 'Martel',
+                                'thumbnail' => ['url' => env('APP_URL')."storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/100.jpg"]]];
+           $channel = app(Discord::class)->send(env('Log'), $array );
         }
     }
 }

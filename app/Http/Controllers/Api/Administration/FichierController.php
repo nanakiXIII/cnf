@@ -182,8 +182,7 @@ class FichierController extends Controller {
 
                 $reponse->data = true;
                 $reponse->episode = $episode;
-
-            //downloadFile::dispatch($episode, $request->streaming, $request->user());
+                downloadFile::dispatch($episode, $request->streaming, $request->user());
         }
         else{
             $reponse->data = false;

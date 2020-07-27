@@ -27,9 +27,7 @@
         <div id="app">
             <layout-component></layout-component>
         </div>
-        <script src="//{{Request::getHost()}}:6001/socket.io/socket.io.js" defer></script>
         <script src="{{ mix('js/app.js') }}" defer></script>
         <script src="{{ asset('js/lazysizes.js') }}" defer></script>
-
     </body>
 </html>

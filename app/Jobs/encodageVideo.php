@@ -60,14 +60,24 @@ class encodageVideo implements ShouldQueue
         $filename = pathinfo($this->fichier, PATHINFO_FILENAME);
         $episode = Episodes::find($this->episodes->id);
         $dossier = storage_path("app/public/serie/$episode->serie_id/$episode->saisons_id/$episode->id/");
+        $array = ["embed" =>['title'=>"[Encodage] $episode->serie->titre $episode->type $episode->numero",
+                                 'author' =>['name' => $this->user->name,
+                                 'icon_url' => env('APP_URL').$this->user->avatar],
+                                 'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+        $channel = app(Discord::class)->send(env('Log'), $array );
 
         chdir($dossier);
         $episode->etat = 3;
         $episode->save();
-        broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Encodage"]));
         exec("ffmpeg -i $basename -vf subtitles=$basename -strict -2 $filename.mp4 2>&1", $output, $returnStat);
-        broadcast(new userEvent($this->user, ['episode' => $episode, 'data' => "Encodage", '$output' => $output, 'stat' => $returnStat]));
+
         if($returnStat === 0){
+            $array = ["embed" =>['title'=>"[Encodage terminé] $episode->serie->titre $episode->type $episode->numero",
+                     'description' => 'Streaming Disponible'
+                     'author' =>['name' => $this->user->name,
+                     'icon_url' => env('APP_URL').$this->user->avatar],
+                     'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
+            $channel = app(Discord::class)->send(env('Log'), $array );
             $episode->etat = 4;
             $episode->save();
         }

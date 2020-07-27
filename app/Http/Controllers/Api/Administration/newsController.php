@@ -56,8 +56,9 @@ class newsController extends Controller {
             ]);
         if ($news){
             if ($news->publication == 1){
-                $array = ["embed" =>['title'=>"$news->titre",
-                    'description' => mb_strimwidth(strip_tags($news->contenu), 0, 200, "..."),
+                $array = [ 'mention_everyone' => true, 'content' => "@everyone $news->titre" ,"embed" =>['title'=>"$news->titre",
+                    'type' => 'article',
+                    'description' => mb_strimwidth(strip_tags($news->contenu), 0, 300, "..."),
                     'url' => env('APP_URL').'/news/'.$news->slug,
                     'image'=>['url' => env('APP_URL').$news->image]]];
                 $channel = app(Discord::class)->send(env('News'), $array );
@@ -92,8 +93,9 @@ class newsController extends Controller {
            $post->staff = $request->staff;
            if ($post->publication == 1){
                if ($post->etat == 0){
-                   $array = ["embed" =>['title'=>"$post->titre",
-                       'description' => mb_strimwidth(strip_tags($post->contenu), 0, 200, "..."),
+                   $array = ['mention_everyone' => true, 'content' => "@everyone $post->titre" "embed" =>['title'=>"$post->titre",
+                        'type' => 'article',
+                       'description' => mb_strimwidth(strip_tags($post->contenu), 0, 300, "..."),
                        'url' => env('APP_URL').'/news/'.$post->slug,
                        'image'=>['url' => env('APP_URL').$post->image]]];
                    $channel = app(Discord::class)->send(env('News'), $array );
