@@ -93,7 +93,7 @@ class newsController extends Controller {
            $post->staff = $request->staff;
            if ($post->publication == 1){
                if ($post->etat == 0){
-                   $array = ['mention_everyone' => true, 'content' => "@everyone $post->titre" "embed" =>['title'=>"$post->titre",
+                   $array = ['mention_everyone' => true, 'content' => "@everyone $post->titre", "embed" =>['title'=>"$post->titre",
                         'type' => 'article',
                        'description' => mb_strimwidth(strip_tags($post->contenu), 0, 300, "..."),
                        'url' => env('APP_URL').'/news/'.$post->slug,
