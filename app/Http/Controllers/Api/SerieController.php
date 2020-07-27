@@ -117,7 +117,7 @@ class SerieController extends Controller {
                         'description'=>$serie->titre." $episode->type $episode->numero",
                         'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$serie->image],
                         'footer' => ['text' => $username, 'icon_url' => $avatar],
-                        'timestamp' => Carbon::now()->toDateTimeString(),
+                        'timestamp' => Carbon::now()->subHours(2)->toDateTimeString(),
                         ]
                     ];
            $channel = app(Discord::class)->send(env('Log'), $array );
