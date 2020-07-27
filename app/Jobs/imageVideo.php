@@ -63,7 +63,7 @@ class imageVideo implements ShouldQueue
             $episode->image = "/storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/$temps.jpg";
             $episode->save();
             $array = ["embed" =>['title'=>"[Extraction terminé] $episode->serie->titre $episode->type $episode->numero",
-                                'author' =>['name' => 'Martel',
+                                'author' =>['name' => 'Martel'],
                                 'thumbnail' => ['url' => env('APP_URL')."storage/serie/$episode->serie_id/$episode->saisons_id/$episode->id/images/100.jpg"]]];
            $channel = app(Discord::class)->send(env('Log'), $array );
         }

@@ -48,16 +48,15 @@ class gestionController extends Controller {
                 imageVideo::dispatch($episode, $request->user());
             }
             if ($request->etat == '5'){
-                $episode->etat = 5;
-                $episode->save();
                 $delete = Storage::disk('public')->delete("serie/$episode->serie_id/$episode->saisons_id/$episode->id/$episode->id.mkv");
-                if($delete){
+                 $episode->etat = 5;
+                $episode->save();
                  $array = ["embed" =>['title'=>"[Suppression de la vidéo MKV] $episode->serie->titre $episode->type $episode->numero",
                              'author' =>['name' => $this->request->user()->name,
                              'icon_url' => env('APP_URL').$this->user()->avatar],
                              'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
                 $channel = app(Discord::class)->send(env('Log'), $array );
-                }
+
             }
         }
         if ($episode->type == 'Chapitre'){
