@@ -18,6 +18,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use NotificationChannels\Discord\Discord;
+use Carbon\Carbon;
 
 
 class SerieController extends Controller {
@@ -45,6 +47,7 @@ class SerieController extends Controller {
     }
     public function telechargement(Request $request){
         $serie = Serie::find($request->serie_id);
+        $episode = Episodes::find($request->episode_id);
         if ($serie){
             if ($request->user('api')){
                 $user = $request->user('api')->id;
@@ -95,11 +98,30 @@ class SerieController extends Controller {
                     ]);
                 }
             }
-
-            if ($dowload){
-                broadcast(new userEvent($request->user('api'), 'reload'));
-                return [true];
+            if($request->user('api')->id){
+                $username = $request->user('api')->name;
+                $avatar = env('APP_URL').$request->user('api')->avatar;
+            }else{
+                $username = 'Anonyme';
+                $avatar = 'https://vpnfacile.net/wp-content/uploads/2019/03/anonyme.png';
             }
+            if($request->qualiter == 'dvd'){
+                $filename = $episode->dvd;
+            }elseif($request->qualiter == 'hd'){
+                $filename= $episode->hd;
+            }else{
+                $filename= $episode->fhd;
+            }
+           $array = ["embed" =>[
+                        'title' => 'Téléchargement '.$request->qualiter, 
+                        'description'=>$serie->titre." $episode->type $episode->numero",
+                        'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$serie->image],
+                        'footer' => ['text' => $username, 'icon_url' => $avatar],
+                        'timestamp' => Carbon::now()->toDateTimeString(),
+                        ]
+                    ];
+           $channel = app(Discord::class)->send(env('Log'), $array );
+
         }
 
 
