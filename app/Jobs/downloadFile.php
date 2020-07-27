@@ -53,7 +53,7 @@ class downloadFile implements ShouldQueue
     {
         $url =env('URL_DL');
         $episode = Episodes::find($this->episodes->id);
-        $array = ["embed" =>['title'=>"[Téléchargement] $episode->serie->titre $episode->type $episode->numero",
+        $array = ["embed" =>['title'=>"[Téléchargement] ".$episode->serie->titre." $episode->type $episode->numero",
                                          'author' =>['name' => $this->user->name,
                                          'icon_url' => env('APP_URL').$this->user->avatar],
                                          'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
@@ -85,7 +85,7 @@ class downloadFile implements ShouldQueue
                     $episode->etat = 2;
                     $episode->save();
                     if ($episode->etat == 2){
-                        $array = ["embed" =>['title'=>"[Téléchargement terminé] $episode->serie->titre $episode->type $episode->numero",
+                        $array = ["embed" =>['title'=>"[Téléchargement terminé] ".$episode->serie->titre." $episode->type $episode->numero",
                                                          'author' =>['name' => $this->user->name,
                                                          'icon_url' => env('APP_URL').$this->user->avatar],
                                                          'thumbnail' => ['url' => env('APP_URL').'storage/images/images/'.$episode->serie->image]]];
