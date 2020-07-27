@@ -52,8 +52,8 @@ class gestionController extends Controller {
                  $episode->etat = 5;
                 $episode->save();
                  $array = ["embed" =>['title'=>"[Suppression de la vidéo MKV] $episode->serie->titre $episode->type $episode->numero",
-                             'author' =>['name' => $this->request->user()->name,
-                             'icon_url' => env('APP_URL').$this->user()->avatar],
+                             'author' =>['name' => $request->user()->name,
+                             'icon_url' => env('APP_URL').$request->user()->avatar],
                              'thumbnail' => ['url' => env('APP_URL').$episode->image]]];
                 $channel = app(Discord::class)->send(env('Log'), $array );
 
