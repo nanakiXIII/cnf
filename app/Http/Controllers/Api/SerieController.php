@@ -107,20 +107,33 @@ class SerieController extends Controller {
             }
             if($request->qualiter == 'dvd'){
                 $filename = $episode->dvd;
+                $qualiter = 'DVD';
+                $etat = 'Téléchargement';
             }elseif($request->qualiter == 'hd'){
                 $filename= $episode->hd;
-            }else{
-                $filename= $episode->fhd;
+                $qualiter = '720P';
+                $etat = 'Téléchargement';
+            }elseif($request->qualiter == 'fhd'){
+             $filename= $episode->fhd;
+             $qualiter = '1080P';
+             $etat = 'Téléchargement';
+         }else{
+                $etat = 'Streaming';
+                $filename= $episode->hd;
+                $qualiter = ' ';
             }
-           $array = ["embed" =>[
-                        'title' => 'Téléchargement '.$request->qualiter,
-                        'description'=>$serie->titre." $episode->type $episode->numero",
-                        'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$serie->image],
-                        'footer' => ['text' => $username, 'icon_url' => $avatar],
-                        'timestamp' => Carbon::now()->subHours(2)->toDateTimeString(),
-                        ]
-                    ];
-           $channel = app(Discord::class)->send(env('Log'), $array );
+            if(!$dowload){
+            $array = ["embed" =>[
+                                    'title' => $etat.' '.$qualiter,
+                                    'description'=>$serie->titre." $episode->type $episode->numero",
+                                    'thumbnail' => ['url' => env('APP_URL').'/storage/images/images/'.$serie->image],
+                                    'footer' => ['text' => $username, 'icon_url' => $avatar],
+                                    'timestamp' => Carbon::now()->subHours(2)->toDateTimeString(),
+                                    ]
+                                ];
+                       $channel = app(Discord::class)->send(env('Log'), $array );
+            }
+
 
         }
 
