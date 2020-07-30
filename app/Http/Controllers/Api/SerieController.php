@@ -122,7 +122,7 @@ class SerieController extends Controller {
                 $filename= $episode->hd;
                 $qualiter = ' ';
             }
-            if(!$request->qualiter != 'vue' || !$dowload){
+            if($request->qualiter != 'vue' || !$dowload){
             $array = ["embed" =>[
                                     'title' => $etat.' '.$qualiter,
                                     'description'=>$serie->titre." $episode->type $episode->numero",
