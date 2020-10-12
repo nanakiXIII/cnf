@@ -2,240 +2,225 @@
     <div class="container mt-5">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-header">
+                <div class="bg-white p-3 border">
+                    <nav class="nav nav-pills nav-justified border">
+                        <a @click="serie.type = 'ANIME'" v-bind:class="{'router-link-exact-active router-link-active':(serie.type === 'ANIME')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Animés</b>
+                        </a>
+                        <a @click="serie.type = 'MANGA'" v-bind:class="{'router-link-exact-active router-link-active':(serie.type === 'MANGA')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Scantrad</b>
+                        </a>
+                        <a @click="serie.type = 'Light-Novel'" v-bind:class="{'router-link-exact-active router-link-active':(serie.type === 'Light-Novel')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Light Novel</b>
+                        </a>
+                        <a @click="serie.type = 'Visual-Novel'" v-bind:class="{'router-link-exact-active router-link-active':(serie.type === 'Visual-Novel')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Visual Novel</b>
+                        </a>
+                    </nav>
+                    <form v-on:submit.prevent="getInfo(name)" class="mt-3">
+                        <div class="input-group">
+                            <input type="text" class="form-control" name="Search" autofocus placeholder="Chercher une série" v-model="name">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-colorise" type="submit" id="valider" v-bind:class="{'disable':(options.sync == true)}" >
+                                    <span class="spinner-border spinner-border-sm" v-if="options.sync == true" role="status" aria-hidden="true"></span>
+                                    <span v-if="options.sync == false" >Recherche</span>
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="mt-3" v-if="informations != null && options.choix == false">
+                        <div class="table-responsive">
+                            <table class="table align-items-center table-flush table-hover">
+                                <tbody>
+                                <tr v-for="info in informations.data.Page.media" @click="getAnime(info)" class="cursor">
+                                    <th scope="row">
+                                        <div class="media align-items-center">
+                                            <img alt="Image placeholder" height="50px" width="50px" class="rounded-circle mr-4 ml-3 shadow-sm" :src="info.coverImage.large">
+                                            <div class="media-body">
+                                                <span class="mb-0 text-sm text-break">{{info.title.romaji}}</span>
+                                            </div>
+                                        </div>
+                                    </th>
+                                    <td class="text-center">
+                                        <span class="text-primary" v-if="serie.etat == 0">En Cours</span>
+                                        <span class="text-success" v-if="serie.etat == 1">Terminé</span>
+                                        <span class="text-warning" v-if="serie.etat == 2">Abandonné</span>
+                                        <span class="text-danger" v-if="serie.etat == 3">Licencié</span>
+                                    </td>
+                                    <td class="text-center">
+                                        {{info.type}}
+                                    </td>
+                                    <td class="text-center">
+                                        <p class="card-text" v-if="info.type == 'ANIME'">{{info.episodes}} Episodes</p>
+                                        <p class="card-text" v-if="info.type == 'MANGA'">{{info.volumes}} Tomes</p>
+
+                                    </td>
+                                    <td>
+                                        <p class="card-text" v-if="info.type == 'MANGA'">{{info.chapters}} Chapitres</p>
+                                    </td>
+                                    <td>
+                                        {{ info.startDate.year}}
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="text-center cursor" v-if="informations != null && options.choix == true" @click="options.choix = false">
+                        <i class="fas fa-arrow-down"></i>
+                    </div>
+                    <div class="text-center cursor" v-if="informations != null && options.choix == false && serie.title.romaji " @click="options.choix = true">
+                        <i class="fas fa-arrow-up"></i>
+                    </div>
+                </div> <!-- Recherche + choix du type -->
+                <form v-on:submit.prevent="postSerie">
+                    <div class="bg-white p-3 mt-3 border relative" id="titres">
+                        <div class="overlay" v-if="options.sync"></div>
+                        <div class="form-group">
+                            <label for="titre">Titre</label>
+                            <input type="text" class="form-control" id="titre" v-model="serie.title.romaji">
+                        </div>
+                        <div class="form-group">
+                            <label for="titre_original">Titre Original</label>
+                            <input type="text" class="form-control" id="titre_original" v-model="serie.title.english">
+                        </div>
+                        <div class="form-group">
+                            <label for="titre_alternatif">Titre Alternatif</label>
+                            <input type="text" class="form-control" id="titre_alternatif" v-model="serie.title.native">
+                        </div>
+                    </div> <!-- input des titres -->
+                    <div class="bg-white p-3 mt-3 border relative" id="informations">
+                        <div class="overlay" v-if="options.sync"></div>
+                        <div class="form-group">
+                            <label for="date">Date de parution</label>
+                            <input type="text" class="form-control" id="date" :value="date | moment('MMMM YYYY')">
+                        </div>
+                        <div class="form-group" v-if="serie.type == 'ANIME'">
+                            <label for="studio">Studio</label>
+                            <input type="text" class="form-control" id="studio" v-model="serie.studios.nodes[0].name">
+                        </div>
+                        <div class="form-group">
+                            <label for="Statut">Statut </label>
+                            <select class="form-control" id="Statut" v-model="serie.statut">
+                                <option value="0">En Cours</option>
+                                <option value="1">Terminé</option>
+                                <option value="2">Abandonné</option>
+                                <option value="3">Licencié</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="visible">Visible </label>
+                            <select class="form-control" id="visible" v-model="serie.publication">
+                                <option value="0" class="text-danger">Non Visible</option>
+                                <option value="1" class="text-success">Visible</option>
+                            </select>
+                        </div>
+                    </div> <!-- informations -->
+                    <div class="bg-white p-3 mt-3 border relative" id="Fichiers">
+                        <div class="overlay" v-if="options.sync"></div>
+                        <div class="form-group" v-if="serie.type == 'ANIME'">
+                            <label for="episodes">Episodes</label>
+                            <input type="number" class="form-control" id="episodes" min="0" v-model="serie.episodes">
+                        </div>
+                        <div class="form-group" v-if="serie.type == 'MANGA' || serie.type == 'Light-Novel'">
+                            <label for="tomes">Tomes</label>
+                            <input type="number" class="form-control" id="tomes" min="0" v-model="serie.volumes">
+                        </div>
+                        <div class="form-group" v-if="serie.type == 'MANGA' || serie.type == 'Light-Novel'">
+                            <label for="chapitres">Chapites</label>
+                            <input type="number" class="form-control" id="chapitres" v-model="serie.chapters">
+                        </div>
+                    </div> <!-- input des fichiers -->
+                    <div class="bg-white p-3 mt-3 border relative" id="Images">
+                        <div class="overlay" v-if="options.sync"></div>
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="spinner-border text-warning float-right" role="status" v-if="options.sync == true">
-                                    <span class="sr-only">Chargement ...</span>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="banniere">Bannière</label>
+                                    <input type="file" class="form-control-file" id="banniere" @change="onFileChange">
                                 </div>
+                            </div>
+                            <div class="col-md-6">
+                                <img :src="serie.bannerImage" alt="" width="100%">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="image">Image</label>
+                                    <input type="file" class="form-control-file" id="image" @change="onFileChange">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <img :src="serie.coverImage.medium" alt="" style="max-height: 100px;">
                             </div>
                         </div>
 
-                    </div>
-                    <div class="card-body">
-                        <div v-if="options.etape == 0">
-                            <div class="row">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <label class="input-group-text" for="type">Type</label>
-                                    </div>
-                                    <select class="custom-select" id="type" v-model="type">
-                                        <option value="Animes">Animes</option>
-                                        <option value="Scantrad">Scantrad</option>
-                                        <option value="Light-Novel">Light Novel</option>
-                                        <option value="Visual-Novel">Visual Novel</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg btn-block" @click="etape('+', 2)">
-                                        Manuellement
-                                    </button>
-                                </div>
-                                <div class="col-md-6" v-if="type != 'Visual-Novel'">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg btn-block" @click="etape('+', 1)">
-                                        Automatiquement
-                                    </button>
-                                </div>
-                            </div>
-
-                        </div> <!-- Choix de la méthode -->
-                        <div v-if="options.etape == 1">
-                            <form v-on:submit.prevent="getInfo(name)">
-                                <div class="input-group mb-3">
-                                    <input type="text" class="form-control" name="Search" autofocus placeholder="Titre de la série" v-model="name">
-                                    <div class="input-group-append">
-                                        <button class="btn btn-outline-success" type="submit" id="button-addon2">valider</button>
-                                    </div>
-                                </div>
-                            </form>
-
-                            <div class="row" v-if="informations != null">
-                                <div class="card mb-3 mr-1" style="width: 540px; cursor: pointer;"  v-for="info in informations.data.Page.media" @click="getAnimeka(info)">
-                                    <div class="row no-gutters border" style="height: 180px">
-                                        <div class="col-md-3">
-                                            <img :src="info.coverImage.large" height="180px" width="100%" class="card-img" alt="...">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{info.title.romaji}}</h5>
-                                                <p class="card-text" v-if="info.type == 'ANIME'">{{info.episodes}} Episodes</p>
-                                                <p class="card-text" v-if="info.type == 'MANGA'">{{info.volumes}} Tomes</p>
-                                                <p class="card-text" v-if="info.type == 'MANGA'">{{info.chapters}} Chapitres</p>
-                                                <p class="card-text"><small class="text-muted">{{info.type}}</small></p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div> <!-- Recherche de la série -->
-                        <form class="mt-3" v-on:submit.prevent="getSubmit">
-                            <div v-if="options.etape == 2">
-                                <div v-if="serie.bannerImage" class="row banner" :style="'background-image: url('+serie.bannerImage+');'">
-                                    <div data-v-b475b770="" class="shadow"></div>
-                                </div>
-                                <div class="row mt-2">
-                                    <div class="col-md-2 position-relative" v-bind:class="{ 'cover-wrap': serie.bannerImage }" v-if="serie.coverImage">
-                                        <img :src="serie.coverImage.large" width="100%" >
-                                    </div>
-                                    <div class="col-md-10">
-                                        <div class="form-group">
-                                            <div class="input-group mb-1" >
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Titre</span>
-                                                </div>
-                                                <input type="text" class="form-control" v-model="serie.title.romaji">
-                                            </div>
-                                            <div class="input-group mb-1" >
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Titre Original</span>
-                                                </div>
-                                                <input type="text" class="form-control" v-model="serie.title.english">
-                                            </div>
-                                            <div class="input-group mb-1" >
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">Titre Alternatif</span>
-                                            </div>
-                                            <input type="text" class="form-control" v-model="serie.title.native">
-                                        </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group mb-1" v-if="serie.type == 'ANIME'">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Production | Studio</span>
-                                                </div>
-                                                <input type="text" class="form-control" :value="date | moment('MMMM YYYY')">
-                                                <input type="text" class="form-control" v-model="serie.studios.nodes[0].name">
-                                            </div>
-                                            <div class="input-group mb-1" v-if="serie.type == 'MANGA'">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Date de parution</span>
-                                                </div>
-                                                <input type="text" class="form-control" :value="date | moment('MMMM YYYY')">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group mb-1" v-if="serie.type == 'ANIME'">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Episodes</span>
-                                                </div>
-                                                <input type="number" class="form-control" v-model="serie.episodes" min="0" required>
-                                            </div>
-                                            <div class="input-group mb-1" v-if="serie.type == 'MANGA'">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Tomes</span>
-                                                </div>
-                                                <input type="number" class="form-control" v-model="serie.volumes" min="0" required>
-                                            </div>
-                                            <div class="input-group mb-1" v-if="serie.type == 'MANGA'">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Chapitres</span>
-                                                </div>
-                                                <input type="number" class="form-control" v-model="serie.chapters" min="0" required>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Synopsis</span>
-                                                </div>
-                                                <textarea class="form-control" rows="8" v-model="serie.synopsis"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="input-group mb-3" v-if="!serie.coverImage.large">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="imageLabel">Image</span>
-                                            </div>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="imageForm" aria-describedby="imageLabel" @change="onFileChange">
-                                                <label class="custom-file-label" for="imageForm">{{image.name}}</label>
-                                            </div>
-                                        </div>
-                                        <div class="input-group mb-3" v-if="!serie.bannerImage">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text" id="bannerLabel">Bannière</span>
-                                            </div>
-                                            <div class="custom-file">
-                                                <input type="file" class="custom-file-input" id="bannerForm" aria-describedby="bannerLabel" @change="onFileChange">
-                                                <label class="custom-file-label" for="bannerForm">{{banner.name}}</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div> <!-- info basic Titre etc ... -->
-                            <div v-if="options.etape == 2">
-                                <div class="row mt-2">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="statut">Statut</label>
-                                                </div>
-                                                <select class="custom-select" id="statut" v-model="serie.statut" required>
-                                                    <option value="0">En Cours</option>
-                                                    <option value="1">Terminé</option>
-                                                    <option value="2">Abandonné</option>
-                                                    <option value="3">Licencié</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="etat">Etat</label>
-                                                </div>
-                                                <select class="custom-select" id="etat" v-model="serie.etat" required>
-                                                    <option value="0" selected>Hors Ligne</option>
-                                                    <option value="1">En ligne</option>
-                                                </select>
-                                            </div>
-                                            <div class="input-group mb-3">
-                                                <div class="input-group-prepend">
-                                                    <span class="input-group-text">Staff</span>
-                                                </div>
-                                                <textarea class="form-control" rows="8" v-model="serie.staff"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <li class="list-group-item col-md-3" v-for="g in serie.allGenres">
-                                                {{g.name}}
-                                                <label class="switch ">
-                                                    <input type="checkbox" class="success" :value="g.id" name="genres[]" v-model="genre">
-                                                    <span class="slider round"></span>
-                                                </label>
-                                            </li>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div><!-- info basic Statut Genre etc ... -->
-                            <div v-if="options.etape == 3"><!-- Ecran de chargement ... -->
-                                <div class="row mt-2">
-                                    <div class="col-md-12">
-                                        <div class="spinner-border" style="width: 3rem; height: 3rem;" role="status">
-                                            <span class="sr-only">Chargement ...</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row" v-if="options.etape > 1 && options.etape != 4">
-                                <div class="progress mb-3" v-if="options.pourcentage != 0">
-                                    <div class="progress-bar bg-warning" role="progressbar" :style="'width:'+options.pourcentage +'%'" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                                <div class="col-md-6" v-if="options.etape != 3">
-                                    <button type="button" class="btn btn-outline-secondary btn-lg btn-block" @click="etape('-', 1)">
-                                        Précèdent
-                                    </button>
-                                </div>
-                                <div class="col-md-6" v-if="options.etape == 2">
-                                    <button type="submit" class="btn btn-outline-success btn-lg btn-block" >
-                                        Valider
+                    </div> <!-- input des images -->
+                    <div class="bg-white p-3 mt-3 border relative" id="nautilijon">
+                        <form v-on:submit.prevent="getNauti(options.url)" class="mt-3">
+                            <label for="nautili">Nautilijon</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="Nautilijon" autofocus placeholder="https://www.nautiljon.com/an..." v-model="options.url" id="nautili" v-bind:class="{'is-invalid':(options.nautilijon == 1),'is-valid':(options.nautilijon == 2)}">
+                                <div class="input-group-append">
+                                    <button class="btn btn-outline-colorise" type="submit" id="validerNautilijon" v-bind:class="{'disable':(options.sync == true)}" >
+                                        <span class="spinner-border spinner-border-sm" v-if="options.sync == true" role="status" aria-hidden="true"></span>
+                                        <span v-if="options.sync == false" >Recherche</span>
                                     </button>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                </div>
+                    </div> <!-- Cherche Nautilijon -->
+                    <div class="bg-white p-3 mt-3 border relative" >
+                        <div class="overlay" v-if="options.sync"></div>
+                        <div class="form-group">
+                            <label for="synopsis">Synopsis</label>
+                            <textarea class="form-control" id="synopsis" rows="6" v-model="serie.synopsis"></textarea>
+                        </div>
+                    </div> <!-- Synopsis -->
+                    <div class="bg-white p-3 mt-3 border relative" id="genres">
+                        <div class="overlay" v-if="options.sync"></div>
+                        <div class="form-group row">
+                            <li class="list-group-item col-md-3" v-for="g in genres">
+                                {{g.name}}
+                                <label class="switch ">
+                                    <input type="checkbox" class="success" :value="g.id" name="genres[]" v-model="serie.genres">
+                                    <span class="slider round"></span>
+                                </label>
+                            </li>
+                        </div>
+                    </div> <!-- genres -->
+                    <div class="bg-white p-3 mt-3 border relative" >
+                        <div class="form-group">
+                            <label for="staff">Equipe du projet</label>
+                            <textarea class="form-control" id="staff" rows="6" v-model="serie.staff"></textarea>
+                        </div>
+                    </div> <!-- Staff -->
+                    <div class="bg-white mt-3 border p-3">
+                        <nav class="nav nav-pills nav-justified border">
+                            <a @click="team = 'cnf'" v-bind:class="{'router-link-exact-active router-link-active':(team === 'cnf')}" class="nav-item nav-link text-truncate cursor">
+                                <b>Chuushin</b>
+                            </a>
+                            <a @click="team = 'set'" v-bind:class="{'router-link-exact-active router-link-active':(team === 'set')}" class="nav-item nav-link text-truncate cursor">
+                                <b>SeedTeam</b>
+                            </a>
+                        </nav>
+                    </div> <!-- team -->
+                    <div class="row">
+                        <div class="col-md-12 mt-3" v-if="options.pourcentage != 0">
+                            <div class="progress" >
+                                <div class="progress-bar bg-warning" role="progressbar" :style="'width:'+options.pourcentage +'%'" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                        </div>
+                        <div class="col-md-6 mt-3" >
+                            <button type="submit" class="btn btn-outline-colorise btn-lg btn-block" >
+                                Enregistrer
+                            </button>
+                        </div>
+                    </div> <!-- submit -->
+                </form>
             </div>
         </div>
     </div>
@@ -243,123 +228,174 @@
 <script>
     export default {
         data(){
-
             return {
                 options:{
-                    etape:0,
                     pourcentage: 0,
                     sync:false,
+                    choix:false,
+                    url:null,
+                    nautilijon:0,
                 },
-                genre:"",
+                serie: {
+                    title:{romaji:''},
+                    statut:0,
+                    publication:0,
+                    type:'ANIME',
+                    genres:[],
+                    chapters: 0,
+                    episodes:0,
+                    volumes:0,
+                    studios:{
+                        nodes:[
+                            {name:null}
+                        ]
+                    },
+                    coverImage:{
+                        large:null,
+                        medium:null
+                    },
+                    bannerImage:null,
+                },
+                team:'cnf',
+                error:null,
+                genres:null,
+                genre:[],
                 name:"",
                 informations: null,
-                pourcentage:0,
-                serie: {title:{},coverImage:{large:null},bannerImage:null},
-                detail:null,
                 date : null,
-                type:'Animes',
                 image:{name:'Selectionner une image'},
                 banner:{name:'Selectionner une image'},
-                uploadPercentage:0,
-                debugs:null
             }
-
-
-        },
-        props:['user'],
-        computed: {
-
-        },
-        watch:{
-
         },
         methods: {
-            getSubmit(e){
-                this.options.etape++
-                e.preventDefault();
+            getGenres(){
+                axios.get('/api/administration/genres')
+                    .then(response => {
+                        this.genres = response.data
+                    })
+                .catch( error => {
+                    this.$notify({
+                        group: 'foo',
+                        title: "Oups! Une erreur c'est produite",
+                        type: 'error',
+                        text: error
+                    });
+                })
+            },
+            postSerie(){
+                this.serie.team = this.team
                 let currentObj = this;
                 let formData = new FormData();
                 formData.append('image', this.image);
-                formData.append('banner', this.banner);
+                formData.append('banniere', this.banner);
                 formData.append('serie', JSON.stringify(this.serie));
-                formData.append('genre', JSON.stringify(this.genre));
-                formData.append('type', this.type);
-                formData.append('user_id', this.user.id);
                 axios.post('/api/administration/series', formData, {
                     onUploadProgress: function( progressEvent ) {
                         this.options.pourcentage = parseInt( Math.round( ( progressEvent.loaded * 100 ) / progressEvent.total ) );
                     }.bind(this)
                 })
                     .then(function (response) {
-                        console.log(response.data)
-                        currentObj.debugs = response.data;
+                        currentObj.$notify({
+                            group: 'foo',
+                            title: "Projet ajouté",
+                            type: 'valid',
+                            text: response.data.titre
+                        });
                         currentObj.$router.push({name: 'AdminSerie'})
                     })
                     .catch(function (error) {
-                        currentObj.etape('-', 1)
-                        currentObj.debugs = error
+                        currentObj.$notify({
+                            group: 'foo',
+                            title: "Oups! Une erreur c'est produite",
+                            type: 'error',
+                            text: error
+                        });
                     });
-            },
-            found: function (tab, element) {
-                let response = tab.indexOf(element)
-                if (response >= 0){
-                    return true
-                }
-                else{
-                    return false
-                }
-            },
-            etape(signe, value){
-                if (signe == '+'){
-                    this.options.etape = this.options.etape + value
-                }else{
-                    this.options.etape = this.options.etape - value
-                }
             },
             onFileChange: function onFileChange(e) {
                 var files = e.target.files || e.dataTransfer.files;
                 if (!files.length) return;
-                if(e.target.id == 'imageForm'){
+                if(e.target.id == 'image'){
                     this.image = files[0];
-                    console.log('bonjour')
                 }else{
                     this.banner = files[0];
                 }
                 this.createImage(files[0], e.target.id)
             },
             createImage: function createImage(file, id) {
-                console.log(file)
                 var image = new Image();
                 var reader = new FileReader();
                 var vm = this;
-
                 reader.onload = function (e) {
-                    if(id == 'imageForm') {
-                        vm.serie.coverImage.large = e.target.result
+                    if(id == 'image') {
+                        vm.serie.coverImage.medium = e.target.result
                     }else{
                         vm.serie.bannerImage = e.target.result
                     }
                 };
                 reader.readAsDataURL(file);
             },
-            getAnimeka(info){
-                this.options.sync = true;
-                this.serie = info;
-                window.axios.post('/api/administration/series/informations', {info})
+            getNauti(url){
+                this.options.sync = true
+                axios.post('/api/administration/series/informations',{url:url})
                     .then(response => {
-                        this.detail = response.data;
-                        this.etape('+',1)
-                        this.serie.synopsis = response.data.synopsis
-                        this.serie.statut = response.data.statut
-                        this.serie.etat = response.data.etat
-                        this.genre = response.data.genre
-                        this.serie.allGenres = response.data.newGenre
-                        this.date = new Date(info.startDate.year+'-'+info.startDate.month+'-'+info.startDate.day)
-                        this.options.sync = false;
-                    });
+                        this.error = null
+                        this.options.sync = false
+                        if (response.data.genres.length != 0){
+                            this.serie.synopsis = response.data.synopsis
+                            this.serie.genres = response.data.genres
+                            this.getGenres()
+                            this.options.nautilijon = 2
+                        }else{
+                            this.options.nautilijon = 1
+                            this.$notify({
+                                group: 'foo',
+                                title: "Oups! Nautilijon",
+                                type: 'error',
+                                text: 'Merci de renseigné une adresse valide'
+                            });
+                        }
 
+                    })
+                    .catch( error => {
+                        this.$notify({
+                            group: 'foo',
+                            title: "Oups! une erreur c'est produite",
+                            type: 'error',
+                            text: error
+                        });
+                        this.options.sync = false
+                    })
+            },
+            getAnime(info){
+                this.options.sync = true
+                info.statut = this.serie.statut
+                info.publication = this.serie.publication
+                info.genres = this.serie.genres
+                if (info.title.english == null){
+                    info.title.english = info.title.romaji
+                }
+                if (!info.chapters){
+                    info.chapters = this.serie.chapters
+                }
+                if (!info.episodes){
+                    info.episodes = this.serie.episodes
+                }
+                if (!info.volumes){
+                    info.volumes = this.serie.volumes
+                }
+                if (info.studios.nodes[0]=== undefined){
+                    info.studios.nodes[0] = {name:null}
+                }
+                this.serie = info
+                this.date = new Date(info.startDate.year+'-'+info.startDate.month+'-'+info.startDate.day)
+                this.options.choix = true
+                this.options.sync = false
+                this.options.url = "https://www.nautiljon.com/"+info.type.toLowerCase()+'s/'+info.title.english.replaceAll(' ', '+').toLowerCase()+'.html'
+                this.getNauti(this.options.url)
             },
             async getInfo(name) {
+                this.options.choix =false
                 this.options.sync = true;
                 var query = `
                 query ($id: Int, $page: Int, $perPage: Int, $search: String) {
@@ -403,7 +439,7 @@
             var variables = {
                 search: name,
                 page: 1,
-                perPage: 6
+                perPage: 10
             };
             var url = 'https://graphql.anilist.co',
                 options = {
@@ -425,6 +461,21 @@
         },
         mounted(){
             this.$parent.titre = "Nouveau Projet"
+            this.getGenres()
         }
     }
     </script>
+<style>
+    .list-group-item{
+        padding-left: 15px;
+        padding-right: 15px;
+        padding-bottom: 0!important;
+        padding-top: 0!important;
+        margin-bottom: 0!important;
+        background-color: transparent!important;
+        border: none!important;
+    }
+    .form-group{
+        margin-bottom: 0!important;
+    }
+</style>

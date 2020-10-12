@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Auth;
 
 class Genres extends Model
 {
-    use RecordsActivity;
     protected $fillable = ['name', 'userId'];
 
     public function setUserIdAttribute($value){

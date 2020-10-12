@@ -40,6 +40,7 @@ class SerieAdminResource extends JsonResource
             'image' => $this->image,
             'banniere' => $this->auteur,
             'episodes' => count($this->episodes),
+            'team' => $this->team,
             'saisons' => SaisonAdminResource::collection($this->saisons)
         ];
     }

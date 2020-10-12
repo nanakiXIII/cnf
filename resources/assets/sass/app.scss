@@ -5,6 +5,7 @@
 @import "lecteur";
 @import "carousel";
 @import "carrousel.default";
+@import "seedTeam";
 
 section{
   font-family: 'Poppins', sans-serif;
@@ -1185,6 +1186,43 @@ div.type-serie{
       border-color: $color;
     }
   }
+}
+.btn-circle {
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  padding: 6px 0;
+  font-size: 12px;
+  line-height: 1.428571429;
+  border-radius: 15px;
+}
+.btn-circle.btn-lg {
+  width: 50px;
+  height: 50px;
+  padding: 10px 16px;
+  font-size: 18px;
+  line-height: 1.33;
+  border-radius: 25px;
+}
+.btn-circle.btn-xl {
+  width: 70px;
+  height: 70px;
+  padding: 10px 16px;
+  font-size: 24px;
+  line-height: 1.33;
+  border-radius: 35px;
+}
+.table.align-items-center td, .table.align-items-center th {
+  vertical-align: middle;
+}
+.overlay{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 1;
 }
 
 

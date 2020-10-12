@@ -1,107 +1,111 @@
 <template>
     <div class="container mt-5">
-        <div class="btn-group btn-group-justified" role="group" aria-label="...">
-            <div class="btn-group" role="group">
-                <router-link :to="{name:'AdminSerieADD'}"
-                             type="button"
-                        class="btn btn-default"
-                >
-                    <i class="fas fa-plus text-success"></i> Nouveau Projet
+        <div class="row mb-4">
+            <div class="col-md-2 offset-sm-1">
+                <router-link :to="{name:'AdminSerieADD'}">
+                    <button type="button" class="btn btn-success btn-circle btn-xl mt-4"><i class="fas fa-plus"></i></button>
                 </router-link>
-                <button type="button"
-                        class="btn btn-default"
-                        v-bind:class="{'colorise':(type === 'all')}"
-                        @click="type = 'all'"
-                >
-                    <i class="fas fa-globe"></i> All
-                </button>
             </div>
-            <div class="btn-group" role="group">
-                <button type="button"
-                        class="btn btn-default"
-                        v-bind:class="{'colorise':(type === 'Animes')}"
-                        @click="type = 'Animes'"
-                >
-                    <i class="fas fa-video"></i> Animés
-                </button>
+            <div class="col-md-9">
+                <div class="bg-white p-3">
+                    <nav class="nav nav-pills nav-justified border">
+                        <a @click="type = 'all'" v-bind:class="{'router-link-exact-active router-link-active':(type === 'all')}" class="nav-item nav-link text-truncate cursor">
+                            <b>All</b>
+                        </a>
+                        <a @click="type = 'Animes'" v-bind:class="{'router-link-exact-active router-link-active':(type === 'Animes')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Animés</b>
+                        </a>
+                        <a @click="type = 'Scantrad'" v-bind:class="{'router-link-exact-active router-link-active':(type === 'Scantrad')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Scantrad</b>
+                        </a>
+                        <a @click="type = 'Light-Novel'" v-bind:class="{'router-link-exact-active router-link-active':(type === 'Light-Novel')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Light Novel</b>
+                        </a>
+                        <a @click="type = 'Visual-Novel'" v-bind:class="{'router-link-exact-active router-link-active':(type === 'Visual-Novel')}" class="nav-item nav-link text-truncate cursor">
+                            <b> Visual Novel</b>
+                        </a>
+                    </nav>
+                    <nav class="nav nav-pills nav-justified border">
+                        <a @click="team = 'cnf'" v-bind:class="{'router-link-exact-active router-link-active':(team === 'cnf')}" class="nav-item nav-link text-truncate cursor">
+                            <b>Chuushin</b>
+                        </a>
+                        <a @click="team = 'set'" v-bind:class="{'router-link-exact-active router-link-active':(team === 'set')}" class="nav-item nav-link text-truncate cursor">
+                            <b>SeedTeam</b>
+                        </a>
+                    </nav>
+                </div>
             </div>
-            <div class="btn-group" role="group">
-                <button type="button"
-                        class="btn btn-default"
-                        v-bind:class="{'colorise':(type === 'Scantrad')}"
-                        @click="type = 'Scantrad'"
-                >
-                    <i class="fas fa-paint-brush"></i> Scantrad</button>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button"
-                        class="btn btn-default"
-                        v-bind:class="{'colorise':(type === 'Light-Novel')}"
-                        @click="type = 'Light-Novel'"
-                >
-                    <i class="fas fa-book-open"></i> Light Novel
-                </button>
-            </div>
-            <div class="btn-group" role="group">
-                <button type="button"
-                        class="btn btn-default"
-                        v-bind:class="{'colorise':(type === 'Visual-Novel')}"
-                        @click="type = 'Visual-Novel'"
-                >
-                    <i class="fas fa-gamepad"></i> Visual Novel
-                </button>
-            </div>
-        </div> <!-- Choix du type -->
+        </div>
+
         <div class="row">
-            <table class="table text-center">
-                <thead>
-                <tr>
-                    <th scope="col text-center">Visible</th>
-                    <th scope="col text-center">Titre</th>
-                    <th scope="col text-center">Etat</th>
-                    <th scope="col text-center">Type</th>
-                    <th scope="col text-center">Fichiers</th>
-                    <th scope="col text-center">Options</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="serie in informations.data" v-if="type == 'all' || type == serie.type">
-                    <td v-bind:class="{ 'table-success': serie.publication == '1', 'table-warning ': serie.publication == '0' }">
-                        <span class="text-primary" v-if="serie.publication == 0">Non</span>
-                        <span class="text-primary" v-if="serie.publication == 1">Oui</span>
-                    </td>
-                    <td>
-                        {{serie.titre}}
-                    </td>
-                    <td>
-                        <span class="text-primary" v-if="serie.etat == 0">En Cours</span>
-                        <span class="text-success" v-if="serie.etat == 1">Terminé</span>
-                        <span class="text-warning" v-if="serie.etat == 2">Abandonné</span>
-                        <span class="text-danger" v-if="serie.etat == 3">Licencié</span><br>
-                    </td>
-                    <td class="text-center">
-                        {{serie.type}}
-                    </td>
-                    <td>
-                        <b>{{serie.episodes}}</b>
-                        /
-                        <b v-if="serie.episode != 0">{{ serie.episode }}</b>
-                        <b v-else="">???</b>
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <router-link :to="{ name: 'AdminSerieFiche', params: { slug:serie.slug, id:serie.id } }" class="no-decoration">
-                                <button type="button" class="btn btn-secondary">Modifier</button>
-                            </router-link>
-                            <router-link :to="{ name: 'AdminSerieFichier', params: { slug:serie.slug, id:serie.id } }" class="no-decoration">
-                                <button type="button" class="btn btn-secondary">Fichiers</button>
-                            </router-link>
-                            <button type="button" class="btn btn-secondary" @click="getDestroy(serie)">Supprimer</button>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
+                    <thead class="thead-light">
+                    <tr class="text-center">
+                        <th scope="col">Série</th>
+                        <th scope="col">Visible</th>
+                        <th scope="col">Etat</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Fichiers</th>
+                        <th scope="col">Team</th>
+                        <th scope="col"></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="serie in informations.data" v-if="(type == 'all' || type == serie.type) && (team == serie.team)" >
+                        <th scope="row" style="max-width: 25%">
+                            <div class="media align-items-center">
+                                <img alt="Image placeholder" height="50px" width="50px" class="rounded-circle mr-4 ml-3 shadow-sm" :src="'https://www.chuushin-no-fansub.fr/storage/images/images/'+serie.image">
+                                <div class="media-body">
+                                    <span class="mb-0 text-sm text-break">{{serie.titre}}</span>
+                                </div>
+                            </div>
+                        </th>
+                        <td class="text-center">
+                           <span class="badge badge-dot mr-4">
+                               <template v-if="serie.publication == 1">
+                                   <i class="text-success fas fa-circle"></i>
+                               </template>
+                               <template v-else>
+                                    <i class="text-danger fas fa-circle"></i>
+                               </template>
+
+                          </span>
+                        </td>
+                        <td class="text-center">
+                            <span class="text-primary" v-if="serie.etat == 0">En Cours</span>
+                            <span class="text-success" v-if="serie.etat == 1">Terminé</span>
+                            <span class="text-warning" v-if="serie.etat == 2">Abandonné</span>
+                            <span class="text-danger" v-if="serie.etat == 3">Licencié</span>
+                        </td>
+                        <td class="text-center">
+                            {{serie.type}}
+                        </td>
+                        <td class="text-center">
+                            <b>{{serie.episodes}}</b>
+                            /
+                            <b v-if="serie.episode != 0">{{ serie.episode }}</b>
+                            <b v-else="">???</b>
+                        </td>
+                        <td class="text-center">
+                           {{serie.team}}
+                        </td>
+                        <td class="text-right">
+                            <div class="dropdown">
+                                <a class="btn btn-sm btn-icon-only" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-ellipsis-v"></i>
+                                </a>
+                                <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                    <router-link :to="{ name: 'AdminSerieFichier', params: { slug:serie.slug, id:serie.id } }" class="dropdown-item">Gestion des fichiers</router-link>
+                                    <router-link :to="{ name: 'AdminSerieFiche', params: { slug:serie.slug, id:serie.id } }" class="dropdown-item">Modifier</router-link>
+                                    <a class="dropdown-item" @click="getDestroy(serie)" href="#">Supprimer</a>
+                                </div>
+                            </div>
+                        </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
@@ -111,6 +115,7 @@
         data(){
             return {
                 type:'all',
+                team:'cnf',
                 informations:'',
             }
 
@@ -162,3 +167,15 @@
         }
     }
 </script>
+<style>
+    .dark .thead-light th{
+        background-color: #1c1c1c !important;
+        color: white;
+    }
+    .light a{
+        color: black;
+    }
+    a:hover{
+        color: orange;
+    }
+</style>
