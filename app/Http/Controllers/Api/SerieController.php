@@ -36,10 +36,17 @@ class SerieController extends Controller {
 
     public function index(Request $request)
     {
-        $projet= Serie::where('publication', 1)->orderBy('etat')->orderBy('titre')->get();
+        $projet= Serie::where('publication', 1)->where('team', 'cnf')->orderBy('etat')->orderBy('titre')->get();
         return serieOnlyResource::collection($projet);
         //return new ProjetsCollection($projet);
     }
+     public function seedTeam(Request $request)
+        {
+            $projet= Serie::where('publication', 1)->where('team', 'set')->orderBy('etat')->orderBy('titre')->get();
+            return serieOnlyResource::collection($projet);
+            //return new ProjetsCollection($projet);
+        }
+
     public function show(Request $request)
     {
         $projet= Serie::where('publication', 1)->where('type', $request->type)->where('slug', $request->slug)->firstOrFail();

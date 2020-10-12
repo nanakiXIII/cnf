@@ -1,19 +1,29 @@
 <template>
     <section :class="theme">
         <main>
-            <navbar-component :theme="theme" :titre="titre" :sync="etat"></navbar-component>
-            <router-view :user="user" :type="type"></router-view>
-            <notifications group="foo" position="bottom right"></notifications>
+            <navbar-component :titre="titre" :theme="theme" :sync="etat"></navbar-component>
+            <div class="background_wrap"></div>
+            <div class="banniere">
+                <div class="quote_container">
+                    <div class="img_quote">
+                        <img src="/img/quote.png" alt="quote" width="70" height="56">
+                        <h3>J'étais mort jusqu'à notre rencontre. </h3>
+                    </div>
+                    <h3 class="ligne">J'étais un cadavre impuissant, prétendant être vivant.”</h3>
+                    <h4 class="author"> Lelouch Lamperouge // Code Geass </h4>
+                </div>
+            </div>
+            <router-view></router-view>
         </main>
         <footer>
+            <div class="background-caractere"></div>
             <div class="bg-grey p-5 mt-5 footer">
                 <div class="container footer-icon">
                     <div class="col-auto text-center">
-
-                        <a href="https://discord.gg/hgXXvxf" rel="noreferrer" class="text-body" target="_blank">
+                        <a href="https://discord.gg/hgXXvxf" class="text-body " target="_blank">
                             <i class="fab fa-discord p-1"></i>
                         </a>
-                        <a href="https://twitter.com/chuushin_kira" rel="noreferrer" target="_blank" class="text-body">
+                        <a href="https://twitter.com/chuushin_kira" target="_blank" class="text-body">
                             <i class="fab fa-twitter p-1"></i>
                         </a>
                         <i class="fas fa-rss p-1"></i>
@@ -25,7 +35,7 @@
                     <router-link class="colorise" :to="{name:'equipes'}">Equipes</router-link> |
                     <router-link class="colorise" :to="{name:'contact'}"> Nous contacter</router-link>
                     <br>
-                    <small>© 2018 - {{annee}}  Chuushin no Fansub</small>
+                    <small>© 2003 - {{annee}}  SeedTeam // Design by <b class="text-warning">Unforgiven</b> </small>
                 </div>
             </div>
         </footer>
@@ -40,7 +50,7 @@
             return {
                 etat : false,
                 titre:'Sa spécialité est de n\'avoir aucune spécialité',
-                theme:'light',
+                theme:'seedteam',
                 description:'Site de la Chuushin no Fansub',
                 image:'/img/logo.png',
                 type:'all',
@@ -115,18 +125,14 @@
                     this.etat = true
                     if(this.user.data != undefined){
                         this.etat = false;
-                        this.theme = this.user.data.theme
+                        //this.theme = this.user.data.theme
                     }
                 }
 
             },
 
         },
-        methods: {
-            reload(){
 
-            },
-        },
         computed: {
             user(){
                 if (this.$store.getters.isAuthenticated) {

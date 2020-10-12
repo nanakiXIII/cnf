@@ -34,6 +34,7 @@ Route::post('/telechargements', 'Api\SerieController@telechargement');
 
 Route::post('/streaming', 'Api\CompteController@update');
 Route::get('/projets', 'Api\SerieController@index');
+Route::get('/seedteam', 'Api\SerieController@seedteam');
 Route::get('/projets/{type}/{slug}', 'Api\SerieController@show');
 //equipes
 Route::get('/equipe', 'Api\staffController@index');

@@ -190,6 +190,10 @@ const ifAuthOrNot = (to, from, next) => {
 }
 
 
+import SeedTeam_layout from './../components/layout/set'
+import SeedTeam from './../components/set/index'
+import SeedTeam_projets from './../components/set/projets'
+
 import Login from './../components/auth/login'
 import Register from './../components/auth/register'
 import PasswordEmail from '../components/auth/password/email'
@@ -476,6 +480,24 @@ const routes = [
         path: '/administration/statistiques/visites',
         name: 'statistiqueVisite',
         component: statistiqueVisite,
+    },
+    {
+        path: '/seedteam',
+        name: 'set',
+        component: SeedTeam_layout,
+        children: [
+            {
+                path: '/',
+                name: 'set',
+                component: SeedTeam,
+            },
+            {
+                path: ':type/:slug',
+                name: 'seedteam_projets',
+                component: SeedTeam_projets,
+            },
+
+        ]
     },
 ];
 
