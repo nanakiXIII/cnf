@@ -45,7 +45,7 @@
                 </div>
             </div>
         </nav>
-        <nav class="navbar navbar-light bg-white border-bottom-1">
+        <nav class="navbar navbar-light bg-white border-bottom-1"v-if="theme != 'seedteam'">
             <div class="container">
                 <button type="button" @click="precedent()" class="btn btn-outline-colorise">Précédent</button>
                 <span class="navbar-brand mb-0 h1 barre no-mobile" >{{ titre}}</span>
@@ -114,6 +114,7 @@
         props:{
             titre : String,
             sync : Boolean,
+            theme: String,
         }
 
         ,
