@@ -34,7 +34,8 @@ Vue.use(Meta, {
     keyName: 'metaInfo', // the component option name that vue-meta looks for meta info on.
     attribute: 'data-vue-meta', // the attribute name vue-meta adds to the tags it observes
     ssrAttribute: 'data-vue-meta-server-rendered', // the attribute name that lets vue-meta know that meta info has already been server-rendered
-    tagIDKeyName: 'vmid' // the property name that vue-meta uses to determine whether to overwrite or append a tag
+    tagIDKeyName: 'vmid', // the property name that vue-meta uses to determine whether to overwrite or append a tag
+    refreshOnceOnNavigation: true
 });
 Vue.use(VueAnalylics, {
     id: 'UA-106567034-1',
@@ -53,6 +54,8 @@ Vue.use(VCalendar, {
 
 Vue.component('navbar-component', require('./components/layout/navbar.vue'));
 Vue.component('layout-component', require('./components/layout/layout.vue'));
+Vue.component('index-component', require('./components/layout/index.vue'));
+Vue.component('set-component', require('./components/layout/theme.vue'));
 Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
