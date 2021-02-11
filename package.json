@@ -21,7 +21,7 @@
     },
     "dependencies": {
         "@ckeditor/ckeditor5-easy-image": "^11.0.4",
-        "apexcharts": "^2.6.0",
+        "apexcharts": "^3.24.0",
         "cheerio": "^1.0.0-rc.3",
         "js-cookie": "^2.2.0",
         "laravel-echo": "^1.5.4",
