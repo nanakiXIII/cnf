@@ -23,7 +23,6 @@ class newsController extends Controller {
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->getClientOriginalExtension();
             $request->image->storeAs('public/images/news', $imageName);
-            $response['status'] = 200;
             $response['url'] = "/storage/images/news/$imageName";
         }
         return $response;
@@ -38,7 +37,6 @@ class newsController extends Controller {
 
     public function create(request $request){
         $response = [
-            'statut' => '200',
             'error' => false,
             'success' => false,
             'data' => null
@@ -77,7 +75,6 @@ class newsController extends Controller {
     }
     public function update(request $request){
         $response = [
-            'statut' => '200',
             'error' => false,
             'success' => false,
             'data' => null
@@ -116,7 +113,6 @@ class newsController extends Controller {
     }
     public function delete(request $request){
         $response = [
-            'statut' => '200',
             'error' => false,
             'success' => false,
             'data' => null

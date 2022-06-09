@@ -77,7 +77,6 @@ class CompteController extends Controller {
         $user->notification = $request->notification;
         $user->theme = $request->theme;
         $user->save();
-        broadcast(new userEvent($request->user('api'), 'reload'));
         return $user;
     }
 
@@ -162,7 +161,6 @@ class CompteController extends Controller {
             $response['error'] = true;
             $response['data'] = 'not Auth';
         }
-        broadcast(new userEvent($request->user('api'), 'reload'));
         return $response;
     }
 
@@ -178,7 +176,6 @@ class CompteController extends Controller {
             $user->avatar = '/storage/images/avatar/'.$name;
             $user->save();
         }
-        broadcast(new userEvent($request->user('api'), 'reload'));
         return $tab;
     }
 

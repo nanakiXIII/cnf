@@ -513,7 +513,7 @@
             formulaire() {
                 const {information } = this
                 if(this.action == "nouvelleSaison"){
-                    axios.post('/api/administration/saison/', information )
+                    axios.post('/api/administration/saison', information )
                         .then(response => {
                             this.modal(false);
                             this.validate = false;

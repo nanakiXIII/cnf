@@ -30,10 +30,10 @@ class ActivityLogged implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('activity.1');
+        //return new PrivateChannel('activity.1');
     }
     public function broadcastWith()
     {
-        return fractal($this->activity, new ActivityTransformer())->toArray();
+        //return fractal($this->activity, new ActivityTransformer())->toArray();
     }
 }

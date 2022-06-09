@@ -20,6 +20,7 @@ class CreateSeries extends Migration
             $table->string('titre_alternatif')->nullable();
             $table->string('annee');
             $table->string('studio');
+            $table->integer('etat')->default(0);
             $table->string('auteur')->nullable();
             $table->integer('episode')->unsigned()->default(0);
             $table->integer('oav')->unsigned()->default(0);
