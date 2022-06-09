@@ -87,6 +87,12 @@ class serieController extends Controller {
     }
 
     public function create(request $request){
+        $arrContextOptions=array(
+            "ssl"=>array(
+                "verify_peer"=>false,
+                "verify_peer_name"=>false,
+            ),
+        );
         $serie = json_decode($request->serie,true);
         $bannerName = null;
         $imageName = null;
@@ -99,7 +105,7 @@ class serieController extends Controller {
                $extension = pathinfo($serie['bannerImage'], PATHINFO_EXTENSION);
                $basename = pathinfo($serie['bannerImage'], PATHINFO_BASENAME);
                $bannerName = time().'.'.$extension;
-               $file = file_get_contents($serie['bannerImage']);
+               $file = file_get_contents($serie['bannerImage'], false, stream_context_create($arrContextOptions));
                $save = file_put_contents(storage_path('app/public/images/banniere/'.$bannerName), $file);
            }
         }
@@ -111,7 +117,7 @@ class serieController extends Controller {
                $extension = pathinfo($serie['coverImage']['large'], PATHINFO_EXTENSION);
                $basename = pathinfo($serie['coverImage']['large'], PATHINFO_BASENAME);
                $imageName = time().'.'.$extension;
-               $file = file_get_contents($serie['coverImage']['large']);
+               $file = file_get_contents($serie['coverImage']['large'], false, stream_context_create($arrContextOptions));
                $save = file_put_contents(storage_path('app/public/images/images/'.$imageName), $file);
            }
         }
